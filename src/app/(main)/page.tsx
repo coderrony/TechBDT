@@ -33,6 +33,9 @@ async function PageHome() {
   // const userData = await getUserByPhoneOrEmail({phone: '01866188330'});
   // console.log("userData ",userData);
 
+  console.log("PageHome session ",session);
+  
+
 
   return (
     <div className='nc-PageHome relative overflow-hidden'>

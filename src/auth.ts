@@ -32,12 +32,21 @@ export const {
   signOut,
   auth,
 } = NextAuth({
-  trustHost: true, // Trust all hosts (use with caution in production)
   secret: process.env.AUTH_SECRET,
   session: {
     strategy: 'jwt',
   },
- 
+  cookies: {
+    sessionToken: {
+      name: `__Secure-authjs.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production', // প্রোডাকশনে true
+      },
+    },
+  },
   providers: [
     Google,
     Facebook,
@@ -97,8 +106,8 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       try {
-        // console.log("signIn user ",user);
-        // console.log("signIn account ",account);
+        console.log("signIn user ",user);
+        console.log("signIn account ",account);
 
         let userData;
         if (
