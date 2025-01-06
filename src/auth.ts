@@ -37,7 +37,7 @@ export const {
   session: {
     strategy: 'jwt',
   },
-
+ 
   providers: [
     Google,
     Facebook,
@@ -149,8 +149,8 @@ export const {
     },
 
     async jwt({ token, user }) {
-      //  console.log("jwt token ",token);
-      //  console.log("jwt user ",user);
+       console.log("jwt token ",token);
+       console.log("jwt user ",user);
 
       if (user?.customData) {
         token.user = user.customData;
@@ -159,8 +159,8 @@ export const {
     },
 
     async session({ session, token }: { session: Session; token: any }) {
-      // console.log("session session ", session);
-      // console.log("session token ", token);
+      console.log("session session ", session);
+      console.log("session token ", token);
 
       if (token?.user) {
         session.user = token.user as Session['user'];

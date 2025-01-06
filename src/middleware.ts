@@ -5,11 +5,8 @@ import { ADMIN_ROUTES, LOGIN,SIGNUP, PUBLIC_ROUTES, ROOT, FORGET_PASSWORD, PRODU
 export async function middleware(req: any) {
  
   const token = await getToken({ req, secret: process.env.AUTH_SECRET }) as any;
-  const {nextUrl,cookies } = req;
+  const {nextUrl } = req;
   console.log("req ",req);
-  
-  const token2 = cookies.get('next-auth.session-token') || cookies.get('__Secure-next-auth.session-token');
-  console.log("token2 ",token2);
   
 
   const isAdminRoute = (ADMIN_ROUTES.find(route => nextUrl.pathname.startsWith(route)));
@@ -41,6 +38,10 @@ export async function middleware(req: any) {
 }
 
 
+// export const config = {
+//   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+//  };
+
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
- };
+  matcher: ['/login', '/admin/:path*', '/api/:path*'],
+};
