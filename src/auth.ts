@@ -13,7 +13,6 @@ import { replaceMongoIdInObject } from './lib/convertData';
 
 // import { AdapterUser } from "next-auth/adapters";
 import { Session as NextAuthSession } from 'next-auth';
-import { authConfig } from './auth.config';
 
 type Session = NextAuthSession & {
   user?: {
@@ -33,7 +32,12 @@ export const {
   signOut,
   auth,
 } = NextAuth({
-  ...authConfig,
+  trustHost: true, // Trust all hosts (use with caution in production)
+  secret: process.env.AUTH_SECRET,
+  session: {
+    strategy: 'jwt',
+  },
+
   providers: [
     Google,
     Facebook,
