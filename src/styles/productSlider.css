@@ -1,0 +1,13 @@
+
+.swiper-wrapper{ 
+  width: 35rem;
+
+}
+.swiper-wrapper .thumb-slide {
+  width: 8rem !important;
+  height: 8rem !important;
+  padding: 0.3rem;
+  border-radius: 2rem;
+  border: 0.2rem solid transparent;
+
+}

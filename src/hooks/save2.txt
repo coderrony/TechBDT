@@ -1,0 +1,60 @@
+"use client"
+import { useSession } from "next-auth/react";
+import { notFound } from "next/navigation";
+import { useEffect } from "react";
+// import { getUserByPhoneOrEmail } from "@/queries/users";
+
+
+import { createGlobalState } from "react-hooks-global-state";
+
+// Create global state
+const { useGlobalState, setGlobalState } = createGlobalState({
+  userData:null, // Holds user data
+});
+
+
+ const useAuth = () => {
+  const [userData] = useGlobalState("userData"); // Access global state
+  const { data: session } = useSession();
+ 
+  console.log("useAuth userData", userData);
+  // console.log("session", session);
+  
+  async function fetchMe() {
+    try {
+      if(session?.user?.id) {
+        console.log("11111111111111111111111111111111111111111111");
+        
+        const response = await fetch(`/api/get-user?id=${session?.user?.id}`, {
+          method: 'GET',
+        });
+      
+        const data = await response.json();
+        console.log("data", data);
+        
+        if (data.status === 200) {
+          // setLoggedInUser(data.user);
+          setGlobalState("userData", data?.user);
+        }else{ 
+          setGlobalState("userData", null);
+        }
+      }
+    } catch (err: any) {
+      console.log( `Error in useAuth hook: ${err.message}`); 
+      throw new Error(err.message)
+     
+    }
+  }
+
+    useEffect(() => {
+      if (session?.user) {
+        fetchMe();
+      }
+    }, [session?.user]);
+
+
+
+    return { userData,fetchMe };
+};
+
+export default useAuth;

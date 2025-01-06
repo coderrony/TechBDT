@@ -1,0 +1,152 @@
+'use server';
+
+import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
+import {
+  replaceMongoIdInArray,
+  replaceMongoIdInObject,
+} from '@/lib/convertData';
+import { Product } from '@/model/product-model';
+import slugify from 'slugify';
+
+export const createProduct = async (formData: any) => {
+  try {
+    const name = formData.get('name') as string;
+    const category_id = formData.get('category_id');
+    const sub_category_id = formData.get('sub_category_id');
+    const price = formData.get('price') as number;
+    const status = formData.get('status') as string;
+    const discount = formData.get('discount') as number;
+    const description = formData.get('description') as string;
+    const thumbnail_img = formData.get('thumbnail') as File;
+    const image_gallery = formData.getAll('image_gallery') as File[];
+    const dropShop = formData.get('dropshop') as string;
+
+    const BN_contentRaw = formData.get('BN_content');
+    const EN_contentRaw = formData.get('EN_content');
+    const payloadString = formData.get('payload') as string;
+
+    let payload = JSON.parse(payloadString);
+    const BN_content = BN_contentRaw ? JSON.parse(BN_contentRaw as string) : {};
+    const EN_content = EN_contentRaw ? JSON.parse(EN_contentRaw as string) : {};
+    const slug = slugify(name, { lower: true, strict: true });
+
+    const product_data = {
+      name,
+      slug,
+      price,
+      status,
+      discount,
+      description,
+      dropShop,
+      BN_content,
+      EN_content,
+    } as any;
+
+    if (category_id) {
+      product_data['category'] = category_id;
+    }
+    if (sub_category_id) {
+      product_data['sub_category'] = sub_category_id;
+    }
+
+    if (payload.sizes.length > 0) {
+      product_data['sizes'] = payload.sizes;
+    }
+    if (payload.colors.length > 0) {
+      product_data['colors'] = payload.colors;
+    }
+    if (payload.variants.length > 0) {
+      product_data['variants'] = payload.variants;
+    }
+
+    // image gallery url store
+    const imageGalleryUrls: string[] = [];
+
+    // thumbnail image upload process
+    const thumbnail_upload = await uploadFileByCloudinary(
+      thumbnail_img,
+      `product-image/${slug}/thumbnail`,
+    );
+    product_data['thumbnail'] = thumbnail_upload.secure_url;
+
+    //image gallery upload process
+    for (const image of image_gallery) {
+      const image_gallery_upload = await uploadFileByCloudinary(
+        image,
+        `product-image/${slug}/image_gallery`,
+      );
+      imageGalleryUrls.push(image_gallery_upload.secure_url);
+    }
+    product_data['images_gallery'] = imageGalleryUrls;
+
+    const product = await Product.create(product_data);
+
+    if (product) {
+      return {
+        status: 200,
+        message: 'Product Create successfully!',
+      };
+    } else {
+      return {
+        status: 500,
+        message: 'Error: File To Product Create!',
+      };
+    }
+  } catch (err: any) {
+    console.log(err);
+    throw new Error('File to Create Product');
+  }
+};
+
+export async function getProducts() {
+  try {
+    const productWithReview = await Product.aggregate([
+      {
+        $lookup: {
+          from: 'reviews', // MongoDB collection name for SubCategory
+          localField: '_id',
+          foreignField: 'product',
+          as: 'reviews',
+        },
+      },
+    ]);
+
+    if (productWithReview.length > 0) {
+      return replaceMongoIdInArray(productWithReview);
+    }
+    return null;
+  } catch (error: any) {
+    throw new Error(`Error fetching product with review ' ${error.message}`);
+  }
+}
+
+export async function getProductBySlug(slug: string) {
+  try {
+    const productWithReviews = await Product.aggregate([
+      {
+        $match: { slug },
+      },
+      {
+        $lookup: {
+          from: 'reviews',
+          localField: '_id',
+          foreignField: 'product',
+          as: 'reviews',
+        },
+      },
+    ]);
+
+    if (productWithReviews.length > 0) {
+      const product = productWithReviews[0];
+      const reviews = replaceMongoIdInArray(product.reviews);
+      return {
+        ...replaceMongoIdInObject(product),
+        reviews,
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching product by slug:', error);
+    return null;
+  }
+}
