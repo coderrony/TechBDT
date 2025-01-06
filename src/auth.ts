@@ -13,6 +13,7 @@ import { replaceMongoIdInObject } from './lib/convertData';
 
 // import { AdapterUser } from "next-auth/adapters";
 import { Session as NextAuthSession } from 'next-auth';
+import { authConfig } from './auth.config';
 
 type Session = NextAuthSession & {
   user?: {
@@ -32,21 +33,7 @@ export const {
   signOut,
   auth,
 } = NextAuth({
-  secret: process.env.AUTH_SECRET,
-  session: {
-    strategy: 'jwt',
-  },
-  cookies: {
-    sessionToken: {
-      name: `__Secure-authjs.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production', // প্রোডাকশনে true
-      },
-    },
-  },
+ ...authConfig,
   providers: [
     Google,
     Facebook,
@@ -106,8 +93,8 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       try {
-        console.log("signIn user ",user);
-        console.log("signIn account ",account);
+        // console.log("signIn user ",user);
+        // console.log("signIn account ",account);
 
         let userData;
         if (
@@ -158,8 +145,8 @@ export const {
     },
 
     async jwt({ token, user }) {
-       console.log("jwt token ",token);
-       console.log("jwt user ",user);
+      //  console.log("jwt token ",token);
+      //  console.log("jwt user ",user);
 
       if (user?.customData) {
         token.user = user.customData;
@@ -168,8 +155,8 @@ export const {
     },
 
     async session({ session, token }: { session: Session; token: any }) {
-      console.log("session session ", session);
-      console.log("session token ", token);
+      // console.log("session session ", session);
+      // console.log("session token ", token);
 
       if (token?.user) {
         session.user = token.user as Session['user'];
