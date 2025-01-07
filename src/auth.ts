@@ -33,14 +33,20 @@ export const {
   auth,
 } = NextAuth({
   trustHost: true, // Trust all hosts (use with caution in production)
-
+  secret: process.env.AUTH_SECRET,
   session: {
     strategy: 'jwt',
   },
 
   providers: [
-    Google,
-    Facebook,
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
+    Facebook({
+      clientId: process.env.AUTH_FACEBOOK_ID,
+      clientSecret: process.env.AUTH_FACEBOOK_SECRET,
+    }),
 
     Credentials({
       authorize: async credentials => {
