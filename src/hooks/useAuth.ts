@@ -19,15 +19,15 @@ const useAuth = () => {
   const fetchMe = useCallback(async () => {
     try {
       if (session?.user?.id) {
-        console.log("Fetching user data...1111111111111111111111111111");
-        
         const response = await fetch(`/api/get-user?id=${session?.user?.id}`, {
           method: "GET",
         });
-
+        if (!response.ok) {
+          console.error(`HTTP Error: ${response.status}`);
+          throw new Error("Failed to fetch user data.");
+        }
         const data = await response.json();
         console.log("data", data);
-
         if (data.status === 200) {
           setGlobalState("userData", data?.user);
         } else {
@@ -35,10 +35,10 @@ const useAuth = () => {
         }
       }
     } catch (err: any) {
-      console.log(`Error in useAuth hook: ${err.message}`);
-      throw new Error(err.message);
+      console.error(`Error in useAuth hook: ${err.message}`);
     }
   }, [session?.user?.id]);
+  
 
   useEffect(() => {
     if (session?.user) {

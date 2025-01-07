@@ -47,13 +47,14 @@
     
      // revalidatePath('/');
      return new NextResponse(
-       JSON.stringify({
-         user: replaceMongoIdInObject(user),
-         message: 'User fetched successfully',
-         status: 200,
-       }),
-       { status: 200 },
-     );
+      JSON.stringify({
+        user: replaceMongoIdInObject(user),
+        message: 'User fetched successfully',
+        status: 200,
+      }),
+      { status: 200 },
+    );
+    
    } catch (err: any) {
      return new NextResponse(
        JSON.stringify({
