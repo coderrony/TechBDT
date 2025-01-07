@@ -64,6 +64,36 @@ export async function getUserByEmail(email: string) {
   return replaceMongoIdInObject(user as any);
 }
 
+export async function getUserById(id: string) {
+  try {
+    const user = (await User.findById(id)
+    .populate({
+      path: 'cart',
+      model: AddToCart,
+      populate: {
+        path: 'product',
+        model: Product,
+      },
+    }).populate({
+      path: 'address',
+      model: Address,
+    })
+    .select('-password')
+    .lean()) as any;
+
+    return {
+      user: replaceMongoIdInObject(user),
+      message: 'User fetched successfully',
+      status: 200,
+    }
+  } catch (err:any) {
+    return  {
+      message: err.message,
+      status: 400,
+    }
+  }
+}
+
 
 
 export async function passwordUpdate(phone: string, newPassword: string) {

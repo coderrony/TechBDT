@@ -184,8 +184,7 @@ export const {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      console.log("url ",url);
-      console.log("baseUrl ",baseUrl);
+    
       
       return process.env.NODE_ENV === 'production' ? baseUrl : 'http://localhost:3000';
     },

@@ -1,4 +1,5 @@
 "use client";
+import { getUserById } from "@/queries/users";
 import { useSession } from "next-auth/react";
 import { useEffect, useCallback } from "react";
 import { createGlobalState } from "react-hooks-global-state";
@@ -19,17 +20,11 @@ const useAuth = () => {
   const fetchMe = useCallback(async () => {
     try {
       if (session?.user?.id) {
-        const response = await fetch(`/api/get-user?id=${session?.user?.id}`, {
-          method: "GET",
-        });
-        if (!response.ok) {
-          console.error(`HTTP Error: ${response.status}`);
-          throw new Error("Failed to fetch user data.");
-        }
-        const data = await response.json();
-        console.log("data", data);
-        if (data.status === 200) {
-          setGlobalState("userData", data?.user);
+     
+        const result = await getUserById(session?.user?.id);
+        console.log("result", result);
+        if (result.status === 200) {
+          setGlobalState("userData", result?.user);
         } else {
           setGlobalState("userData", null);
         }
