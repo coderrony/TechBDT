@@ -63,24 +63,6 @@ export const createAddToCart = async (addToCartData: any) => {
 };
 
 
-// export const deleteCart = async(cartId:string,userId:string)=>{ 
-//   try {
-//     const cart = await AddToCart.findByIdAndDelete(cartId);
-//     console.log("deleteCart ", cart);
-    
-//     return {
-//       status: 200,
-//       message: 'Cart Deleted',
-//     };
-//   } catch (error: any) {
-//     return {
-//       status: 500,
-//       message: `cart not deleted: ${error.message}`,
-//     };
-//   }
-// }
-
-
 export const deleteCart = async (cartId: string, userId: string) => {
   try {
     // Delete the cart from the AddToCart collection
@@ -99,7 +81,7 @@ export const deleteCart = async (cartId: string, userId: string) => {
       { new: true }
     );
 
-    console.log('deleteCart', cart);
+    // console.log('deleteCart', cart);
 
     return {
       status: 200,
