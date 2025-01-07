@@ -32,12 +32,18 @@ export const {
   signOut,
   auth,
 } = NextAuth({
-  trustHost: true, // Trust all hosts (use with caution in production)
-  secret: process.env.AUTH_SECRET,
-  session: {
-    strategy: 'jwt',
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'authjs.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
   },
-
+  secret: process.env.AUTH_SECRET,
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
@@ -47,6 +53,7 @@ export const {
       clientId: process.env.AUTH_FACEBOOK_ID,
       clientSecret: process.env.AUTH_FACEBOOK_SECRET,
     }),
+    
 
     Credentials({
       authorize: async credentials => {
@@ -99,7 +106,9 @@ export const {
       },
     }),
   ],
-
+  session: {
+    strategy: 'jwt',
+  },
   callbacks: {
     async signIn({ user, account }) {
       try {
@@ -173,6 +182,12 @@ export const {
       }
 
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      console.log("url ",url);
+      console.log("baseUrl ",baseUrl);
+      
+      return process.env.NODE_ENV === 'production' ? baseUrl : 'http://localhost:3000';
     },
   },
 });

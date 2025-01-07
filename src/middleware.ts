@@ -4,11 +4,16 @@ import { ADMIN_ROUTES, LOGIN,SIGNUP, PUBLIC_ROUTES, ROOT, FORGET_PASSWORD, PRODU
 
 export async function middleware(req: any) {
  
-  const token = await getToken({ req, secret: process.env.AUTH_SECRET }) as any;
-  const {nextUrl} = req;
 
-  console.log("req ",req);
-  console.log("middleware token",token);
+  const {nextUrl} = req;
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === 'production',
+  }) as any;
+
+  console.log('Middleware Cookies:', req.cookies);
+  console.log('Middleware Token:', token);
   
 
   const isAdminRoute = (ADMIN_ROUTES.find(route => nextUrl.pathname.startsWith(route)));
