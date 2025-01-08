@@ -1,3 +1,4 @@
+"use server"
 import { replaceMongoIdInArray } from '@/lib/convertData';
 import { DropShop } from '@/model/drop-shop-model';
 
