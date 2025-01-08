@@ -3,29 +3,33 @@
 import { Popover, Transition } from "@/app/headlessui";
 import Prices from "@/components/Prices";
 // import { Product, PRODUCTS } from "@/data/data";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment} from "react";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Image from "next/image";
 import Link from "next/link";
 // import taka from '@/images/taka.png';
 
-import useAuth from "@/hooks/useAuth";
+
 import { calculateCartTotal } from "@/utils/calculateCartTotal";
 import formatNumber from "@/utils/formatNumber";
-import { deleteCart } from "@/queries/addToCart";
+
+import useAuthData from "@/hooks/useAuthData";
+import LoadingIndicator from "../LoadingIndicator";
 
 export default function CartDropdown() {
 
-  const {userData,fetchMe} = useAuth() as any;
+  
+  const {authDataFetch:{authData,isFetchingAuthData},cartDelete} = useAuthData() as any;
+ 
+  // console.log("CartDropdown ",userData);
+  // console.log("authData ",authData);
+  
+  if(isFetchingAuthData)   return <LoadingIndicator />;
 
-  // const [cartTotalAmount,setCartTotalAmount] = useState(0)
+  const cartTotalAmount = calculateCartTotal(authData?.cart)
 
-  const cartTotalAmount = calculateCartTotal(userData?.cart)
 
-  // useEffect(()=>{
-  //   setCartTotalAmount(calculateCartTotal(userData?.cart))
-  // },[userData?.cart])
 
   const renderProduct = (item:any, index:number, close: () => void) => {
   //  console.log(item);
@@ -73,7 +77,8 @@ export default function CartDropdown() {
               <button
                 type="button"
                 className="font-medium text-primary-6000 dark:text-primary-500 "
-                onClick={()=> handleRemoveCart(item._id.toString(),userData?.id)}
+                // onClick={()=> handleRemoveCart(item._id.toString(),authData?.id)}
+                onClick={()=> cartDelete.handleRemoveFromCart(item._id.toString())}
               >
                 Remove
               </button>
@@ -84,11 +89,6 @@ export default function CartDropdown() {
     );
   };
 
-  const handleRemoveCart =async (id: string,userId:string) => {
-  
-   const cart= await deleteCart(id,userId)
-   await fetchMe()
-  }
 
   return (
     <Popover className="relative">
@@ -100,7 +100,7 @@ export default function CartDropdown() {
                  group w-10 h-10 sm:w-12 sm:h-12 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 relative`}
           >
             <div className="w-3.5 h-3.5 flex items-center justify-center bg-primary-500 absolute top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-              <span className="mt-[1px]">{userData?.cart?.length || 0}</span>
+              <span className="mt-[1px]">{authData?.cart?.length || 0}</span>
             </div>
             <svg
               className="w-6 h-6"
@@ -159,7 +159,7 @@ export default function CartDropdown() {
                   <div className="max-h-[60vh] p-5 overflow-y-auto hiddenScrollbar">
                     <h3 className="text-xl font-semibold">Shopping cart</h3>
                     <div className="divide-y divide-slate-100 dark:divide-slate-700 ">
-                      {userData?.cart?.length > 0 && userData?.cart?.map((item:any) => renderProduct(item, item._id.toString(), close))}
+                      {authData?.cart?.length > 0 && authData?.cart?.map((item:any) => renderProduct(item, item._id.toString(), close))}
                     </div>
                   </div>
                   <div className="bg-neutral-50 dark:bg-slate-900 p-5">

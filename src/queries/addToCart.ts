@@ -2,30 +2,31 @@
 
 import { AddToCart } from '@/model/add-to-cart-model';
 import { User } from '@/model/user-model';
-import { auth } from '@/auth';
+// import { auth } from '@/auth';
 // import { getUserByPhoneOrEmail } from './users';
 
 
 
 export const createAddToCart = async (addToCartData: any) => {
-
+//  console.log("in createAddToCart addToCartData",addToCartData);
+ 
   try {
-    const session = await auth();
-    if(!session?.user){
-      return {
-        status: 500,
-        message: `User Not Authenticate`,
-      };
-      // redirect("/login")
-    }
-    // session user added to addToCartData
-    addToCartData["user"] = session.user.id;
+    // const session = await auth();
+    // if(!session?.user){
+    //   return {
+    //     status: 500,
+    //     message: `User Not Authenticate`,
+    //   };
+    //   // redirect("/login")
+    // }
+    // // session user added to addToCartData
+    // addToCartData["user"] = session.user.id;
     
     // console.log('addToCartData', addToCartData);
       
-    const {  quantity, ...rest} = addToCartData;
+    const {  quantity, ...queryData} = addToCartData;
 
-    const queryData = {user:session.user.id, ...rest}
+    // const queryData = {user:session.user.id, ...rest}
     // console.log('queryData ', queryData);
 
     const cartItem = await AddToCart.findOne(queryData);

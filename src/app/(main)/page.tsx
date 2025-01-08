@@ -33,7 +33,7 @@ async function PageHome() {
   // const userData = await getUserByPhoneOrEmail({phone: '01866188330'});
   // console.log("userData ",userData);
 
-  console.log("PageHome session ",session);
+  // console.log("PageHome session ",session);
   
 
 

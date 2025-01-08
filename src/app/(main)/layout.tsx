@@ -1,15 +1,14 @@
 import HeaderLogged from '@/components/Header/HeaderLogged';
 import Footer from '@/shared/Footer/Footer';
 import { ReactNode } from 'react';
-import { SessionProvider } from 'next-auth/react';
+
 function MainLayout({ children }: { children: ReactNode }) {
   return (
     <div>
-      <SessionProvider>
-        <HeaderLogged />
+      <HeaderLogged />
 
-        {children}
-      </SessionProvider>
+      {children}
+
       <Footer />
     </div>
   );

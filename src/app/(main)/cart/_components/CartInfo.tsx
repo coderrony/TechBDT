@@ -1,6 +1,6 @@
 'use client';
 import Prices from '@/components/Prices';
-import useAuth from '@/hooks/useAuth';
+
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import formatNumber from '@/utils/formatNumber';
 import Image from 'next/image';
@@ -9,18 +9,21 @@ import { FC } from 'react';
 import QuantityBtn from './QuantityBtn';
 import { NoSymbolIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { calculateCartTotal } from '@/utils/calculateCartTotal';
-import { deleteCart } from '@/queries/addToCart';
-// import useDebounce from '@/hooks/useDebounce';
+
+import useAuthData from '@/hooks/useAuthData';
+import LoadingIndicator from '@/components/LoadingIndicator';
+
 
 interface CartInfoProps {
   className?: string;
 }
 
 const CartInfo: FC<CartInfoProps> = () => {
-  const { userData, fetchMe } = useAuth() as any;
-  // console.log("userData ",userData);
+
+  const {authDataFetch:{authData,isFetchingAuthData},cartDelete:{handleRemoveFromCart}} = useAuthData() as any;
+  // console.log("authData ",authData);
   
-  const cartTotalAmount = calculateCartTotal(userData?.cart);
+  const cartTotalAmount = calculateCartTotal(authData?.cart);
 
   const renderStatusInstock = () => {
     return (
@@ -29,11 +32,6 @@ const CartInfo: FC<CartInfoProps> = () => {
         <span className='ml-1 leading-none'>In Stock</span>
       </div>
     );
-  };
-
-  const handleRemoveCart = async (cartId: string,userId:string) => {
-    const cart = await deleteCart(cartId,userId);
-    await fetchMe();
   };
 
 
@@ -175,7 +173,8 @@ const CartInfo: FC<CartInfoProps> = () => {
             {renderStatusInstock()}
 
             <button
-              onClick={() => handleRemoveCart(item._id.toString(),userData?.id)}
+               onClick={()=> handleRemoveFromCart(item._id.toString())}
+         
               className='relative z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm '>
               <span>Remove</span>
             </button>
@@ -185,10 +184,12 @@ const CartInfo: FC<CartInfoProps> = () => {
     );
   };
 
+  if(isFetchingAuthData)   return <LoadingIndicator />;
+
   return (
     <div className='flex flex-col lg:flex-row'>
       <div className='w-full lg:w-[60%] xl:w-[55%] divide-y divide-slate-200 dark:divide-slate-700 '>
-        {userData?.cart.map(renderProduct)}
+        {authData?.cart.map(renderProduct)}
       </div>
       <div className='border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:mx-16 2xl:mx-20 flex-shrink-0'></div>
       <div className='flex-1'>
@@ -244,13 +245,7 @@ const CartInfo: FC<CartInfoProps> = () => {
                 />
               </svg>
               Learn more 
-              {/* <a
-                target='_blank'
-                rel='noopener noreferrer'
-                href='##'
-                className='text-slate-900 dark:text-slate-200 underline font-medium'>
-                Taxes
-              </a> */}
+            
               <span>
                 {` `}and{` `}
               </span>

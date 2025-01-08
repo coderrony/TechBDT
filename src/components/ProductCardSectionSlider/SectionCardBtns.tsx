@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import ButtonSecondary from '@/shared/Button/ButtonSecondary';
-// import { ProductRole, ProductType } from '@/types/ProductTypes';
 
 import { ArrowsPointingOutIcon } from '@heroicons/react/24/outline';
 import Prices from '../Prices';
@@ -14,10 +13,9 @@ import BagIcon from '../BagIcon';
 import ModalQuickView from '../ModalQuickView';
 import { ProductType } from '@/types/ProductTypes';
 import LoadingIndicator from '../LoadingIndicator';
-import { createAddToCart } from '@/queries/addToCart';
-import { useSession } from 'next-auth/react';
+
 import { notify_duration } from '@/data/defaultValue';
-import useAuth from '@/hooks/useAuth';
+import useAuthData from '@/hooks/useAuthData';
 
 interface SectionCardBtnsProps {
   className?: string;
@@ -30,12 +28,13 @@ interface NotifyType {
 }
 
 const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
-  const {fetchMe} = useAuth()
+  const {
+    cartAdd: { isAdding, handleAddToCart, isAddError },
+    authDataFetch: { authData },
+  } = useAuthData() as any;
   const router = useRouter();
   const [showModalQuickView, setShowModalQuickView] = useState(false);
-    // const { data: session } = useSession();
-    // console.log("CartDropdown session",session);
-  const [isPending, startTransition] = useTransition();
+
   const {
     name,
     price,
@@ -46,16 +45,15 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
     slug,
     product_role,
   } = data;
-//  console.log("SectionCardBtns data",data);
+  //  console.log("SectionCardBtns data",data);
 
- const addToCartData:any = {
-  product:id,quantity:1
- }
+  const addToCartData: any = {
+    product: id,
+    quantity: 1,
+  };
 
-
-  const handleAddToCart = async () => {
-
-    startTransition(async () => {
+  const addToCartHandle = () => {
+    if (authData) {
       let sizeColorNotifyTost: NotifyType = {
         size: '',
         color: '',
@@ -68,24 +66,35 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
         addToCartData['color'] = colors[0];
         sizeColorNotifyTost['color'] = colors[0];
       }
-
-     const cartRes =  await createAddToCart(addToCartData) as any;
-  
-    
-     if(cartRes.status === 200){ 
-       notifyAddTocart(sizeColorNotifyTost,cartRes.message)
-       fetchMe()
-     }
-
-     if(cartRes.status === 500){
-      router.push("/login")
+      handleAddToCart(addToCartData);
+      notifyAddTocart(sizeColorNotifyTost, 'ADD TO CART');
+    } else {
+      toast.custom(
+        t => (
+          <Transition
+            appear
+            show={t.visible}
+            className='p-4 max-w-md w-full bg-white dark:bg-slate-800 shadow-lg rounded-2xl pointer-events-auto ring-1 ring-black/5 dark:ring-white/10 text-slate-900 dark:text-slate-200'
+            enter='transition-all duration-150'
+            enterFrom='opacity-0 translate-x-20'
+            enterTo='opacity-100 translate-x-0'
+            leave='transition-all duration-150'
+            leaveFrom='opacity-100 translate-x-0'
+            leaveTo='opacity-0 translate-x-20'>
+            <p className='block text-base text-red-500 text-center font-semibold leading-none'>
+              Please login to your account first
+            </p>
+           
+          
+          </Transition>
+        ),
+        
+      );
+      router.push('/login');
     }
- 
-  
-    })
-  }
+  };
 
-  const notifyAddTocart = (item: NotifyType,message:string) => {
+  const notifyAddTocart = (item: NotifyType, message: string) => {
     toast.custom(
       t => (
         <Transition
@@ -178,7 +187,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
           fontSize='text-xs'
           sizeClass='py-2 px-4'
           disabled={product_role !== 'active'}
-          onClick={handleAddToCart}>
+          onClick={addToCartHandle}>
           <BagIcon className='w-3.5 h-3.5 mb-0.5' />
           <span className='ms-1'>Add to Cart</span>
         </ButtonPrimary>
@@ -197,8 +206,12 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
   const loadingIndicator = () => {
     return <LoadingIndicator />;
   };
-  if(isPending) return loadingIndicator();
 
+  if (isAddError) {
+    router.push('/login');
+  }
+
+  if (isAdding) return loadingIndicator();
 
   return (
     <>

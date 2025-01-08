@@ -8,11 +8,12 @@ import SwitchDarkMode from '@/shared/SwitchDarkMode/SwitchDarkMode';
 import Image from 'next/image';
 import {signOut } from 'next-auth/react';
 
-import useAuth from '@/hooks/useAuth';
+import useAuthData from '@/hooks/useAuthData';
 
 export default function AvatarDropdown() {
-  const {userData} = useAuth() as any;
-// console.log("AvatarDropdown userData ",userData);
+
+  const {authDataFetch:{authData}} = useAuthData() as any;
+// console.log("AvatarDropdown authData ",authData);
 
   return (
     <div className='AvatarDropdown '>
@@ -54,18 +55,18 @@ export default function AvatarDropdown() {
                 <div className='overflow-hidden rounded-3xl shadow-lg ring-1 ring-black ring-opacity-5'>
                   <div className='relative grid grid-cols-1 gap-6 bg-white dark:bg-neutral-800 py-7 px-6'>
                     {/* avatar */}
-                    {userData && (
+                    {authData && (
                       <>
                         <div className='flex items-center space-x-3'>
                           <Image
-                            src={userData?.profilePicture}
+                            src={authData?.profilePicture}
                             width={50}
                             height={50}
                             alt='avatar'
                           />
                           <div className='flex-grow'>
                             <h4 className='font-semibold'>
-                              {userData?.full_name}
+                              {authData?.full_name}
                             </h4>
                             <p className='text-xs mt-0.5'>Elite Member</p>
                           </div>
@@ -75,7 +76,7 @@ export default function AvatarDropdown() {
                     )}
 
                     {/* ------------------ account --------------------- */}
-                    {userData && (
+                    {authData && (
                       <Link
                         href={'/account'}
                         className='flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50'
@@ -110,7 +111,7 @@ export default function AvatarDropdown() {
                     )}
 
                     {/* ------------------ checkout --------------------- */}
-                    {userData && (
+                    {authData && (
                       <>
                         <Link
                           href={'/checkout'}
@@ -267,7 +268,7 @@ export default function AvatarDropdown() {
 
                     {/* ------------------ 2 --------------------- */}
                     <Link
-                      href={userData ? '#' : '/login'}
+                      href={authData ? '#' : '/login'}
                       className='flex items-center p-2 -m-3 transition duration-150 ease-in-out rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50'
                       onClick={() => close()}>
                       <div className='flex items-center justify-center flex-shrink-0 text-neutral-500 dark:text-neutral-300'>
@@ -302,7 +303,7 @@ export default function AvatarDropdown() {
                       </div>
                       <div className='ml-4'>
                         {/* <p className="text-sm font-medium ">{"Log out"}</p> */}
-                        {userData ? (
+                        {authData ? (
                           <button
                             className='text-sm font-medium'
                             onClick={() =>

@@ -1,53 +1,49 @@
 "use client"
 import { getUserById } from "@/queries/users";
 import { useSession } from "next-auth/react";
-
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-// import { getUserByPhoneOrEmail } from "@/queries/users";
 
 
-import { createGlobalState } from "react-hooks-global-state";
 
-// Create global state
-const { useGlobalState, setGlobalState } = createGlobalState({
-  userData:null, // Holds user data
-});
-
-
- const useAuth = () => {
-  const [userData] = useGlobalState("userData"); // Access global state
+const useAuth = () => {
   const { data: session } = useSession();
- 
-  console.log("useAuth userData", userData);
-  console.log("session", session);
-  
-  async function fetchMe() {
-    try {
 
-      if(session?.user?.id) {
-        const result = await getUserById(session?.user?.id);
-        console.log("result ",result);
-        if (result.status === 200) {
-          // setLoggedInUser(data.user);
-          setGlobalState("userData", result?.user);
-        }
-      }
-    
+  // Fetch user data using React Query
+  // const { data: userData, isLoading, error, refetch:fetchMe } = useQuery({
+  //   queryKey: ["user", session?.user?.id], // Query key
+  //   queryFn: async () => {
+  //     if (session?.user?.id){ 
+  //       const result = await getUserById(session.user.id);
+
+  //       if (result.status === 200) {
+  //         return result.user; // Return user data
+  //       } else {
+  //         throw new Error("Failed to fetch user data");
+  //       }
+  //     }
      
-    } catch (err: any) {
-      console.log( `Error in useAuth hook: ${err.message}`); 
-      
-      throw new Error(err.message)
-    }
-  }
+  //   },
+  //   enabled: !!session?.user?.id, // Only fetch when user ID exists
+  //   staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+  //   retry: 1, // Retry once if the query fails
+ 
+  // });
 
-    useEffect(() => {
-      if (session?.user) {
-        fetchMe();
-      }
-    }, [session?.user]);
+  // Re-fetch user data when session changes
+  // useEffect(() => {
+  //   if (session?.user?.id) {
+  //     fetchMe();
+  //   }
+  // }, [session?.user?.id, fetchMe]);
 
-    return { userData,fetchMe };
+
+
+  // console.log("userData ",userData);
+  // console.log("session ",session);
+  
+  
+  return { userData:null,  fetchMe:()=> {} };
 };
 
 export default useAuth;
