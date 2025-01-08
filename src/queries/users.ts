@@ -65,7 +65,9 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function getUserById(id: string) {
+
   try {
+    await connectDB();
     const user = (await User.findById(id)
     .populate({
       path: 'cart',
@@ -207,7 +209,7 @@ export async function accountRegistration(formData: any) {
 
 export async function updateAccount(formData: any) {
   // console.log('updateAccount ', formData);
-
+  await connectDB();
   const full_name = formData.get('full_name') as string;
   const phone = formData.get('phone') as string;
   const avatar = formData.get('avatar') as File;

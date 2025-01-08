@@ -1,7 +1,10 @@
 {
   "functions": {
     "src/app/api/*": {
-      "maxDuration": 30
+      "maxDuration": 60
+    },
+    "src/queries/*": {
+      "maxDuration": 60
     }
   }
 }
