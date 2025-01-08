@@ -2,7 +2,7 @@
 
 import { AddToCart } from '@/model/add-to-cart-model';
 import { User } from '@/model/user-model';
-import { connectDB } from '@/services/mongo';
+
 // import { auth } from '@/auth';
 // import { getUserByPhoneOrEmail } from './users';
 
@@ -12,19 +12,7 @@ export const createAddToCart = async (addToCartData: any) => {
 //  console.log("in createAddToCart addToCartData",addToCartData);
  
   try {
-    // const session = await auth();
-    // if(!session?.user){
-    //   return {
-    //     status: 500,
-    //     message: `User Not Authenticate`,
-    //   };
-    //   // redirect("/login")
-    // }
-    // // session user added to addToCartData
-    // addToCartData["user"] = session.user.id;
-    
-    // console.log('addToCartData', addToCartData);
-      await connectDB();
+ 
     const {  quantity, ...queryData} = addToCartData;
 
     // const queryData = {user:session.user.id, ...rest}
@@ -67,7 +55,7 @@ export const createAddToCart = async (addToCartData: any) => {
 
 export const deleteCart = async (cartId: string, userId: string) => {
   try {
-    await connectDB();
+
     // Delete the cart from the AddToCart collection
     const cart = await AddToCart.findByIdAndDelete(cartId);
     if (!cart) {
@@ -101,7 +89,7 @@ export const deleteCart = async (cartId: string, userId: string) => {
 
 export const updateCart = async (cartId: string, quantity: number) => {
   try {
-    await connectDB();
+
     const cartItem = await AddToCart.findById(cartId);
     if (cartItem) {
       cartItem.quantity = quantity;

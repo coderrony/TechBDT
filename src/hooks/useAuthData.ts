@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createAddToCart, deleteCart, updateCart } from '@/queries/addToCart';
 import { queryClient } from '@/lib/react-query';
+import { connectDB } from '@/services/mongo';
 
 const useAuthData = () => {
   const { data: session } = useSession();
@@ -18,6 +19,7 @@ const useAuthData = () => {
     queryKey: ['user', session?.user?.id], // Query key
     queryFn: async () => {
       if (session?.user?.id) {
+        await connectDB()
         const result = await getUserById(session.user.id);
 
         if (result.status === 200) {
@@ -41,6 +43,7 @@ const useAuthData = () => {
     isSuccess: isAddSuccess,
   } = useMutation({
     mutationFn: async (addToCartData: any) => {
+      await connectDB()
       const result = await createAddToCart(addToCartData);
       console.log("result ",result);
       
@@ -75,6 +78,7 @@ const useAuthData = () => {
     reset,
   } = useMutation({
     mutationFn: async ({ cartId, userId }: { cartId: string; userId: string }) => {
+      await connectDB()
       const result = await deleteCart(cartId, userId);
       if (result.status !== 200) {
         throw new Error(result.message);
@@ -103,6 +107,7 @@ const useAuthData = () => {
       isSuccess: isUpdateSuccess,
     } = useMutation({
       mutationFn: async ({ cartId, quantity }: { cartId: string; quantity: number }) => {
+        await connectDB()
         const result = await updateCart(cartId, quantity);
         if (result.status !== 200) {
           throw new Error(result.message);
