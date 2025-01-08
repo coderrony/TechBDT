@@ -2,9 +2,7 @@
   "functions": {
     "src/app/api/*": {
       "maxDuration": 60
-    },
-    "src/queries/*": {
-      "maxDuration": 60
     }
+   
   }
 }
