@@ -22,10 +22,12 @@ import Link from 'next/link';
 
 import ProductStatus from './ProductStatus';
 import { ProductType } from '@/types/ProductTypes';
-import { createAddToCart } from '@/queries/addToCart';
-import { notFound } from 'next/navigation';
-import useAuth from '@/hooks/useAuth';
+// import { createAddToCart } from '@/queries/addToCart';
+import { notFound, useRouter } from 'next/navigation';
+// import useAuth from '@/hooks/useAuth';
 import LoadingIndicator from './LoadingIndicator';
+import useCart from '@/hooks/useCart';
+import { useSession } from 'next-auth/react';
 
 export interface ProductQuickViewProps {
   className?: string;
@@ -51,22 +53,24 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({
     images_gallery,
     product_role,
   } = data;
-
+const { data: session } = useSession();
   const rating = reviews?.reduce((sum, item) => sum + item.rating, 0);
   const numberOfReviews = reviews?.length;
   const [isPending, startTransition] = useTransition();
   const [sizeSelected, setSizeSelected] = useState(sizes ? sizes[0] : '');
   const [colorSelected, setColorSelected] = useState(colors ? colors[0] : '');
   const [qualitySelected, setQualitySelected] = useState(1);
+  const router = useRouter()
   const inactiveProduct = product_role === 'inactive';
-  const { fetchMe } = useAuth();
+  const { cartAdd:{handleAddToCart} } = useCart();
   const addToCartData: any = {
     product: id,
     quantity: qualitySelected,
   };
 
+
   const handleAddTOCart = async () => {
-    startTransition(async () => {
+    if (session?.user) {
       if (sizeSelected !== '') {
         addToCartData['size'] = sizeSelected;
       }
@@ -74,18 +78,14 @@ const ProductQuickView: FC<ProductQuickViewProps> = ({
       if (colorSelected !== '') {
         addToCartData['color'] = colorSelected;
       }
-      const cartRes = (await createAddToCart(addToCartData)) as any;
-      // console.log("cartRes ",cartRes);
-      if (cartRes.status === 500) {
-        notFound();
-      }
-      if (cartRes.status === 200) {
-        fetchMe();
-        notifyAddTocart(cartRes.message);
-      }
-    });
-  };
 
+      handleAddToCart(addToCartData);
+      notifyAddTocart('ADD TO CART');
+    }else{ 
+      router.push("/login")
+    }
+ 
+  };
   const notifyAddTocart = (title: string) => {
     toast.custom(
       t => (
