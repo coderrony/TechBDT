@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { otpRequestProcess } from '@/queries/users';
 import { otpSend } from '@/queries/otp-send';
 import { notify_duration } from '@/data/defaultValue';
+import axios from 'axios';
 
 interface SignupProps {
   className?: string;
@@ -42,39 +43,48 @@ const Signup: FC<SignupProps> = () => {
 
   const handleSignup = async (event: any) => {
     setUserData(event);
-
+   console.log("event ",event);
+   
     startTransition(async () => {
       try {
-
-        const result = (await otpRequestProcess(event.phone, true)) as any;
        
-        if (result.status === 400) {
-          notifyToast(true, 'Error', result?.message);
+        const result = await axios.get(`/api/otp-send`, { params: { phone:event.phone,isRegistration:true } }) as any;
+        // const result = (await otpRequestProcess(event.phone, true)) as any;
+      
+        console.log("result ",result?.data);
+        
+       
+        if (result?.data.status === 400) {
+          notifyToast(true, 'Error', result?.data?.message);
           setError('phone', {
             type: 'manual',
             message: 'phone number already exists.',
           });
         }
-        if (result.status === 500) {
-          notifyToast(true, 'Error', result?.message);
+        if (result?.data.status === 500) {
+          notifyToast(true, 'Error', result?.data?.message);
         }
-        if (result.status === 200) {
+        if (result?.data.status === 200) {
        
-          await otpSend(event.phone, result.otp);
+          await otpSend(event.phone, result?.data.otp);
           setVerificationOTP(true);
-          setOtp(result.otp);
+          setOtp(result?.data.otp);
           notifyToast(
             false,
             'OTP Verification',
-            `${result?.message} To ${event.phone}`,
+            `${result?.data?.message} To ${event.phone}`,
           );
-    
         }
+
+
       } catch (err: any) {
         notifyToast(true, 'Error', err.message); 
       }
     });
   };
+
+
+
 
   const loadingIndicator = () => {
     return <LoadingIndicator />;

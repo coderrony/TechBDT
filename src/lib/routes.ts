@@ -13,9 +13,9 @@ export const PUBLIC_ROUTES = [
   '/forgot-pass',
   '/not-found',
   '/api/auth/',
-  '/api/send-otp',
-  '/api/verify-otp',
-  '/api/forgot-otp-verify',
+  '/api/otp-send',
+  // '/api/verify-otp',
+  // '/api/forgot-otp-verify',
 //  '/auth/callback', // when login with any provider auto redirect to that api and handle cookies
 ]
 
