@@ -54,27 +54,27 @@ const Signup: FC<SignupProps> = () => {
         console.log("result ",result?.data);
         
        
-        if (result?.data.status === 400) {
-          notifyToast(true, 'Error', result?.data?.message);
-          setError('phone', {
-            type: 'manual',
-            message: 'phone number already exists.',
-          });
-        }
-        if (result?.data.status === 500) {
-          notifyToast(true, 'Error', result?.data?.message);
-        }
-        if (result?.data.status === 200) {
+        // if (result?.data.status === 400) {
+        //   notifyToast(true, 'Error', result?.data?.message);
+        //   setError('phone', {
+        //     type: 'manual',
+        //     message: 'phone number already exists.',
+        //   });
+        // }
+        // if (result?.data.status === 500) {
+        //   notifyToast(true, 'Error', result?.data?.message);
+        // }
+        // if (result?.data.status === 200) {
        
-          await otpSend(event.phone, result?.data.otp);
-          setVerificationOTP(true);
-          setOtp(result?.data.otp);
-          notifyToast(
-            false,
-            'OTP Verification',
-            `${result?.data?.message} To ${event.phone}`,
-          );
-        }
+        //   await otpSend(event.phone, result?.data.otp);
+        //   setVerificationOTP(true);
+        //   setOtp(result?.data.otp);
+        //   notifyToast(
+        //     false,
+        //     'OTP Verification',
+        //     `${result?.data?.message} To ${event.phone}`,
+        //   );
+        // }
 
 
       } catch (err: any) {
