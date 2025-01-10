@@ -24,8 +24,8 @@ const productSchema = new Schema(
     },
 
     dropShop: { type: Schema.ObjectId, ref: 'DropShop', require: true },
-    category: { type: Schema.ObjectId, ref: 'Category', default: null },
-    sub_category: { type: Schema.ObjectId, ref: 'SubCategory', default: null },
+    category: {  type: String, default: null },
+    sub_category: {  type: String, default: null },
     stock: {
       type: Number,
       default: 0,

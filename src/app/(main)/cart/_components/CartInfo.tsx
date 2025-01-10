@@ -10,8 +10,9 @@ import QuantityBtn from './QuantityBtn';
 import { NoSymbolIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { calculateCartTotal } from '@/utils/calculateCartTotal';
 
-import useAuthData from '@/hooks/useAuthData';
+// import useAuthData from '@/hooks/useAuthData';
 import LoadingIndicator from '@/components/LoadingIndicator';
+import useCart from '@/hooks/useCart';
 
 
 interface CartInfoProps {
@@ -20,10 +21,11 @@ interface CartInfoProps {
 
 const CartInfo: FC<CartInfoProps> = () => {
 
-  const {authDataFetch:{authData,isFetchingAuthData},cartDelete:{handleRemoveFromCart}} = useAuthData() as any;
-  // console.log("authData ",authData);
+  // const {authDataFetch:{authData,isFetchingAuthData},cartDelete:{handleRemoveFromCart}} = useAuthData() as any;
+  const {cartDataFetch:{cartData,isFetchingCart},cartDelete:{handleRemoveFromCart,isRemoving}} = useCart() as any;
+  // console.log("cartData ",cartData);
   
-  const cartTotalAmount = calculateCartTotal(authData?.cart);
+  const cartTotalAmount = calculateCartTotal(cartData?.products);
 
   const renderStatusInstock = () => {
     return (
@@ -171,25 +173,25 @@ const CartInfo: FC<CartInfoProps> = () => {
 
           <div className='flex mt-auto pt-4 items-end justify-between text-sm'>
             {renderStatusInstock()}
-
-            <button
+           {isRemoving ? <LoadingIndicator/> :    <button
                onClick={()=> handleRemoveFromCart(item._id.toString())}
          
               className='relative z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm '>
               <span>Remove</span>
-            </button>
+            </button>}
+         
           </div>
         </div>
       </div>
     );
   };
 
-  if(isFetchingAuthData)   return <LoadingIndicator />;
+  if(isFetchingCart)   return <LoadingIndicator />;
 
   return (
     <div className='flex flex-col lg:flex-row'>
       <div className='w-full lg:w-[60%] xl:w-[55%] divide-y divide-slate-200 dark:divide-slate-700 '>
-        {authData?.cart.map(renderProduct)}
+        {cartData?.products.map(renderProduct)}
       </div>
       <div className='border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:mx-16 2xl:mx-20 flex-shrink-0'></div>
       <div className='flex-1'>

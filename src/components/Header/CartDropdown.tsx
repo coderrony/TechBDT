@@ -14,20 +14,24 @@ import Link from "next/link";
 import { calculateCartTotal } from "@/utils/calculateCartTotal";
 import formatNumber from "@/utils/formatNumber";
 
-import useAuthData from "@/hooks/useAuthData";
+// import useAuthData from "@/hooks/useAuthData";
 import LoadingIndicator from "../LoadingIndicator";
+import useCart from "@/hooks/useCart";
 
 export default function CartDropdown() {
 
   
-  const {authDataFetch:{authData,isFetchingAuthData},cartDelete} = useAuthData() as any;
- 
+  // const {authDataFetch:{authData,isFetchingAuthData},cartDelete} = useAuthData() as any;
+  const {cartDataFetch:{cartData},cartDelete:{handleRemoveFromCart,isRemoving}} = useCart() as any;
+  
+  // console.log("cartData ",cartData);
+  
   // console.log("CartDropdown ",userData);
   // console.log("authData ",authData);
   
-  if(isFetchingAuthData)   return <LoadingIndicator />;
+  // if(isFetchingCart)   return <LoadingIndicator />;
 
-  const cartTotalAmount = calculateCartTotal(authData?.cart)
+  const cartTotalAmount = calculateCartTotal(cartData?.products)
 
 
 
@@ -74,14 +78,15 @@ export default function CartDropdown() {
             <p className="text-gray-500 dark:text-slate-400">{`Qty ${item.quantity}`}</p>
 
             <div className="flex">
-              <button
+            {isRemoving ? <LoadingIndicator/> :      <button
                 type="button"
                 className="font-medium text-primary-6000 dark:text-primary-500 "
                 // onClick={()=> handleRemoveCart(item._id.toString(),authData?.id)}
-                onClick={()=> cartDelete.handleRemoveFromCart(item._id.toString())}
+                onClick={()=> handleRemoveFromCart(item._id.toString())}
               >
                 Remove
-              </button>
+              </button>}
+         
             </div>
           </div>
         </div>
@@ -100,7 +105,7 @@ export default function CartDropdown() {
                  group w-10 h-10 sm:w-12 sm:h-12 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 relative`}
           >
             <div className="w-3.5 h-3.5 flex items-center justify-center bg-primary-500 absolute top-1.5 right-1.5 rounded-full text-[10px] leading-none text-white font-medium">
-              <span className="mt-[1px]">{authData?.cart?.length || 0}</span>
+              <span className="mt-[1px]">{cartData?.products?.length || 0}</span>
             </div>
             <svg
               className="w-6 h-6"
@@ -159,7 +164,7 @@ export default function CartDropdown() {
                   <div className="max-h-[60vh] p-5 overflow-y-auto hiddenScrollbar">
                     <h3 className="text-xl font-semibold">Shopping cart</h3>
                     <div className="divide-y divide-slate-100 dark:divide-slate-700 ">
-                      {authData?.cart?.length > 0 && authData?.cart?.map((item:any) => renderProduct(item, item._id.toString(), close))}
+                      {cartData?.products?.length > 0 && cartData?.products?.map((item:any) => renderProduct(item, item._id.toString(), close))}
                     </div>
                   </div>
                   <div className="bg-neutral-50 dark:bg-slate-900 p-5">

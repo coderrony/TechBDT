@@ -261,9 +261,6 @@ export async function updateAccount(formData: any) {
     mobile:payload.additional_mobile,
   };
 
-  // if (payload.additional_mobile.length > 0) {
-  //   user_address['mobile'] = payload.additional_mobile;
-  // }
 
   // Step 4: Check if address already exists for the user
   const existingAddress = await Address.findOne({ user: user_id });

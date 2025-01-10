@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createAddToCart, deleteCart, updateCart } from '@/queries/addToCart';
 import { queryClient } from '@/lib/react-query';
-
+import axios from 'axios';
 
 const useAuthData = () => {
   const { data: session } = useSession();
@@ -20,10 +20,11 @@ const useAuthData = () => {
     queryFn: async () => {
       if (session?.user?.id) {
     
-        const result = await getUserById(session.user.id);
-
+        const result = await axios.get(`/api/user-api`, { params: { id: session?.user?.id } }) as any;
+        // console.log("result ",result);
+        
         if (result.status === 200) {
-          return result.user; // Return user data
+          return result.data.user; // Access user data from result.data
         } else {
           throw new Error('Failed to fetch user data');
         }
@@ -43,8 +44,9 @@ const useAuthData = () => {
     isSuccess: isAddSuccess,
   } = useMutation({
     mutationFn: async (addToCartData: any) => {
-   
-      const result = await createAddToCart(addToCartData);
+     console.log("addToCartData ",addToCartData);
+     
+      const result =  await axios.post('/api/add-to-cart', addToCartData) as any ;
       console.log("result ",result);
       
       if (result.status !== 200) {

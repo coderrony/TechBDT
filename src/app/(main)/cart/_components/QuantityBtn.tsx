@@ -1,7 +1,8 @@
 'use client';
 
 import NcInputNumber from '@/components/NcInputNumber';
-import useAuthData from '@/hooks/useAuthData';
+// import useAuthData from '@/hooks/useAuthData';
+import useCart from '@/hooks/useCart';
 import useDebounce from '@/hooks/useDebounce';
 
 
@@ -15,11 +16,12 @@ interface QuantityBtnProps {
 
 const QuantityBtn: FC<QuantityBtnProps> = ({ defaultValue = 1, cartId }) => {
 
-  const {cartUpdate:{handleUpdateToCart}} = useAuthData() as any;
+  // const {cartUpdate:{handleUpdateToCart}} = useAuthData() as any;
+  const {cartUpdate:{handleUpdateToCartQuantity}} = useCart() as any;
 
   const debounce = useDebounce(async value => {
     try {
-      const cart =  handleUpdateToCart(cartId, value);
+      const cart =  handleUpdateToCartQuantity(cartId, value);
    
       
     } catch (err: any) {

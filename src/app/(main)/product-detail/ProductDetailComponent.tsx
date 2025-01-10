@@ -1,7 +1,7 @@
 'use client';
 // import { Product } from '@/data/data';
-import { FC, useEffect, useState, useTransition } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { FC, useState } from 'react';
+import {  useRouter } from 'next/navigation';
 
 import formatNumber from '@/utils/formatNumber';
 import taka from '@/images/taka.png';
@@ -28,11 +28,12 @@ import ModalViewAllReviews from './ModalViewAllReviews';
 
 import ProductImageSlider from '@/components/ProductImageSlider';
 import { ProductType } from '@/types/ProductTypes';
-import { ReviewType } from '@/types/ReviewType';
-import { createAddToCart } from '@/queries/addToCart';
+
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { notify_duration } from '@/data/defaultValue';
-import useAuth from '@/hooks/useAuth';
+
+import useCart from '@/hooks/useCart';
+import { useSession } from 'next-auth/react';
 // import { replaceMongoIdInArray } from '@/lib/convertData';
 // import ProductImageSlider from '@/components/ProductImageSlider';
 
@@ -57,15 +58,16 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
     EN_content,
     reviews,
   } = productInfo;
-
-  const [isPending, startTransition] = useTransition();
+   const { data: session } = useSession();
+  const { cartAdd: { isAdding, handleAddToCart }} = useCart() as any;
+  // const [isPending, startTransition] = useTransition();
   const [sizeSelected, setSizeSelected] = useState(sizes ? sizes[0] : '');
   const [colorSelected, setColorSelected] = useState(colors ? colors[0] : '');
   const [qualitySelected, setQualitySelected] = useState(1);
   const [isOpenModalViewAllReviews, setIsOpenModalViewAllReviews] =
     useState(false);
 
-  const {fetchMe} = useAuth()
+  // const {fetchMe} = useAuth()
 
   const rating = reviews?.reduce((sum, item) => sum + item.rating, 0);
   const numberOfReviews = reviews?.length;
@@ -76,9 +78,8 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
     product:id,quantity:qualitySelected
    }
 
-  const handleAddTOCart = async ()=>{
-
-    startTransition(async()=>{
+  const handleCart = ()=>{
+    if(session?.user){ 
       if(sizeSelected !== ''){ 
         addToCartData['size'] = sizeSelected;
        }
@@ -86,18 +87,36 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
        if(colorSelected !== ''){ 
         addToCartData['color'] = colorSelected;
        }
-      const cartRes =   await createAddToCart(addToCartData) as any;
-      // console.log("cartRes ",cartRes);
-      if(cartRes.status === 500){
-        router.push("/login")
-      }
-      if(cartRes.status === 200){
-        fetchMe()
-        notifyAddTocart(cartRes.message)
-      }
-     
-    })
+       handleAddToCart(addToCartData);
+       notifyAddTocart("ADD TO CART")
+    }else{ 
+      router.push('/login')
+    }
+ 
   }
+
+  // const handleAddTOCart = async ()=>{
+
+  //   startTransition(async()=>{
+  //     if(sizeSelected !== ''){ 
+  //       addToCartData['size'] = sizeSelected;
+  //      }
+    
+  //      if(colorSelected !== ''){ 
+  //       addToCartData['color'] = colorSelected;
+  //      }
+  //     const cartRes =   await createAddToCart(addToCartData) as any;
+  //     // console.log("cartRes ",cartRes);
+  //     if(cartRes.status === 500){
+  //       router.push("/login")
+  //     }
+  //     if(cartRes.status === 200){
+  //       fetchMe()
+  //       notifyAddTocart(cartRes.message)
+  //     }
+     
+  //   })
+  // }
 
   const notifyAddTocart = (title :string) => {
     toast.custom(
@@ -289,11 +308,11 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
                 max={250} // stock quantity
               />
             </div>
-            {isPending ?  <div className='flex justify-center items-center w-full mx-auto'><LoadingIndicator /></div>
+            {isAdding ?  <div className='flex justify-center items-center w-full mx-auto'><LoadingIndicator /></div>
             : 
             <ButtonPrimary
               className='flex-1 flex-shrink-0'
-              onClick={handleAddTOCart}>
+              onClick={handleCart}>
               <BagIcon className='hidden sm:inline-block w-5 h-5 mb-0.5' />
               <span className='ml-3'>Add to cart</span>
             </ButtonPrimary>}

@@ -3,7 +3,7 @@ import { FC, useState, useTransition } from 'react';
 import toast from 'react-hot-toast';
 import { Transition } from '@/app/headlessui';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import ButtonSecondary from '@/shared/Button/ButtonSecondary';
 
@@ -16,6 +16,8 @@ import LoadingIndicator from '../LoadingIndicator';
 
 import { notify_duration } from '@/data/defaultValue';
 import useAuthData from '@/hooks/useAuthData';
+import useCart from '@/hooks/useCart';
+import { useSession } from 'next-auth/react';
 
 interface SectionCardBtnsProps {
   className?: string;
@@ -28,10 +30,12 @@ interface NotifyType {
 }
 
 const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
-  const {
-    cartAdd: { isAdding, handleAddToCart, isAddError },
-    authDataFetch: { authData },
-  } = useAuthData() as any;
+  // const {
+  //   cartAdd: { isAdding, handleAddToCart, isAddError },
+  //   authDataFetch: { authData },
+  // } = useAuthData() as any;
+ const { data: session } = useSession();
+  const { cartAdd: { isAdding, handleAddToCart, isAddError }} = useCart() as any;
   const router = useRouter();
   const [showModalQuickView, setShowModalQuickView] = useState(false);
 
@@ -45,6 +49,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
     slug,
     product_role,
   } = data;
+
   //  console.log("SectionCardBtns data",data);
 
   const addToCartData: any = {
@@ -53,7 +58,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
   };
 
   const addToCartHandle = () => {
-    if (authData) {
+    if (session?.user) {
       let sizeColorNotifyTost: NotifyType = {
         size: '',
         color: '',
@@ -82,7 +87,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
             leaveFrom='opacity-100 translate-x-0'
             leaveTo='opacity-0 translate-x-20'>
             <p className='block text-base text-red-500 text-center font-semibold leading-none'>
-              Please login to your account first
+              Somthing is Wrong!
             </p>
            
           
@@ -90,7 +95,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
         ),
         
       );
-      router.push('/login');
+     router.push("/login")
     }
   };
 

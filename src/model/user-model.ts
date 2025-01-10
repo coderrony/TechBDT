@@ -1,7 +1,6 @@
 import { default_avatar } from '@/data/defaultValue';
 import mongoose, { Schema } from 'mongoose';
 
-
 const userSchema = new Schema(
   {
     full_name: {
@@ -33,18 +32,19 @@ const userSchema = new Schema(
       default: default_avatar,
       type: String,
     },
-    // address: {
-    //   type: [
-    //     { type: Schema.Types.ObjectId, ref: "Address" }
-    //   ],
-    // },
-    address:{ type: Schema.Types.ObjectId, ref: "Address",default: null },
-    cart:{
+    address: {
       type: [
-         { type: Schema.Types.ObjectId, ref: 'AddToCart' }
-        ],
+        {
+          division: { type: String, required: true },
+          district: { type: String, required: true },
+          upzila: { type: String, required: true },
+          union: { type: String, required: true },
+          house: { type: String, required: true },
+          mobile: { type: [String], default: [] },
+        },
+      ],
+      default: [],
     },
-  
   },
   { timestamps: true },
 );

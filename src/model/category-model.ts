@@ -1,3 +1,4 @@
+import { default_category } from "@/data/defaultValue";
 import mongoose, { Schema } from "mongoose";
 
 const categorySchema = new Schema({
@@ -13,7 +14,7 @@ const categorySchema = new Schema({
     },
     image_url: {
         type: String,
-        default: 'https://res.cloudinary.com/dgobtxhjp/image/upload/v1734691085/sub_categories_dhwejf.png' 
+        default: default_category 
     },
     count: {
         type: Number,

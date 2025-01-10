@@ -32,9 +32,9 @@ export async function middleware(req: any) {
   }
 
   // can't access signup  ,login and forgot-pass page when authenticate
-  if(token && (nextUrl.pathname.startsWith(LOGIN) || nextUrl.pathname.startsWith(SIGNUP) || nextUrl.pathname.startsWith(FORGET_PASSWORD))){ 
-    return NextResponse.redirect(new URL(ROOT,nextUrl)); // Unauthorized page
-  }
+  // if(token && (nextUrl.pathname.startsWith(LOGIN) || nextUrl.pathname.startsWith(SIGNUP) || nextUrl.pathname.startsWith(FORGET_PASSWORD))){ 
+  //   return NextResponse.redirect(new URL(ROOT,nextUrl)); // Unauthorized page
+  // }
   // public access
   if(!token && !isPublicRoute && !nextUrl.pathname.startsWith(PRODUCT_DETAILS) ){ 
     return Response.redirect(new URL(LOGIN,nextUrl))
