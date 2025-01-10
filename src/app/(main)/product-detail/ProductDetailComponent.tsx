@@ -1,7 +1,7 @@
 'use client';
 // import { Product } from '@/data/data';
 import { FC, useState } from 'react';
-import {  useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import formatNumber from '@/utils/formatNumber';
 import taka from '@/images/taka.png';
@@ -23,7 +23,6 @@ import Policy from './Policy';
 import AccordionInfo from '@/components/AccordionInfo';
 import ReviewItem from '@/components/ReviewItem';
 
-
 import ModalViewAllReviews from './ModalViewAllReviews';
 
 import ProductImageSlider from '@/components/ProductImageSlider';
@@ -34,8 +33,6 @@ import { notify_duration } from '@/data/defaultValue';
 
 import useCart from '@/hooks/useCart';
 import { useSession } from 'next-auth/react';
-// import { replaceMongoIdInArray } from '@/lib/convertData';
-// import ProductImageSlider from '@/components/ProductImageSlider';
 
 interface ProductDetailComponentProps {
   className?: string;
@@ -58,9 +55,11 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
     EN_content,
     reviews,
   } = productInfo;
-   const { data: session } = useSession();
-  const { cartAdd: { isAdding, handleAddToCart }} = useCart() as any;
-  // const [isPending, startTransition] = useTransition();
+  const { data: session } = useSession();
+  const {
+    cartAdd: { isAdding, handleAddToCart },
+  } = useCart() as any;
+
   const [sizeSelected, setSizeSelected] = useState(sizes ? sizes[0] : '');
   const [colorSelected, setColorSelected] = useState(colors ? colors[0] : '');
   const [qualitySelected, setQualitySelected] = useState(1);
@@ -72,37 +71,37 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
   const rating = reviews?.reduce((sum, item) => sum + item.rating, 0);
   const numberOfReviews = reviews?.length;
   const displayedReviews = reviews.slice(0, Math.min(4, reviews.length));
-  const router = useRouter()
+  const router = useRouter();
 
-  const addToCartData:any = {
-    product:id,quantity:qualitySelected
-   }
+  const addToCartData: any = {
+    product: id,
+    quantity: qualitySelected,
+  };
 
-  const handleCart = ()=>{
-    if(session?.user){ 
-      if(sizeSelected !== ''){ 
+  const handleCart = () => {
+    if (session?.user) {
+      if (sizeSelected !== '') {
         addToCartData['size'] = sizeSelected;
-       }
-    
-       if(colorSelected !== ''){ 
+      }
+
+      if (colorSelected !== '') {
         addToCartData['color'] = colorSelected;
-       }
-       handleAddToCart(addToCartData);
-       notifyAddTocart("ADD TO CART")
-    }else{ 
-      router.push('/login')
+      }
+      handleAddToCart(addToCartData);
+      notifyAddTocart('ADD TO CART');
+    } else {
+      router.push('/login');
     }
- 
-  }
+  };
 
   // const handleAddTOCart = async ()=>{
 
   //   startTransition(async()=>{
-  //     if(sizeSelected !== ''){ 
+  //     if(sizeSelected !== ''){
   //       addToCartData['size'] = sizeSelected;
   //      }
-    
-  //      if(colorSelected !== ''){ 
+
+  //      if(colorSelected !== ''){
   //       addToCartData['color'] = colorSelected;
   //      }
   //     const cartRes =   await createAddToCart(addToCartData) as any;
@@ -114,11 +113,11 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
   //       fetchMe()
   //       notifyAddTocart(cartRes.message)
   //     }
-     
+
   //   })
   // }
 
-  const notifyAddTocart = (title :string) => {
+  const notifyAddTocart = (title: string) => {
     toast.custom(
       t => (
         <NotifyAddTocart
@@ -132,7 +131,11 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
           title={title}
         />
       ),
-      { position: 'top-right', id: 'nc-product-notify', duration: notify_duration },
+      {
+        position: 'top-right',
+        id: 'nc-product-notify',
+        duration: notify_duration,
+      },
     );
   };
 
@@ -308,15 +311,18 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
                 max={250} // stock quantity
               />
             </div>
-            {isAdding ?  <div className='flex justify-center items-center w-full mx-auto'><LoadingIndicator /></div>
-            : 
-            <ButtonPrimary
-              className='flex-1 flex-shrink-0'
-              onClick={handleCart}>
-              <BagIcon className='hidden sm:inline-block w-5 h-5 mb-0.5' />
-              <span className='ml-3'>Add to cart</span>
-            </ButtonPrimary>}
-          
+            {isAdding ? (
+              <div className='flex justify-center items-center w-full mx-auto'>
+                <LoadingIndicator />
+              </div>
+            ) : (
+              <ButtonPrimary
+                className='flex-1 flex-shrink-0'
+                onClick={handleCart}>
+                <BagIcon className='hidden sm:inline-block w-5 h-5 mb-0.5' />
+                <span className='ml-3'>Add to cart</span>
+              </ButtonPrimary>
+            )}
           </div>
 
           {/* SUM */}
@@ -400,7 +406,6 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
     );
   };
 
-
   const renderReviews = () => {
     return (
       <div id='reviews' className='scroll-mt-[150px]'>
@@ -417,7 +422,7 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
         <div className='mt-10'>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-y-11 gap-x-28'>
             {displayedReviews.length > 0 &&
-              displayedReviews.map((review: any,index) => (
+              displayedReviews.map((review: any, index) => (
                 <ReviewItem key={review._id.toString()} data={review} />
               ))}
           </div>
@@ -433,7 +438,6 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
       </div>
     );
   };
-
 
   return (
     <div className={`ListingDetailPage nc-ProductDetailPage2`}>
@@ -460,8 +464,6 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
         <hr className='border-slate-200 dark:border-slate-700' />
 
         {renderReviews()}
-
-  
       </div>
 
       {/* MODAL VIEW ALL REVIEW */}

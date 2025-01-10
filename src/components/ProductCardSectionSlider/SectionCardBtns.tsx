@@ -30,10 +30,7 @@ interface NotifyType {
 }
 
 const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
-  // const {
-  //   cartAdd: { isAdding, handleAddToCart, isAddError },
-  //   authDataFetch: { authData },
-  // } = useAuthData() as any;
+
  const { data: session } = useSession();
   const { cartAdd: { isAdding, handleAddToCart, isAddError }} = useCart() as any;
   const router = useRouter();

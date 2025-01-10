@@ -13,7 +13,7 @@ import Input from '@/shared/Input/Input';
 import Textarea from '@/shared/Textarea/Textarea';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Image from 'next/image';
-import useAuth from '@/hooks/useAuth';
+// import useAuth from '@/hooks/useAuth';
 import SelectValue from '@/components/SelectValue';
 import { divisionsData } from '../_data/divisions';
 import {
@@ -33,6 +33,7 @@ import { delay } from '@/utils/delay';
 import { otpRequestProcess, updateAccount } from '@/queries/users';
 import { useRouter } from 'next/navigation';
 import { otpSend } from '@/queries/otp-send';
+import useAuthData from '@/hooks/useAuthData';
 
 interface AccountInfoProps {
   className?: string;
@@ -54,7 +55,10 @@ type FormValues = {
 
 const AccountInfo: FC<AccountInfoProps> = () => {
   const [preview, setPreview] = useState<string | null>(null);
-  const { userData, fetchMe } = useAuth() as any;
+  const { authDataFetch:{authData}, fetchMe } = useAuthData() as any;
+
+  console.log("authData ",authData);
+  
 
   const [divisions, setDivisions] = useState<DivisionType[]>([]);
   const [selectedDivision, setSelectedDivision] = useState<string>('');
@@ -74,8 +78,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
   const [formInfo, setFormInfo] = useState<null | FormData>(null);
   const router = useRouter()
 
-  // console.log("userData ",userData);
-  // console.log("selectedDivision ",selectedDivision);
+
   const {
     register,
     handleSubmit,
@@ -178,8 +181,8 @@ const AccountInfo: FC<AccountInfoProps> = () => {
   
   // first time load divisions
   useEffect(() => {
-    if (userData?.address?.mobile?.length > 0) {
-      userData?.address?.mobile.forEach((mobile: string) =>
+    if (authData?.address?.mobile?.length > 0) {
+      authData?.address?.mobile.forEach((mobile: string) =>
         appendAdditionalMobile({ value: mobile }),
       );
     }
@@ -187,10 +190,10 @@ const AccountInfo: FC<AccountInfoProps> = () => {
     const loadDivisions = () => {
       // console.log('render 2');
       setDivisions(divisionsData);
-      const division_selected = userData?.address?.division;
-      const district_selected = userData?.address?.district;
-      const upzila_selected = userData?.address?.upzila;
-      const union_selected = userData?.address?.union;
+      const division_selected = authData?.address?.division;
+      const district_selected = authData?.address?.district;
+      const upzila_selected = authData?.address?.upzila;
+      const union_selected = authData?.address?.union;
 
       if (division_selected) {
         const divisionId = divisionsData.find(
@@ -223,8 +226,8 @@ const AccountInfo: FC<AccountInfoProps> = () => {
     };
 
     loadDivisions();
-  }, [JSON.stringify(userData?.address)]);
-  // [JSON.stringify(userData?.address)]
+  }, [JSON.stringify(authData?.address)]);
+ 
   const onSubmit = (data: any) => {
 
     const formData = new FormData();
@@ -233,7 +236,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
         (item: any) => item.value,
       ),
     };
-    formData.append('user_id', userData?.id);
+    formData.append('user_id', authData?.id);
     if(data.avatar.length > 0){ 
       formData.append('avatar', data.avatar[0]);
     }
@@ -386,7 +389,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
               {/* AVATAR */}
               <div className='relative rounded-full overflow-hidden flex'>
                 <Image
-                  src={preview ?? userData?.profilePicture ?? default_avatar}
+                  src={preview ?? authData?.profilePicture ?? default_avatar}
                   alt='avatar'
                   width={128}
                   height={128}
@@ -426,7 +429,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
                 <Input
                   type='text'
                   className='mt-1.5'
-                  defaultValue={userData?.full_name}
+                  defaultValue={authData?.full_name}
                   {...register('full_name', {
                     required: 'Full Name Field is Required!',
                     minLength: {
@@ -451,11 +454,11 @@ const AccountInfo: FC<AccountInfoProps> = () => {
                   <span className='inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm'>
                     <i className='text-2xl las la-phone-volume'></i>
                   </span>
-                  {userData?.phone ? (
+                  {authData?.phone ? (
                     <Input
                       type='number'
                       className='!rounded-l-none'
-                      defaultValue={userData?.phone}
+                      defaultValue={authData?.phone}
                       disabled={true}
                     />
                   ) : (
@@ -655,7 +658,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
                 <Label>Address</Label>
                 <Textarea
                   className='mt-1.5'
-                  defaultValue={userData?.address?.address}
+                  defaultValue={authData?.address?.address}
                   {...register('address', {
                     required: 'Address Field is Required!',
                   })}

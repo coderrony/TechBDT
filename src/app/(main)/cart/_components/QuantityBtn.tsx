@@ -27,7 +27,7 @@ const QuantityBtn: FC<QuantityBtnProps> = ({ defaultValue = 1, cartId }) => {
     } catch (err: any) {
       throw new Error(err.message);
     }
-  }, 500);
+  }, 300);
 
   return <NcInputNumber defaultValue={defaultValue} debounce={debounce} />;
 };

@@ -1,114 +1,114 @@
-'use server';
+// 'use server';
 
-import { AddToCart } from '@/model/add-to-cart-model';
-import { User } from '@/model/user-model';
-import { connectDB } from '@/services/mongo';
+// import { AddToCart } from '@/model/add-to-cart-model';
+// import { User } from '@/model/user-model';
+// import { connectDB } from '@/services/mongo';
 
-// import { auth } from '@/auth';
-// import { getUserByPhoneOrEmail } from './users';
+// // import { auth } from '@/auth';
+// // import { getUserByPhoneOrEmail } from './users';
 
 
-export const createAddToCart = async (addToCartData: any) => {
-//  console.log("in createAddToCart addToCartData",addToCartData);
+// export const createAddToCart = async (addToCartData: any) => {
+// //  console.log("in createAddToCart addToCartData",addToCartData);
 
-  try {
-    await connectDB()
-    const {  quantity, ...queryData} = addToCartData;
+//   try {
+//     await connectDB()
+//     const {  quantity, ...queryData} = addToCartData;
 
-    // const queryData = {user:session.user.id, ...rest}
-    // console.log('queryData ', queryData);
+//     // const queryData = {user:session.user.id, ...rest}
+//     // console.log('queryData ', queryData);
 
-    const cartItem = await AddToCart.findOne(queryData);
+//     const cartItem = await AddToCart.findOne(queryData);
 
-    // console.log('cartItem ', cartItem);
-    if(cartItem){
-      cartItem.quantity += addToCartData.quantity;
-      await cartItem.save();
-      return {
-        status: 200,
-        message: 'Quantity Update',
-      };
-    }else{ 
-      const addToCart = await AddToCart.create(addToCartData);
-      // console.log('addToCart ', addToCart);
-      await User.findByIdAndUpdate(
-        addToCartData.user,
-        { $push: { cart: addToCart._id } },
-        { new: true },
-      );
-      return {
-        status: 200,
-        message: 'Add To Cart',
-      };
-    }
+//     // console.log('cartItem ', cartItem);
+//     if(cartItem){
+//       cartItem.quantity += addToCartData.quantity;
+//       await cartItem.save();
+//       return {
+//         status: 200,
+//         message: 'Quantity Update',
+//       };
+//     }else{ 
+//       const addToCart = await AddToCart.create(addToCartData);
+//       // console.log('addToCart ', addToCart);
+//       await User.findByIdAndUpdate(
+//         addToCartData.user,
+//         { $push: { cart: addToCart._id } },
+//         { new: true },
+//       );
+//       return {
+//         status: 200,
+//         message: 'Add To Cart',
+//       };
+//     }
     
 
-  } catch (error: any) {
-    //  throw new Error(`cart not created: ${error.message}`);
-    return {
-      status: 500,
-      message: `cart not created: ${error.message}`,
-    };
-  }
-};
+//   } catch (error: any) {
+//     //  throw new Error(`cart not created: ${error.message}`);
+//     return {
+//       status: 500,
+//       message: `cart not created: ${error.message}`,
+//     };
+//   }
+// };
 
 
-export const deleteCart = async (cartId: string, userId: string) => {
-  try {
-    await connectDB()
-    // Delete the cart from the AddToCart collection
-    const cart = await AddToCart.findByIdAndDelete(cartId);
-    if (!cart) {
-      return {
-        status: 404,
-        message: 'Cart not found',
-      };
-    }
+// export const deleteCart = async (cartId: string, userId: string) => {
+//   try {
+//     await connectDB()
+//     // Delete the cart from the AddToCart collection
+//     const cart = await AddToCart.findByIdAndDelete(cartId);
+//     if (!cart) {
+//       return {
+//         status: 404,
+//         message: 'Cart not found',
+//       };
+//     }
 
-    // Remove the cart reference from the user's cart array
-    await User.findByIdAndUpdate(
-      userId,
-      { $pull: { cart: cartId } }, // Pull removes the cartId from the cart array
-      { new: true }
-    );
+//     // Remove the cart reference from the user's cart array
+//     await User.findByIdAndUpdate(
+//       userId,
+//       { $pull: { cart: cartId } }, // Pull removes the cartId from the cart array
+//       { new: true }
+//     );
 
-    // console.log('deleteCart', cart);
+//     // console.log('deleteCart', cart);
 
-    return {
-      status: 200,
-      message: 'Cart Deleted',
-    };
-  } catch (error: any) {
-    return {
-      status: 500,
-      message: `Cart not deleted: ${error.message}`,
-    };
-  }
-};
+//     return {
+//       status: 200,
+//       message: 'Cart Deleted',
+//     };
+//   } catch (error: any) {
+//     return {
+//       status: 500,
+//       message: `Cart not deleted: ${error.message}`,
+//     };
+//   }
+// };
 
 
-export const updateCart = async (cartId: string, quantity: number) => {
-  try {
-    await connectDB()
-    const cartItem = await AddToCart.findById(cartId);
-    if (cartItem) {
-      cartItem.quantity = quantity;
-      await cartItem.save();
+// export const updateCart = async (cartId: string, quantity: number) => {
+//   try {
+//     await connectDB()
+//     const cartItem = await AddToCart.findById(cartId);
+//     if (cartItem) {
+//       cartItem.quantity = quantity;
+//       await cartItem.save();
 
-      return {
-        status: 200,
-        message: 'Quantity Update',
-      };
-    }else{ 
-      return {
-        status: 500,
-        message: 'Cart not found',
-      };
-    }
-  } catch (err :any) {
-    return{
-      status: 500,
-      message: `Cart not updated: ${err.message}`,
-    }
-  }
-};
+//       return {
+//         status: 200,
+//         message: 'Quantity Update',
+//       };
+//     }else{ 
+//       return {
+//         status: 500,
+//         message: 'Cart not found',
+//       };
+//     }
+//   } catch (err :any) {
+//     return{
+//       status: 500,
+//       message: `Cart not updated: ${err.message}`,
+//     }
+//   }
+// };

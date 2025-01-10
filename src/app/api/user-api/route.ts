@@ -1,7 +1,7 @@
 import { replaceMongoIdInObject } from '@/lib/convertData';
 import { User } from '@/model/user-model';
 import { connectDB } from '@/services/mongo';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (req:any) => {
   try {
@@ -39,6 +39,29 @@ export const GET = async (req:any) => {
     return NextResponse.json(
       { message: err.message, status: 500 },
       { status: 500 }
+    );
+  }
+};
+
+
+export const POST = async (request: NextRequest) => {
+  const data = await request.json();
+
+  console.log("data user api post route ",data);
+  
+
+  try {
+    await connectDB();
+ 
+      return NextResponse.json(
+        { message: 'Add To Cart', status: 200 },
+        { status: 200 },
+      );
+    
+  } catch (err: any) {
+    return NextResponse.json(
+      { message: err.message, status: 500 },
+      { status: 500 },
     );
   }
 };

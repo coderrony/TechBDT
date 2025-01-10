@@ -1,9 +1,9 @@
 'use server';
-import { auth } from '@/auth';
+// import { auth } from '@/auth';
 import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
 import { replaceMongoIdInObject } from '@/lib/convertData';
-import { AddToCart } from '@/model/add-to-cart-model';
-import { Product } from '@/model/product-model';
+// import { AddToCart } from '@/model/add-to-cart-model';
+// import { Product } from '@/model/product-model';
 import { Address } from '@/model/user-address-models';
 import { User } from '@/model/user-model';
 import { connectDB } from '@/services/mongo';
@@ -64,37 +64,37 @@ export async function getUserByEmail(email: string) {
   return replaceMongoIdInObject(user as any);
 }
 
-export async function getUserById(id: string) {
-  await connectDB()
-  try {
+// export async function getUserById(id: string) {
+//   await connectDB()
+//   try {
 
-    const user = (await User.findById(id)
-    .populate({
-      path: 'cart',
-      model: AddToCart,
-      populate: {
-        path: 'product',
-        model: Product,
-      },
-    }).populate({
-      path: 'address',
-      model: Address,
-    })
-    .select('-password')
-    .lean()) as any;
+//     const user = (await User.findById(id)
+//     .populate({
+//       path: 'cart',
+//       model: AddToCart,
+//       populate: {
+//         path: 'product',
+//         model: Product,
+//       },
+//     }).populate({
+//       path: 'address',
+//       model: Address,
+//     })
+//     .select('-password')
+//     .lean()) as any;
 
-    return {
-      user: replaceMongoIdInObject(user),
-      message: 'User fetched successfully',
-      status: 200,
-    }
-  } catch (err:any) {
-    return  {
-      message: err.message,
-      status: 400,
-    }
-  }
-}
+//     return {
+//       user: replaceMongoIdInObject(user),
+//       message: 'User fetched successfully',
+//       status: 200,
+//     }
+//   } catch (err:any) {
+//     return  {
+//       message: err.message,
+//       status: 400,
+//     }
+//   }
+// }
 
 
 
