@@ -19,6 +19,7 @@ const useCart = () => {
         const result = (await axios.get(`/api/add-to-cart`, {
           params: { id: session?.user?.id },
         })) as any;
+     console.log("get result ",result.data);
 
         if (result.data.status === 200) {
           return result.data.cart;
@@ -46,7 +47,7 @@ const useCart = () => {
         addToCartData,
       )) as any;
 
-    
+      console.log("post result ",result.data);
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null
@@ -79,7 +80,7 @@ const useCart = () => {
       const result = (await axios.delete('/api/add-to-cart', {
         data: { cartId, userId },
       })) as any;
-  
+      console.log("delete result ",result.data);
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null
@@ -112,7 +113,7 @@ const useCart = () => {
       const result = (await axios.patch('/api/add-to-cart', {
         data: { cartId, userId, quantity },
       })) as any;
-   
+      console.log("patch result ",result.data);
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null

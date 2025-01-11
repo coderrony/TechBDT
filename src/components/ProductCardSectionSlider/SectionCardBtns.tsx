@@ -84,7 +84,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
             leaveFrom='opacity-100 translate-x-0'
             leaveTo='opacity-0 translate-x-20'>
             <p className='block text-base text-red-500 text-center font-semibold leading-none'>
-              Somthing is Wrong!
+             You need to log in first.
             </p>
            
           

@@ -33,6 +33,8 @@ import { notify_duration } from '@/data/defaultValue';
 
 import useCart from '@/hooks/useCart';
 import { useSession } from 'next-auth/react';
+import { Transition } from '@headlessui/react';
+
 
 interface ProductDetailComponentProps {
   className?: string;
@@ -59,6 +61,7 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
   const {
     cartAdd: { isAdding, handleAddToCart },
   } = useCart() as any;
+ 
 
   const [sizeSelected, setSizeSelected] = useState(sizes ? sizes[0] : '');
   const [colorSelected, setColorSelected] = useState(colors ? colors[0] : '');
@@ -89,7 +92,30 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
       }
       handleAddToCart(addToCartData);
       notifyAddTocart('ADD TO CART');
+     
     } else {
+      toast.custom(
+        t => (
+          <Transition
+            appear
+            show={t.visible}
+            className='p-4 max-w-md w-full bg-white dark:bg-slate-800 shadow-lg rounded-2xl pointer-events-auto ring-1 ring-black/5 dark:ring-white/10 text-slate-900 dark:text-slate-200'
+            enter='transition-all duration-150'
+            enterFrom='opacity-0 translate-x-20'
+            enterTo='opacity-100 translate-x-0'
+            leave='transition-all duration-150'
+            leaveFrom='opacity-100 translate-x-0'
+            leaveTo='opacity-0 translate-x-20'>
+            <p className='block text-base text-red-500 text-center font-semibold leading-none'>
+             You need to log in first.
+            </p>
+           
+          
+          </Transition>
+        ),
+        
+      );
+
       router.push('/login');
     }
   };

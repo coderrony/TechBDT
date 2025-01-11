@@ -8,6 +8,7 @@ import axios from 'axios';
 
 const useAuthData = () => {
   const { data: session } = useSession();
+console.log("useAuthData session ",session);
 
   // Fetch user data using React Query
   const {
@@ -20,12 +21,13 @@ const useAuthData = () => {
     queryFn: async () => {
       if (session?.user?.id) {
         const result = await axios.get(`/api/user-auth`, { params: { id: session?.user?.id } }) as any;
-        // console.log("result ",result);
+        console.log("useAuthData result ",result.data);
         
-        if (result.status === 200) {
+        if (result.data.status === 200) {
           return result.data.user; // Access user data from result.data
         } else {
-          throw new Error('Failed to fetch user data');
+          // throw new Error('Failed to fetch user data');
+          return null
         }
       }
     },
