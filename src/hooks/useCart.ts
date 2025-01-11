@@ -4,9 +4,11 @@ import { queryClient } from '@/lib/react-query';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 
+
 const useCart = () => {
   const { data: session } = useSession();
-//  console.log("useCart session ",session);
+
+
  
   // Fetch user data using React Query
   const {

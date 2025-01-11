@@ -3,47 +3,37 @@ import { AddToCart } from '@/model/add-to-cart-model';
 import { Product } from '@/model/product-model';
 
 import { connectDB } from '@/services/mongo';
-import mongoose from 'mongoose';
+
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (req: any) => {
   try {
     // Extract the ID from the query parameters
     const userId = req.nextUrl.searchParams.get('id');
-    console.log("add-to-cart userId ",userId);
-
+  
     if (!userId) {
-      return NextResponse.json(
-        { message: 'You are not authenticated!', status: 400 },
-    
-      );
+      return NextResponse.json({
+        message: 'You are not authenticated!',
+        status: 400,
+      });
     }
 
     // Connect to the database
     await connectDB();
-
 
     // const cart = (await AddToCart.findOne({ user: userId })
     //   .populate('products.product', 'name slug thumbnail price ') // Populate product with selected fields
     //   .lean()) as any; // Convert the result to a plain JS object
     const cart = (await AddToCart.findOne({ user: userId })
       .populate({
-      path: "products.product",
-      model: Product,
-      select: "name slug thumbNailUrl price",
+        path: 'products.product',
+        model: Product,
+        select: 'name slug thumbnail price',
       })
-      .lean()) as any; 
+      .lean()) as any;
 
-
-    
-    console.log("get route cart ",cart);
- 
-   
     if (!cart) {
-      return NextResponse.json(
-        { message: 'Cart not found!', status: 404 },
-       
-      );
+      return NextResponse.json({ message: 'Cart not found!', status: 404 });
     }
 
     // Return the cart data after replacing the MongoDB ID
@@ -57,15 +47,9 @@ export const GET = async (req: any) => {
     );
   } catch (err: any) {
     // console.error('Error fetching user:', err);
-    return NextResponse.json(
-      { message: err.message, status: 500 },
-  
-    );
+    return NextResponse.json({ message: err.message, status: 500 });
   }
 };
-
-
-
 
 export const POST = async (request: NextRequest) => {
   const { user, ...queryData } = await request.json();
@@ -108,10 +92,7 @@ export const POST = async (request: NextRequest) => {
       );
     }
   } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message, status: 500 },
-   
-    );
+    return NextResponse.json({ message: err.message, status: 500 });
   }
 };
 
@@ -120,10 +101,10 @@ export async function DELETE(request: NextRequest) {
     const { cartId, userId } = await request.json();
 
     if (!cartId || !userId) {
-      return NextResponse.json(
-        { message: 'You are not Authentication', status: 404 },
-      
-      );
+      return NextResponse.json({
+        message: 'You are not Authentication',
+        status: 404,
+      });
     }
 
     await connectDB();
@@ -131,10 +112,7 @@ export async function DELETE(request: NextRequest) {
     const cart = await AddToCart.findOne({ user: userId });
 
     if (!cart) {
-      return NextResponse.json(
-        { message: 'Not Authenticate', status: 404 },
-        
-      );
+      return NextResponse.json({ message: 'Not Authenticate', status: 404 });
     }
 
     // Filter out the product with the specified cartId from the products array
@@ -144,10 +122,7 @@ export async function DELETE(request: NextRequest) {
 
     // Check if the Cart was found and removed
     if (updateCart.length === cart.products.length) {
-      return NextResponse.json(
-        { message: 'Cart Not Found', status: 404 },
-      
-      );
+      return NextResponse.json({ message: 'Cart Not Found', status: 404 });
     }
     cart.products = updateCart;
     await cart.save();
@@ -157,10 +132,7 @@ export async function DELETE(request: NextRequest) {
       { status: 200 },
     );
   } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message, status: 500 },
-  
-    );
+    return NextResponse.json({ message: err.message, status: 500 });
   }
 }
 
@@ -171,20 +143,17 @@ export async function PATCH(request: NextRequest) {
     } = await request.json();
 
     if (!cartId || !userId || !quantity) {
-      return NextResponse.json(
-        { message: 'You are not Authentication', status: 404 },
-       
-      );
+      return NextResponse.json({
+        message: 'You are not Authentication',
+        status: 404,
+      });
     }
 
     await connectDB();
 
     const cart = await AddToCart.findOne({ user: userId });
     if (!cart) {
-      return NextResponse.json(
-        { message: 'Not Authenticate', status: 404 },
-     
-      );
+      return NextResponse.json({ message: 'Not Authenticate', status: 404 });
     }
 
     const productExists = cart.products.find(
@@ -192,10 +161,10 @@ export async function PATCH(request: NextRequest) {
     );
 
     if (!productExists) {
-      return NextResponse.json(
-        { message: 'Product not found in cart', status: 404 },
-       
-      );
+      return NextResponse.json({
+        message: 'Product not found in cart',
+        status: 404,
+      });
     }
 
     productExists.quantity = quantity;
@@ -206,9 +175,6 @@ export async function PATCH(request: NextRequest) {
       { status: 200 },
     );
   } catch (err: any) {
-    return NextResponse.json(
-      { message: err.message, status: 500 },
-    
-    );
+    return NextResponse.json({ message: err.message, status: 500 });
   }
 }
