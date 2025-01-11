@@ -9,7 +9,7 @@ import { User } from '@/model/user-model';
 import { connectDB } from '@/services/mongo';
 // import { otpSender } from "@/services/bulksmsbd";
 import { UserType } from '@/types/UserType';
-import { delay } from '@/utils/delay';
+// import { delay } from '@/utils/delay';
 import bcrypt from 'bcrypt';
 // import { otpSend } from "./otp-send";
 // import { storeOtpInRedis } from "./redisQuery";
@@ -27,8 +27,17 @@ export interface FrontendUserType {
 export async function newUserCreate(data: UserType) {
   await connectDB();
   try {
+    const {password, ...rest} = data;
+    console.log("data ",data);
+    
+      let createUser = {...rest} as any;
+      console.log("rest ",rest)
+      if(password){ 
+        createUser["password"] = await bcrypt.hash(password, 5);
+      }
+      
     // Implement this function to add a user to your database
-    const user = await User.create(data);
+    const user = await User.create(createUser);
 
     // console.log("newUserCreate user" ,user);
 
@@ -125,86 +134,86 @@ export async function passwordUpdate(phone: string, newPassword: string) {
   }
 }
 
-export async function otpRequestProcess(phone: string, isRegister: boolean) {
-  await connectDB();
-  try {
-    // const existingUser = await getUserByPhone(phone);
-    const existingUser = await User.findOne({ phone }).lean();
+// export async function otpRequestProcess(phone: string, isRegister: boolean) {
+//   await connectDB();
+//   try {
+//     // const existingUser = await getUserByPhone(phone);
+//     const existingUser = await User.findOne({ phone }).lean();
 
-    // register request phone number already exists
-    if (isRegister && existingUser) {
-      return {
-        status: 400,
-        message: 'An account with this phone number already exists',
-      };
-    }
+//     // register request phone number already exists
+//     if (isRegister && existingUser) {
+//       return {
+//         status: 400,
+//         message: 'An account with this phone number already exists',
+//       };
+//     }
 
-    //  forget password request phone number not exists
-    if (!isRegister && !existingUser) {
-      return {
-        status: 400,
-        message: 'An account with this phone number Not exists',
-      };
-    }
+//     //  forget password request phone number not exists
+//     if (!isRegister && !existingUser) {
+//       return {
+//         status: 400,
+//         message: 'An account with this phone number Not exists',
+//       };
+//     }
 
-    // get random 4 digit otp
-    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+//     // get random 4 digit otp
+//     const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
-    return { status: 200, message: 'OTP Sent Successfully', otp };
-  } catch (error: any) {
-    // throw new Error(error.message);
-    return {
-      status: 500,
-      message: error.message,
-    };
-  }
-}
+//     return { status: 200, message: 'OTP Sent Successfully', otp };
+//   } catch (error: any) {
+//     // throw new Error(error.message);
+//     return {
+//       status: 500,
+//       message: error.message,
+//     };
+//   }
+// }
 
-export async function accountRegistration(formData: any) {
-  const phone = formData.get('phone') as string;
-  const otp = formData.get('otp') as string;
-  const clientOtp = formData.get('client_otp') as string;
-  const full_name = formData.get('full_name') as string;
-  const password = formData.get('password') as string;
-  await connectDB();
-  try {
-    if (!phone || !otp || !clientOtp) {
-      return {
-        status: 400,
-        message: 'Phone number and OTP are required',
-      };
-    }
-    // check otp
-    if (otp !== clientOtp) {
-      await delay(2000);
-      return {
-        status: 400,
-        message: 'Invalid OTP',
-      };
-    }
-    // new user create
-    const passwordHash = await bcrypt.hash(password, 5);
-    const newUser = await newUserCreate({
-      full_name: full_name,
-      provider: 'phone',
-      phone: phone,
-      password: passwordHash,
-    } as any);
+// export async function accountRegistration(formData: any) {
+//   const phone = formData.get('phone') as string;
+//   const otp = formData.get('otp') as string;
+//   const clientOtp = formData.get('client_otp') as string;
+//   const full_name = formData.get('full_name') as string;
+//   const password = formData.get('password') as string;
+//   await connectDB();
+//   try {
+//     if (!phone || !otp || !clientOtp) {
+//       return {
+//         status: 400,
+//         message: 'Phone number and OTP are required',
+//       };
+//     }
+//     // check otp
+//     if (otp !== clientOtp) {
+//       await delay(2000);
+//       return {
+//         status: 400,
+//         message: 'Invalid OTP',
+//       };
+//     }
+//     // new user create
+//     const passwordHash = await bcrypt.hash(password, 5);
+//     const newUser = await newUserCreate({
+//       full_name: full_name,
+//       provider: 'phone',
+//       phone: phone,
+//       password: passwordHash,
+//     } as any);
 
-    console.log('newUser ', newUser);
+//     console.log('newUser ', newUser);
 
-    return {
-      status: 200,
-      message: 'User authenticated successfully',
-      newUser: newUser,
-    };
-  } catch (error: any) {
-    return {
-      status: 500,
-      message: error.message,
-    };
-  }
-}
+//     return {
+//       status: 200,
+//       message: 'User authenticated successfully',
+//       newUser: newUser,
+//     };
+//   } catch (error: any) {
+//     return {
+//       status: 500,
+//       message: error.message,
+//     };
+//   }
+// }
 
 
 export async function updateAccount(formData: any) {

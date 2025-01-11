@@ -10,8 +10,6 @@ import { getUserByEmail, newUserCreate } from './queries/users';
 import { UserType } from './types/UserType';
 import { replaceMongoIdInObject } from './lib/convertData';
 
-
-// import { AdapterUser } from "next-auth/adapters";
 import { Session as NextAuthSession } from 'next-auth';
 
 type Session = NextAuthSession & {
@@ -34,7 +32,10 @@ export const {
 } = NextAuth({
   cookies: {
     sessionToken: {
-      name: process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'authjs.session-token',
+      name:
+        process.env.NODE_ENV === 'production'
+          ? '__Secure-authjs.session-token'
+          : 'authjs.session-token',
       options: {
         httpOnly: true,
         sameSite: 'lax',
@@ -53,7 +54,6 @@ export const {
       clientId: process.env.AUTH_FACEBOOK_ID,
       clientSecret: process.env.AUTH_FACEBOOK_SECRET,
     }),
-    
 
     Credentials({
       authorize: async credentials => {
@@ -112,7 +112,7 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       try {
-        // console.log("signIn user ",user);
+        console.log('signIn user ', user);
         // console.log("signIn account ",account);
 
         let userData;
@@ -135,7 +135,7 @@ export const {
           } else {
             userData = existingUser;
           }
-          // console.log("userData ",userData);
+          // console.log('userData ', userData);
 
           user.customData = userData;
         } else {
@@ -184,9 +184,9 @@ export const {
       return session;
     },
     async redirect({ url, baseUrl }) {
-    
-      
-      return process.env.NODE_ENV === 'production' ? baseUrl : 'http://localhost:3000';
+      return process.env.NODE_ENV === 'production'
+        ? baseUrl
+        : 'http://localhost:3000';
     },
   },
 });

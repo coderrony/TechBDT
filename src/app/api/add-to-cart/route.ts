@@ -11,7 +11,7 @@ export const GET = async (req: any) => {
     if (!userId) {
       return NextResponse.json(
         { message: 'You are not authenticated!', status: 400 },
-        { status: 400 },
+    
       );
     }
 
@@ -25,7 +25,7 @@ export const GET = async (req: any) => {
     if (!cart) {
       return NextResponse.json(
         { message: 'Cart not found!', status: 404 },
-        { status: 404 },
+       
       );
     }
 
@@ -42,7 +42,7 @@ export const GET = async (req: any) => {
     // console.error('Error fetching user:', err);
     return NextResponse.json(
       { message: err.message, status: 500 },
-      { status: 500 },
+  
     );
   }
 };
@@ -90,7 +90,7 @@ export const POST = async (request: NextRequest) => {
   } catch (err: any) {
     return NextResponse.json(
       { message: err.message, status: 500 },
-      { status: 500 },
+   
     );
   }
 };
@@ -102,7 +102,7 @@ export async function DELETE(request: NextRequest) {
     if (!cartId || !userId) {
       return NextResponse.json(
         { message: 'You are not Authentication', status: 404 },
-        { status: 404 },
+      
       );
     }
 
@@ -113,7 +113,7 @@ export async function DELETE(request: NextRequest) {
     if (!cart) {
       return NextResponse.json(
         { message: 'Not Authenticate', status: 404 },
-        { status: 404 },
+        
       );
     }
 
@@ -126,7 +126,7 @@ export async function DELETE(request: NextRequest) {
     if (updateCart.length === cart.products.length) {
       return NextResponse.json(
         { message: 'Cart Not Found', status: 404 },
-        { status: 404 },
+      
       );
     }
     cart.products = updateCart;
@@ -139,7 +139,7 @@ export async function DELETE(request: NextRequest) {
   } catch (err: any) {
     return NextResponse.json(
       { message: err.message, status: 500 },
-      { status: 500 },
+  
     );
   }
 }
@@ -153,7 +153,7 @@ export async function PATCH(request: NextRequest) {
     if (!cartId || !userId || !quantity) {
       return NextResponse.json(
         { message: 'You are not Authentication', status: 404 },
-        { status: 404 },
+       
       );
     }
 
@@ -163,7 +163,7 @@ export async function PATCH(request: NextRequest) {
     if (!cart) {
       return NextResponse.json(
         { message: 'Not Authenticate', status: 404 },
-        { status: 404 },
+     
       );
     }
 
@@ -174,7 +174,7 @@ export async function PATCH(request: NextRequest) {
     if (!productExists) {
       return NextResponse.json(
         { message: 'Product not found in cart', status: 404 },
-        { status: 404 },
+       
       );
     }
 
@@ -188,7 +188,7 @@ export async function PATCH(request: NextRequest) {
   } catch (err: any) {
     return NextResponse.json(
       { message: err.message, status: 500 },
-      { status: 500 },
+    
     );
   }
 }

@@ -20,15 +20,17 @@ const useCart = () => {
           params: { id: session?.user?.id },
         })) as any;
 
-        if (result.status === 200) {
+        if (result.data.status === 200) {
           return result.data.cart;
         } else {
-          throw new Error('Failed to fetch user data');
+          // throw new Error('Failed to fetch user data');
+          return []
         }
       }
     },
     enabled: !!session?.user?.id, // Only fetch when user ID exists
     retry: 1, // Retry once if the query fails
+    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
   });
 
   // Add product to cart mutation
@@ -44,8 +46,10 @@ const useCart = () => {
         addToCartData,
       )) as any;
 
-      if (result.status !== 200) {
-        throw new Error(result.message);
+    
+      if (result.data.status !== 200) {
+        // throw new Error(result.message);
+        return null
       }
       return result;
     },
@@ -75,9 +79,10 @@ const useCart = () => {
       const result = (await axios.delete('/api/add-to-cart', {
         data: { cartId, userId },
       })) as any;
-
-      if (result.status !== 200) {
-        throw new Error(result.message);
+  
+      if (result.data.status !== 200) {
+        // throw new Error(result.message);
+        return null
       }
       return result;
     },
@@ -107,8 +112,10 @@ const useCart = () => {
       const result = (await axios.patch('/api/add-to-cart', {
         data: { cartId, userId, quantity },
       })) as any;
-      if (result.status !== 200) {
-        throw new Error(result.message);
+   
+      if (result.data.status !== 200) {
+        // throw new Error(result.message);
+        return null
       }
       return result;
     },

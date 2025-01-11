@@ -8,8 +8,10 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import NotifyAlert from '@/components/NotifyToaster';
 import toast from 'react-hot-toast';
 import ChangePassword from './_components/ChangePassword';
-import { otpRequestProcess } from '@/queries/users';
-import { otpSend } from '@/queries/otp-send';
+// import { otpRequestProcess } from '@/queries/users';
+// import { otpSend } from '@/queries/otp-send';
+import axios from 'axios';
+import { notify_duration } from '@/data/defaultValue';
 
 const PageForgotPass = ({}) => {
   const [verificationOTP, setVerificationOTP] = useState(false);
@@ -25,15 +27,18 @@ const PageForgotPass = ({}) => {
   } = useForm();
 
   const phoneOtpHandle = async (event: any) => {
-
+    console.log(event);
     setPhoneNumber(event.phone)
     startTransition(async () => {
       try {
    
-        const result = await otpRequestProcess(event.phone, false) as any;
-    
+        // const result = await otpRequestProcess(event.phone, false) as any;
+        const res = await axios.post(`/api/otp-send`, { phone:event.phone,isRegistration:false } ) as any;
+        const result = res.data;
+        console.log("result ",result);
+        
         if (result.status === 200) {
-          await otpSend(event.phone, result.otp);
+          // await otpSend(event.phone, result.otp);
           setVerificationOTP(true);
           setOtp(result.otp);
           notifyToast(
@@ -66,7 +71,7 @@ const PageForgotPass = ({}) => {
           message={message}
         />
       ),
-      { position: 'top-right', id: 'nc-product-notify', duration: 3000 },
+      { position: 'top-right', id: 'nc-product-notify', duration: notify_duration },
     );
   };
 

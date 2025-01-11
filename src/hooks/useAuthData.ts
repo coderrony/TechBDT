@@ -19,7 +19,7 @@ const useAuthData = () => {
     queryKey: ['user', session?.user?.id], // Query key
     queryFn: async () => {
       if (session?.user?.id) {
-        const result = await axios.get(`/api/user-api`, { params: { id: session?.user?.id } }) as any;
+        const result = await axios.get(`/api/user-auth`, { params: { id: session?.user?.id } }) as any;
         // console.log("result ",result);
         
         if (result.status === 200) {

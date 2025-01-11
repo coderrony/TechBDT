@@ -10,8 +10,8 @@ import OtpVerification from './OtpVerification';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import NotifyAlert from '@/components/NotifyToaster';
 import toast from 'react-hot-toast';
-import { otpRequestProcess } from '@/queries/users';
-import { otpSend } from '@/queries/otp-send';
+// import { otpRequestProcess } from '@/queries/users';
+// import { otpSend } from '@/queries/otp-send';
 import { notify_duration } from '@/data/defaultValue';
 import axios from 'axios';
 
@@ -48,43 +48,39 @@ const Signup: FC<SignupProps> = () => {
     startTransition(async () => {
       try {
        
-        const result = await axios.get(`/api/otp-send`, { params: { phone:event.phone,isRegistration:true } }) as any;
-        // const result = (await otpRequestProcess(event.phone, true)) as any;
+   
+        const result = await axios.post(`/api/otp-send`, { phone:event.phone,isRegistration:true } ) as any;
+        
       
-        console.log("result ",result?.data);
+        console.log("result ",result);
         
        
-        // if (result?.data.status === 400) {
-        //   notifyToast(true, 'Error', result?.data?.message);
-        //   setError('phone', {
-        //     type: 'manual',
-        //     message: 'phone number already exists.',
-        //   });
-        // }
-        // if (result?.data.status === 500) {
-        //   notifyToast(true, 'Error', result?.data?.message);
-        // }
-        // if (result?.data.status === 200) {
+        if (result?.data.status === 400) {
+          notifyToast(true, 'Error', result?.data?.message);
+          setError('phone', {
+            type: 'manual',
+            message: 'phone number already exists.',
+          });
+        }
+        if (result?.data.status === 500) {
+          notifyToast(true, 'Error', result?.data?.message);
+        }
+        if (result?.data.status === 200) {
        
-        //   await otpSend(event.phone, result?.data.otp);
-        //   setVerificationOTP(true);
-        //   setOtp(result?.data.otp);
-        //   notifyToast(
-        //     false,
-        //     'OTP Verification',
-        //     `${result?.data?.message} To ${event.phone}`,
-        //   );
-        // }
-
+          setVerificationOTP(true);
+          setOtp(result?.data.otp);
+          notifyToast(
+            false,
+            'OTP Verification',
+            `${result?.data?.message} To ${event.phone}`,
+          );
+        }
 
       } catch (err: any) {
         notifyToast(true, 'Error', err.message); 
       }
     });
   };
-
-
-
 
   const loadingIndicator = () => {
     return <LoadingIndicator />;

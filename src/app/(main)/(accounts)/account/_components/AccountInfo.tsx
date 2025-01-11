@@ -30,10 +30,12 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import toast from 'react-hot-toast';
 import NotifyAlert from '@/components/NotifyToaster';
 import { delay } from '@/utils/delay';
-import { otpRequestProcess, updateAccount } from '@/queries/users';
+// import { otpRequestProcess, updateAccount } from '@/queries/users';
 import { useRouter } from 'next/navigation';
-import { otpSend } from '@/queries/otp-send';
+// import { otpSend } from '@/queries/otp-send';
 import useAuthData from '@/hooks/useAuthData';
+import axios from 'axios';
+import { updateAccount } from '@/queries/users';
 
 interface AccountInfoProps {
   className?: string;
@@ -251,11 +253,13 @@ const AccountInfo: FC<AccountInfoProps> = () => {
 
     startTransition(async () => {
       if (data.phone) {
-        const result = await otpRequestProcess(data.phone, true) as any;
+        // const result = await otpRequestProcess(data.phone, true) as any;
+        const res = await axios.post(`/api/otp-send`, { phone:data.phone,isRegistration:true } ) as any;
+        const result = res.data;
         // console.log('result ', result);
         if (result.status === 200) {
           setOtp(result.otp);
-          await otpSend(data.phone, result.otp);
+          // await otpSend(data.phone, result.otp);
           notifyToast(
             false,
             'OTP Verification',
@@ -305,7 +309,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
      }else{ 
       notifyToast(true, 'Error!',result.message);
      }
-     await fetchMe()
+    //  await fetchMe()
       router.refresh()
 
     })
