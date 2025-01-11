@@ -1,3 +1,4 @@
+"use client"
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient } from '@/lib/react-query';
 import axios from 'axios';
@@ -5,7 +6,8 @@ import { useSession } from 'next-auth/react';
 
 const useCart = () => {
   const { data: session } = useSession();
-
+ console.log("useCart session ",session);
+ 
   // Fetch user data using React Query
   const {
     data: cartData,
@@ -19,7 +21,7 @@ const useCart = () => {
         const result = (await axios.get(`/api/add-to-cart`, {
           params: { id: session?.user?.id },
         })) as any;
-     console.log("get result ",result.data);
+     console.log("useCart get result ",result.data);
 
         if (result.data.status === 200) {
           return result.data.cart;
@@ -47,7 +49,7 @@ const useCart = () => {
         addToCartData,
       )) as any;
 
-      console.log("post result ",result.data);
+      console.log("useCart post result ",result.data);
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null
@@ -80,7 +82,7 @@ const useCart = () => {
       const result = (await axios.delete('/api/add-to-cart', {
         data: { cartId, userId },
       })) as any;
-      console.log("delete result ",result.data);
+      console.log("useCart delete result ",result.data);
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null
@@ -113,7 +115,7 @@ const useCart = () => {
       const result = (await axios.patch('/api/add-to-cart', {
         data: { cartId, userId, quantity },
       })) as any;
-      console.log("patch result ",result.data);
+      console.log("useCart patch result ",result.data);
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null
