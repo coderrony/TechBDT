@@ -22,14 +22,18 @@ export const GET = async (req: any) => {
     // Connect to the database
     await connectDB();
 
+    const cart2 = (await AddToCart.findOne({ user: userId }).lean()) as any; // Convert the result to a plain JS object
+    console.log("get route cart ",cart2);
+
+    
     const cart = (await AddToCart.findOne({ user: userId })
       .populate('products.product', 'name slug thumbnail price ') // Populate product with selected fields
       .lean()) as any; // Convert the result to a plain JS object
 
-    const cart2 = (await AddToCart.findOne({ user: userId }).lean()) as any; // Convert the result to a plain JS object
+
     
     console.log("get route cart ",cart);
-    console.log("get route cart ",cart2);
+ 
    
     if (!cart) {
       return NextResponse.json(
