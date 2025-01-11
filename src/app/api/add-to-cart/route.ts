@@ -26,8 +26,14 @@ export const GET = async (req: any) => {
     console.log("get route cart2--- ",cart2);
 
 
+    // const cart = (await AddToCart.findOne({ user: userId })
+    //   .populate('products.product', 'name slug thumbnail price ') // Populate product with selected fields
+    //   .lean()) as any; // Convert the result to a plain JS object
     const cart = (await AddToCart.findOne({ user: userId })
-      .populate('products.product', 'name slug thumbnail price ') // Populate product with selected fields
+      .populate({
+      path: "products.product",
+      model: Product
+      })
       .lean()) as any; // Convert the result to a plain JS object
 
 
