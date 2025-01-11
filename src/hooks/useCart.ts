@@ -23,7 +23,7 @@ const useCart = () => {
         const result = (await axios.get(`/api/add-to-cart`, {
           params: { id: session?.user?.id },
         })) as any;
-     console.log("useCart get result ",result.data);
+    
 
         if (result.data.status === 200) {
           return result.data.cart;
@@ -35,7 +35,7 @@ const useCart = () => {
     },
     enabled: !!session?.user?.id, // Only fetch when user ID exists
     retry: 1, // Retry once if the query fails
-    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+    // staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
   });
 
   // Add product to cart mutation
@@ -51,7 +51,7 @@ const useCart = () => {
         addToCartData,
       )) as any;
 
-      console.log("useCart post result ",result.data);
+
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null
@@ -84,7 +84,7 @@ const useCart = () => {
       const result = (await axios.delete('/api/add-to-cart', {
         data: { cartId, userId },
       })) as any;
-      console.log("useCart delete result ",result.data);
+    
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null
@@ -117,7 +117,7 @@ const useCart = () => {
       const result = (await axios.patch('/api/add-to-cart', {
         data: { cartId, userId, quantity },
       })) as any;
-      console.log("useCart patch result ",result.data);
+
       if (result.data.status !== 200) {
         // throw new Error(result.message);
         return null
