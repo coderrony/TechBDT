@@ -24,7 +24,7 @@ export default function CartDropdown() {
   // const {authDataFetch:{authData,isFetchingAuthData},cartDelete} = useAuthData() as any;
   const {cartDataFetch:{cartData},cartDelete:{handleRemoveFromCart,isRemoving}} = useCart() as any;
   
-  // console.log("cartData ",cartData);
+  console.log("cartData ",cartData);
   
   // console.log("CartDropdown ",userData);
   // console.log("authData ",authData);

@@ -7,6 +7,7 @@ export const GET = async (req: any) => {
   try {
     // Extract the ID from the query parameters
     const userId = req.nextUrl.searchParams.get('id');
+    console.log("add-to-cart userId ",userId);
 
     if (!userId) {
       return NextResponse.json(

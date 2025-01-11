@@ -32,4 +32,4 @@ const AddressSchema = new Schema(
 );
 
 export const Address =
-  mongoose.models.Address ?? mongoose.model('Address', AddressSchema);
+  mongoose.models.Address || mongoose.model('Address', AddressSchema);

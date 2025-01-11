@@ -33,4 +33,4 @@ const addToCartSchema = new Schema(
 );
 
 export const AddToCart =
-  mongoose.models.AddToCart ?? mongoose.model('AddToCart', addToCartSchema);
+  mongoose.models.AddToCart || mongoose.model('AddToCart', addToCartSchema);

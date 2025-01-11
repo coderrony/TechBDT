@@ -20,4 +20,4 @@ const dropShopSchema = new Schema(
 );
 
 export const DropShop =
-  mongoose.models.DropShop ?? mongoose.model('DropShop', dropShopSchema);
+  mongoose.models.DropShop || mongoose.model('DropShop', dropShopSchema);

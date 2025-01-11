@@ -1,19 +1,18 @@
 import { replaceMongoIdInObject } from '@/lib/convertData';
 import { User } from '@/model/user-model';
-import { FrontendUserType } from '@/queries/users';
+
 import { connectDB } from '@/services/mongo';
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
+
 export const GET = async (req:any) => {
   try {
     // Extract the ID from the query parameters
     const id = req.nextUrl.searchParams.get('id');
-  //  console.log("id ",id);
+   console.log("user auth id ",id);
    
     if (!id) {
       return NextResponse.json(
         { message: 'You are not authenticated!', status: 400 },
-      
       );
     }
 

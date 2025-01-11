@@ -23,4 +23,4 @@ const categorySchema = new Schema({
 },{ timestamps: true });
 
 export const Category =
-    mongoose.models.Category ?? mongoose.model("Category", categorySchema);
+    mongoose.models.Category || mongoose.model("Category", categorySchema);
