@@ -1,6 +1,9 @@
 import { replaceMongoIdInObject } from '@/lib/convertData';
 import { AddToCart } from '@/model/add-to-cart-model';
+import { Product } from '@/model/product-model';
+
 import { connectDB } from '@/services/mongo';
+import mongoose from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (req: any) => {
@@ -23,6 +26,11 @@ export const GET = async (req: any) => {
       .populate('products.product', 'name slug thumbnail price ') // Populate product with selected fields
       .lean()) as any; // Convert the result to a plain JS object
 
+    const cart2 = (await AddToCart.findOne({ user: userId }).lean()) as any; // Convert the result to a plain JS object
+    
+    console.log("get route cart ",cart);
+    console.log("get route cart ",cart2);
+   
     if (!cart) {
       return NextResponse.json(
         { message: 'Cart not found!', status: 404 },
@@ -47,6 +55,9 @@ export const GET = async (req: any) => {
     );
   }
 };
+
+
+
 
 export const POST = async (request: NextRequest) => {
   const { user, ...queryData } = await request.json();

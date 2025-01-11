@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const useAuthData = () => {
   const { data: session } = useSession();
-console.log("useAuthData session ",session);
+// console.log("useAuthData session ",session);
 
   // Fetch user data using React Query
   const {

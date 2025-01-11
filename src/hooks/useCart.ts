@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 
 const useCart = () => {
   const { data: session } = useSession();
- console.log("useCart session ",session);
+//  console.log("useCart session ",session);
  
   // Fetch user data using React Query
   const {

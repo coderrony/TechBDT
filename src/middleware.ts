@@ -13,7 +13,7 @@ export async function middleware(req: any) {
   }) as any;
 
   // console.log('Middleware Cookies:', req.cookies);
-  console.log('Middleware Token:', token);
+  // console.log('Middleware Token:', token);
   
 
   const isAdminRoute = (ADMIN_ROUTES.find(route => nextUrl.pathname.startsWith(route)));
