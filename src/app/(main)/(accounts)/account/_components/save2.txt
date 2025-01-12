@@ -2,18 +2,17 @@
 import Label from '@/components/Label/Label';
 import React, {
   FC,
-  useCallback,
   useEffect,
   useState,
   useTransition,
 } from 'react';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import Input from '@/shared/Input/Input';
-import Select from '@/shared/Select/Select';
+
 import Textarea from '@/shared/Textarea/Textarea';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Image from 'next/image';
-import useAuth from '@/hooks/useAuth';
+
 import SelectValue from '@/components/SelectValue';
 import { divisionsData } from '../_data/divisions';
 import {
@@ -30,18 +29,40 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import toast from 'react-hot-toast';
 import NotifyAlert from '@/components/NotifyToaster';
 import { delay } from '@/utils/delay';
-import { otpRequestProcess, updateAccount } from '@/queries/users';
 import { useRouter } from 'next/navigation';
-import { otpSend } from '@/queries/otp-send';
+
+import useAuthData from '@/hooks/useAuthData';
+import axios from 'axios';
+import { updateAccount } from '@/queries/users';
 
 interface AccountInfoProps {
   className?: string;
+  selectedAddress:any;
+  onSetSelectAddress:any;
 }
 
-const AccountInfo: FC<AccountInfoProps> = () => {
-  const [preview, setPreview] = useState<string | null>(null);
-  const { userData, fetchMe } = useAuth() as any;
+type FormValues = {
+  additional_mobile: { value: string }[];
+  otp:string;
+  avatar: File | null;
+  full_name: string;
+  phone:string | null;
+  division: string;
+  district: string;
+  upzila: string;
+  union: string;
+  house: string;
+};
 
+
+const AccountInfo: FC<AccountInfoProps> = ({selectedAddress,onSetSelectAddress}) => {
+  const [preview, setPreview] = useState<string | null>(null);
+  const { authDataFetch:{authData,refetchAuthData} } = useAuthData() as any;
+
+  console.log("selectedAddress ",selectedAddress);
+  console.log("authData ",authData);
+  
+ 
   const [divisions, setDivisions] = useState<DivisionType[]>([]);
   const [selectedDivision, setSelectedDivision] = useState<string>('');
 
@@ -60,8 +81,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
   const [formInfo, setFormInfo] = useState<null | FormData>(null);
   const router = useRouter()
 
-  // console.log("userData ",userData);
-  // console.log("selectedDivision ",selectedDivision);
+
   const {
     register,
     handleSubmit,
@@ -69,7 +89,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
     control, // Extract control from useForm
     setError,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormValues>();
 
   const {
     fields: additionalMobileFields,
@@ -161,19 +181,11 @@ const AccountInfo: FC<AccountInfoProps> = () => {
       setUnions([]);
     }
   };
-  // Prefill the form with mobile numbers on mount
-  // useEffect(() => {
-  //   if (userData?.address?.mobile?.length > 0) {
-  //     userData?.address?.mobile.forEach((mobile: string) =>
-  //       appendAdditionalMobile({ value: mobile }),
-  //     );
-  //   }
-  // }, [JSON.stringify(userData?.address)]);
-
+  
   // first time load divisions
   useEffect(() => {
-    if (userData?.address?.mobile?.length > 0) {
-      userData?.address?.mobile.forEach((mobile: string) =>
+    if (authData?.address?.mobile?.length > 0) {
+      authData?.address?.mobile.forEach((mobile: string) =>
         appendAdditionalMobile({ value: mobile }),
       );
     }
@@ -181,16 +193,16 @@ const AccountInfo: FC<AccountInfoProps> = () => {
     const loadDivisions = () => {
       // console.log('render 2');
       setDivisions(divisionsData);
-      const division_selected = userData?.address?.division;
-      const district_selected = userData?.address?.district;
-      const upzila_selected = userData?.address?.upzila;
-      const union_selected = userData?.address?.union;
+      const division_selected = authData?.address?.division;
+      const district_selected = authData?.address?.district;
+      const upzila_selected = authData?.address?.upzila;
+      const union_selected = authData?.address?.union;
 
       if (division_selected) {
         const divisionId = divisionsData.find(
           division => division.name === division_selected,
         )?.id as string;
-        console.log('divisionId ', divisionId);
+        
         handleDistrict(divisionId);
         setSelectedDivision(division_selected);
       }
@@ -217,17 +229,18 @@ const AccountInfo: FC<AccountInfoProps> = () => {
     };
 
     loadDivisions();
-  }, [JSON.stringify(userData?.address)]);
-
+  }, [JSON.stringify(authData?.address)]);
+ 
   const onSubmit = (data: any) => {
-
+     console.log("onSubmit Data ",data);
+     
     const formData = new FormData();
     const payload = {
       additional_mobile: (data.additional_mobile || []).map(
         (item: any) => item.value,
       ),
     };
-    formData.append('user_id', userData?.id);
+    formData.append('user_id', authData?.id);
     if(data.avatar.length > 0){ 
       formData.append('avatar', data.avatar[0]);
     }
@@ -237,16 +250,18 @@ const AccountInfo: FC<AccountInfoProps> = () => {
     formData.append('district', data.district);
     formData.append('upzila', data.upzila);
     formData.append('union', data.union);
-    formData.append('address', data.address);
+    formData.append('house', data.house);
     // console.log('payload', payload);
 
     startTransition(async () => {
       if (data.phone) {
-        const result = await otpRequestProcess(data.phone, true) as any;
-        // console.log('result ', result);
+        // const result = await otpRequestProcess(data.phone, true) as any;
+        const res = await axios.post(`/api/otp-send`, { phone:data.phone,isRegistration:true } ) as any;
+        const result = res.data;
+        console.log('result ', result);
         if (result.status === 200) {
           setOtp(result.otp);
-          await otpSend(data.phone, result.otp);
+          // await otpSend(data.phone, result.otp);
           notifyToast(
             false,
             'OTP Verification',
@@ -266,8 +281,16 @@ const AccountInfo: FC<AccountInfoProps> = () => {
         }
       } else {
         // without phone
-        const response = await updateAccount(formData);
+        // const response = await updateAccount(formData);
         // console.log("response ",response);
+        const res =  await axios.patch("/api/user-auth",formData) as any;
+        const result = res.data;
+        console.log("without phone result ",result);
+        if(result.status === 200){ 
+          refetchAuthData() // refetch user data
+          notifyToast(false, 'Account Address',result.message);
+        }
+      
         
       }
     });
@@ -288,15 +311,18 @@ const AccountInfo: FC<AccountInfoProps> = () => {
       }
 
    
-     const result =  await updateAccount(formInfo);
-    //  console.log("result ",result);
+    //  const result =  await updateAccount(formInfo);
+     const res =  await axios.patch("/api/user-auth",formInfo) as any;
+     const result = res.data
+     console.log("result ",result);
      
      if(result.status === 200){ 
+      refetchAuthData() // refetch user data
       notifyToast(false, 'Account Address',result.message);
      }else{ 
       notifyToast(true, 'Error!',result.message);
      }
-     await fetchMe()
+    //  await fetchMe()
       router.refresh()
 
     })
@@ -380,7 +406,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
               {/* AVATAR */}
               <div className='relative rounded-full overflow-hidden flex'>
                 <Image
-                  src={preview ?? userData?.profilePicture ?? default_avatar}
+                  src={preview ?? authData?.profilePicture ?? default_avatar}
                   alt='avatar'
                   width={128}
                   height={128}
@@ -420,7 +446,7 @@ const AccountInfo: FC<AccountInfoProps> = () => {
                 <Input
                   type='text'
                   className='mt-1.5'
-                  defaultValue={userData?.full_name}
+                  defaultValue={authData?.full_name}
                   {...register('full_name', {
                     required: 'Full Name Field is Required!',
                     minLength: {
@@ -445,11 +471,11 @@ const AccountInfo: FC<AccountInfoProps> = () => {
                   <span className='inline-flex items-center px-2.5 rounded-l-2xl border border-r-0 border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 text-sm'>
                     <i className='text-2xl las la-phone-volume'></i>
                   </span>
-                  {userData?.phone ? (
+                  {authData?.phone ? (
                     <Input
                       type='number'
                       className='!rounded-l-none'
-                      defaultValue={userData?.phone}
+                      defaultValue={authData?.phone}
                       disabled={true}
                     />
                   ) : (
@@ -513,11 +539,13 @@ const AccountInfo: FC<AccountInfoProps> = () => {
                       </button>
                     </div>
 
-                    {errors.additional_mobile?.[index]?.value && (
+                    {errors?.additional_mobile?.[index]?.value && (
                       <p className='text-red-600 text-xs ml-2'>
-                        {errors.additional_mobile[index].value.message}
+                        {errors?.additional_mobile[index]?.value?.message}
                       </p>
                     )}
+
+
                   </>
                 ))}
                 <button
@@ -642,21 +670,21 @@ const AccountInfo: FC<AccountInfoProps> = () => {
                 )}
               </div>
 
-              {/* address */}
+              {/* House */}
               <div>
-                <Label>Address</Label>
+                <Label>House</Label>
                 <Textarea
                   className='mt-1.5'
-                  defaultValue={userData?.address?.address}
-                  {...register('address', {
-                    required: 'Address Field is Required!',
+                  defaultValue={authData?.address?.house}
+                  {...register('house', {
+                    required: 'House Field is Required!',
                   })}
-                  name='address'
+                  name='house'
                 />
-                {errors.address &&
-                  typeof errors.address.message === 'string' && (
+                {errors.house &&
+                  typeof errors.house.message === 'string' && (
                     <p className='text-red-600 text-xs ml-2'>
-                      {errors.address.message}
+                      {errors.house.message}
                     </p>
                   )}
               </div>

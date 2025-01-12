@@ -5,6 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 // import { createAddToCart, deleteCart, updateCart } from '@/queries/addToCart';
 // import { queryClient } from '@/lib/react-query';
 import axios from 'axios';
+import { queryClient } from '@/lib/react-query';
 
 const useAuthData = () => {
   const { data: session } = useSession();
@@ -36,6 +37,39 @@ const useAuthData = () => {
     staleTime: 0, // Cache data for 0 minutes
     retry: 1, // Retry once if the query fails
   });
+
+    // user address mutation
+    // const {
+    //   mutate: userAddress,
+    //   isPending: isAddressPending,
+    //   isError: isAddressError,
+    //   isSuccess: isAddressSuccess,
+    // } = useMutation({
+    //   mutationFn: async ({
+    //     cartId,
+    //     userId,
+    //     quantity,
+    //   }: {
+    //     cartId: string;
+    //     userId: string;
+    //     quantity: number;
+    //   }) => {
+    //     const result = (await axios.patch('/api/add-to-cart', {
+    //       data: { cartId, userId, quantity },
+    //     })) as any;
+  
+    //     if (result.data.status !== 200) {
+    //       // throw new Error(result.message);
+    //       return null
+    //     }
+    //     return result;
+    //   },
+    //   onSuccess: () => {
+    //     queryClient.invalidateQueries({
+    //       queryKey: ['cart'],
+    //     });
+    //   },
+    // });
 
  
   const authDataFetch = { 

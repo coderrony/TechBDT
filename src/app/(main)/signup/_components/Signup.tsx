@@ -10,8 +10,7 @@ import OtpVerification from './OtpVerification';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import NotifyAlert from '@/components/NotifyToaster';
 import toast from 'react-hot-toast';
-// import { otpRequestProcess } from '@/queries/users';
-// import { otpSend } from '@/queries/otp-send';
+
 import { notify_duration } from '@/data/defaultValue';
 import axios from 'axios';
 
@@ -27,7 +26,7 @@ export interface UserDataType {
 
 const Signup: FC<SignupProps> = () => {
   const [verificationOTP, setVerificationOTP] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState('');
   const [isPending, startTransition] = useTransition();
   const [userData, setUserData] = useState<UserDataType | null>(null);
 
@@ -43,18 +42,14 @@ const Signup: FC<SignupProps> = () => {
 
   const handleSignup = async (event: any) => {
     setUserData(event);
-   console.log("event ",event);
-   
+
     startTransition(async () => {
       try {
-       
-   
-        const result = await axios.post(`/api/otp-send`, { phone:event.phone,isRegistration:true } ) as any;
-        
-      
-        console.log("result ",result);
-        
-       
+        const result = (await axios.post(`/api/otp-send`, {
+          phone: event.phone,
+          isRegistration: true,
+        })) as any;
+
         if (result?.data.status === 400) {
           notifyToast(true, 'Error', result?.data?.message);
           setError('phone', {
@@ -66,7 +61,6 @@ const Signup: FC<SignupProps> = () => {
           notifyToast(true, 'Error', result?.data?.message);
         }
         if (result?.data.status === 200) {
-       
           setVerificationOTP(true);
           setOtp(result?.data.otp);
           notifyToast(
@@ -75,9 +69,8 @@ const Signup: FC<SignupProps> = () => {
             `${result?.data?.message} To ${event.phone}`,
           );
         }
-
       } catch (err: any) {
-        notifyToast(true, 'Error', err.message); 
+        notifyToast(true, 'Error', err.message);
       }
     });
   };
@@ -96,7 +89,11 @@ const Signup: FC<SignupProps> = () => {
           message={message}
         />
       ),
-      { position: 'top-right', id: 'nc-product-notify', duration: notify_duration },
+      {
+        position: 'top-right',
+        id: 'nc-product-notify',
+        duration: notify_duration,
+      },
     );
   };
 
@@ -114,7 +111,7 @@ const Signup: FC<SignupProps> = () => {
           </div>
 
           {verificationOTP ? (
-            userData !== null && <OtpVerification user={userData} otp={otp}/>
+            userData !== null && <OtpVerification user={userData} otp={otp} />
           ) : isPending ? (
             loadingIndicator()
           ) : (
@@ -143,7 +140,7 @@ const Signup: FC<SignupProps> = () => {
                     </p>
                   )}
               </div>
-{/* Phone Number */}
+              {/* Phone Number */}
               <div className='h-20 '>
                 <span>Phone Number</span>
                 <Input
@@ -169,7 +166,7 @@ const Signup: FC<SignupProps> = () => {
                   </p>
                 )}
               </div>
-{/* password */}
+              {/* password */}
               <div className='h-20'>
                 <PasswordInput
                   register={register}
@@ -184,7 +181,7 @@ const Signup: FC<SignupProps> = () => {
                     </p>
                   )}
               </div>
-{/* confirm password */}
+              {/* confirm password */}
               <div className='h-20'>
                 <PasswordInput
                   register={register}

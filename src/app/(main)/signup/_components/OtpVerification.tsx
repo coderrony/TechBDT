@@ -10,10 +10,9 @@ import NotifyToaster from '@/components/NotifyToaster';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-// import { accountRegistration } from '@/queries/users';
+
 import { delay } from '@/utils/delay';
 
-import axios from 'axios';
 import { newUserCreate } from '@/queries/users';
 
 interface OtpVerificationProps {
@@ -76,15 +75,7 @@ const OtpVerification: FC<OtpVerificationProps> = ({ user, otp }) => {
             password: password,
           } as any);
 
-          // const newUser = await axios.post('/api/user-auth', {
-          //   full_name: full_name,
-          //   provider: 'phone',
-          //   phone: phone,
-          //   password: password,
-          // });
-          // const result = newUser.data;
-
-          console.log('result ', result);
+    
 
           if (result) {
             await signIn('credentials', {

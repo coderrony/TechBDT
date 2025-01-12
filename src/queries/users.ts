@@ -216,95 +216,93 @@ export async function passwordUpdate(phone: string, newPassword: string) {
 // }
 
 
-export async function updateAccount(formData: any) {
-  // console.log('updateAccount ', formData);
-  await connectDB()
-  const full_name = formData.get('full_name') as string;
-  const phone = formData.get('phone') as string;
-  const avatar = formData.get('avatar') as File;
-  const user_id = formData.get('user_id') as string;
-  const payloadString = formData.get('additional_mobile') as string;
-  const division = formData.get('division') as string;
-  const district = formData.get('district') as string;
-  const upzila = formData.get('upzila') as string;
-  const union = formData.get('union') as string;
-  const address = formData.get('address') as string;
+// export async function updateAccount(formData: any) {
+//   // console.log('updateAccount ', formData);
+//   await connectDB()
+//   const full_name = formData.get('full_name') as string;
+//   const phone = formData.get('phone') as string;
+//   const avatar = formData.get('avatar') as File;
+//   const user_id = formData.get('user_id') as string;
+//   const payloadString = formData.get('additional_mobile') as string;
+//   const division = formData.get('division') as string;
+//   const district = formData.get('district') as string;
+//   const upzila = formData.get('upzila') as string;
+//   const union = formData.get('union') as string;
+//   const address = formData.get('address') as string;
 
-  let payload = JSON.parse(payloadString);
+//   let payload = JSON.parse(payloadString);
 
-  // console.log("user_id ",user_id);
-  // console.log("avatar ",avatar);
-  // console.log("avatar type",typeof avatar);
-  // console.log("phone ",phone);
-  // console.log("payloadString ",payloadString);
-  try{
+//   // console.log("user_id ",user_id);
+//   // console.log("avatar ",avatar);
+//   // console.log("avatar type",typeof avatar);
+//   // console.log("phone ",phone);
+//   // console.log("payloadString ",payloadString);
+//   try{
     
-  // Step 1: Prepare user data for update
-  const user_data: any = { full_name };
-  if (phone) user_data['phone'] = phone;
+//   // Step 1: Prepare user data for update
+//   const user_data: any = { full_name };
+//   if (phone) user_data['phone'] = phone;
 
-  if (avatar) {
+//   if (avatar) {
+//     const profile_picture = await uploadFileByCloudinary(
+//       avatar,
+//       `profile-picture/${full_name}`,
+//     );
+//     user_data['profilePicture'] = profile_picture.secure_url;
+//   }
 
-    
-    const profile_picture = await uploadFileByCloudinary(
-      avatar,
-      `profile-picture/${full_name}`,
-    );
-    user_data['profilePicture'] = profile_picture.secure_url;
-  }
+//   // Step 2: Update User model
+//   const updatedUser = await User.findByIdAndUpdate(user_id, user_data, {
+//     new: true,
+//     runValidators: true,
+//   });
 
-  // Step 2: Update User model
-  const updatedUser = await User.findByIdAndUpdate(user_id, user_data, {
-    new: true,
-    runValidators: true,
-  });
-
-  // Step 3: Prepare address data
-  const user_address: any = {
-    user: user_id,
-    division,
-    district,
-    upzila,
-    union,
-    address,
-    mobile:payload.additional_mobile,
-  };
+//   // Step 3: Prepare address data
+//   const user_address: any = {
+//     user: user_id,
+//     division,
+//     district,
+//     upzila,
+//     union,
+//     address,
+//     mobile:payload.additional_mobile,
+//   };
 
 
-  // Step 4: Check if address already exists for the user
-  const existingAddress = await Address.findOne({ user: user_id });
-  // console.log("existingAddress ",existingAddress);
+//   // Step 4: Check if address already exists for the user
+//   const existingAddress = await Address.findOne({ user: user_id });
+//   // console.log("existingAddress ",existingAddress);
 
-  let addressDoc;
-  if (existingAddress) {
-    // Update existing address
-    addressDoc = await Address.findByIdAndUpdate(existingAddress._id, user_address, {
-      new: true,
-      runValidators: true,
-    });
-  } else {
-    // Create new address
-    addressDoc = new Address(user_address);
-    await addressDoc.save();
+//   let addressDoc;
+//   if (existingAddress) {
+//     // Update existing address
+//     addressDoc = await Address.findByIdAndUpdate(existingAddress._id, user_address, {
+//       new: true,
+//       runValidators: true,
+//     });
+//   } else {
+//     // Create new address
+//     addressDoc = new Address(user_address);
+//     await addressDoc.save();
 
-    // Step 5: Push new address to user's address array
-    // updatedUser.address.push(addressDoc._id);
-    updatedUser.address = addressDoc._id;
-    await updatedUser.save();
-  }
+//     // Step 5: Push new address to user's address array
+//     // updatedUser.address.push(addressDoc._id);
+//     updatedUser.address = addressDoc._id;
+//     await updatedUser.save();
+//   }
 
-  // console.log('User updated:', updatedUser);
-  // console.log('Address updated/created:', addressDoc);
+//   // console.log('User updated:', updatedUser);
+//   // console.log('Address updated/created:', addressDoc);
 
-  return {
-    status:200,
-    message:"User updated successfully",
-  }
+//   return {
+//     status:200,
+//     message:"User updated successfully",
+//   }
 
-  }catch(err:any){ 
-    return {
-      status:400,
-      message:err.message,
-    }
-  }
-}
+//   }catch(err:any){ 
+//     return {
+//       status:400,
+//       message:err.message,
+//     }
+//   }
+// }
