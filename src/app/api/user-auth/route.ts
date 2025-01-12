@@ -62,16 +62,10 @@ export async function PATCH(request: NextRequest) {
 
     let payload = JSON.parse(payloadString);
 
-    console.log("addressId ",addressId);
-    console.log("addressId type",typeof addressId) ;
-    console.log("division ",division);
-    
-
     await connectDB();
 
     const user = (await User.findById(user_id)) as any;
-   console.log("user ",user);
-   
+
     if (!user) {
       return NextResponse.json({ message: 'Unauthorized User', status: 400 });
     }
@@ -84,46 +78,31 @@ export async function PATCH(request: NextRequest) {
       house: house,
       mobile: payload.additional_mobile,
     };
-    
-    console.log("shipping_address ",shipping_address)
 
     user.full_name = full_name;
     if (avatar) {
-      console.log("avatar ",avatar);
+      console.log('avatar ', avatar);
       const fileBuffer = await avatar.arrayBuffer();
       const base64String = `data:${avatar.type};base64,${Buffer.from(
         fileBuffer,
       ).toString('base64')}`;
 
       const uploadResult = await cloudinary.uploader.upload(base64String, {
-          folder: `profile-picture/${full_name}${user_id}`,
-          transformation: [
-            {
-              quality: 'auto',
-              fetch_format: 'auto',
-            },
-          ],
-        });
+        folder: `profile-picture/${full_name}${user_id}`,
+        transformation: [
+          {
+            quality: 'auto',
+            fetch_format: 'auto',
+          },
+        ],
+      });
 
-
-     console.log("uploadResult ",uploadResult);
-
-
-
-
-      // const profile_picture = await uploadFileByCloudinary(
-      //   avatar,
-      //   `profile-picture/${full_name}${user_id}`,
-      // );
-      // console.log("profile_picture ",profile_picture);
-      
       user.profilePicture = uploadResult.secure_url;
     }
 
-
     if (addressId) {
-      console.log("i am in ",addressId);
-      
+      console.log('i am in ', addressId);
+
       // update address
       const address = user.address.find(
         (address: any) => address._id == addressId,

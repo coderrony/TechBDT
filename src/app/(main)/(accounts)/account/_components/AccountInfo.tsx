@@ -233,7 +233,7 @@ const AccountInfo: FC<AccountInfoProps> = ({
   }, []);
 
   const onSubmit = (data: any) => {
-    console.log('onSubmit Data ', data);
+    // console.log('onSubmit Data ', data);
 
     const formData = new FormData();
     const payload = {
@@ -293,7 +293,7 @@ const AccountInfo: FC<AccountInfoProps> = ({
         }
         const res = (await axios.patch('/api/user-auth', formData)) as any;
         const result = res.data;
-        console.log('without phone result ', result);
+        // console.log('without phone result ', result);
         if (result.status === 200) {
           refetchAuthData(); // refetch user data
           notifyToast(false, 'Account Address', result.message);
@@ -321,7 +321,7 @@ const AccountInfo: FC<AccountInfoProps> = ({
       //  const result =  await updateAccount(formInfo);
       const res = (await axios.patch('/api/user-auth', formInfo)) as any;
       const result = res.data;
-      console.log('result for otp verification ', result);
+      // console.log('result for otp verification ', result);
 
       if (result.status === 200) {
         refetchAuthData(); // refetch user data
