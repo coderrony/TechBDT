@@ -1,6 +1,7 @@
-import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
+// import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
 import { replaceMongoIdInObject } from '@/lib/convertData';
 import { User } from '@/model/user-model';
+import cloudinary from '@/services/cloudinary';
 
 import { connectDB } from '@/services/mongo';
 import { NextRequest, NextResponse } from 'next/server';
@@ -89,13 +90,34 @@ export async function PATCH(request: NextRequest) {
     user.full_name = full_name;
     if (avatar) {
       console.log("avatar ",avatar);
-      const profile_picture = await uploadFileByCloudinary(
-        avatar,
-        `profile-picture/${full_name}${user_id}`,
-      );
-      console.log("profile_picture ",profile_picture);
+      const fileBuffer = await avatar.arrayBuffer();
+      const base64String = `data:${avatar.type};base64,${Buffer.from(
+        fileBuffer,
+      ).toString('base64')}`;
+
+      const uploadResult = await cloudinary.uploader.upload(base64String, {
+          folder: `profile-picture/${full_name}${user_id}`,
+          transformation: [
+            {
+              quality: 'auto',
+              fetch_format: 'auto',
+            },
+          ],
+        });
+
+
+     console.log("uploadResult ",uploadResult);
+
+
+
+
+      // const profile_picture = await uploadFileByCloudinary(
+      //   avatar,
+      //   `profile-picture/${full_name}${user_id}`,
+      // );
+      // console.log("profile_picture ",profile_picture);
       
-      user.profilePicture = profile_picture.secure_url;
+      user.profilePicture = uploadResult.secure_url;
     }
 
 

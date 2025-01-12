@@ -1,4 +1,4 @@
-"use server"
+
 import cloudinary from '@/services/cloudinary';
 
 export const uploadFileByCloudinary = async(file : File,path:string)=>{ 
