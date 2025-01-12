@@ -36,16 +36,16 @@ export const POST = async (req: any) => {
     // get random 4 digit otp
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
-    const message = encodeURIComponent(
-      `(TechBDT.com) Please use code ${otp} to verify your phone number`,
-    );
+    // const message = encodeURIComponent(
+    //   `(TechBDT.com) Please use code ${otp} to verify your phone number`,
+    // );
 
-    const apiUrl = `http://bulksmsbd.net/api/smsapi?api_key=${process.env.BULKSMSBD_API_KEY}&senderid=${process.env.BULKSMSBD_SENDER_ID}&type=text&number=${phone}&message=${message}`;
+    // const apiUrl = `http://bulksmsbd.net/api/smsapi?api_key=${process.env.BULKSMSBD_API_KEY}&senderid=${process.env.BULKSMSBD_SENDER_ID}&type=text&number=${phone}&message=${message}`;
 
-    // // Use axios GET request with params
-    const response = (await axios.get(apiUrl)) as any;
+    // // // Use axios GET request with params
+    // const response = (await axios.get(apiUrl)) as any;
 
-    console.log('SMS API Response:', response.data);
+    // console.log('SMS API Response:', response.data);
 
     return NextResponse.json(
       { message: 'OTP Sent Successfully', status: 200, otp },

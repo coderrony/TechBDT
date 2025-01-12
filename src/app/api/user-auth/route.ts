@@ -57,14 +57,20 @@ export async function PATCH(request: NextRequest) {
     const upzila = formData.get('upzila') as string;
     const union = formData.get('union') as string;
     const house = formData.get('house') as string;
-    const addressId = formData.get('addressId');
+    const addressId = formData.get('addressId') as string | boolean;
 
     let payload = JSON.parse(payloadString);
+
+    console.log("addressId ",addressId);
+    console.log("addressId type",typeof addressId) ;
+    console.log("division ",division);
+    
 
     await connectDB();
 
     const user = (await User.findById(user_id)) as any;
-
+   console.log("user ",user);
+   
     if (!user) {
       return NextResponse.json({ message: 'Unauthorized User', status: 400 });
     }
@@ -77,17 +83,25 @@ export async function PATCH(request: NextRequest) {
       house: house,
       mobile: payload.additional_mobile,
     };
+    
+    console.log("shipping_address ",shipping_address)
 
     user.full_name = full_name;
     if (avatar) {
+      console.log("avatar ",avatar);
       const profile_picture = await uploadFileByCloudinary(
         avatar,
-        `profile-picture/${full_name}`,
+        `profile-picture/${full_name}${user_id}`,
       );
+      console.log("profile_picture ",profile_picture);
+      
       user.profilePicture = profile_picture.secure_url;
     }
 
-    if (addressId !== 'undefined') {
+
+    if (addressId) {
+      console.log("i am in ",addressId);
+      
       // update address
       const address = user.address.find(
         (address: any) => address._id == addressId,

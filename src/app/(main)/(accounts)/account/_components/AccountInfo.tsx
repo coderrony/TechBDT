@@ -287,7 +287,10 @@ const AccountInfo: FC<AccountInfoProps> = ({
         // without phone
         // const response = await updateAccount(formData);
         // console.log("response ",response);
-        formData.append('addressId', selectedAddress?._id.toString());
+        
+        if(selectedAddress?._id){ 
+          formData.append('addressId', selectedAddress?._id.toString());
+        }
         const res = (await axios.patch('/api/user-auth', formData)) as any;
         const result = res.data;
         console.log('without phone result ', result);
