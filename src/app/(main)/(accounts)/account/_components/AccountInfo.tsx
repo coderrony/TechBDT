@@ -33,8 +33,8 @@ import ButtonClose from '@/shared/ButtonClose/ButtonClose';
 
 interface AccountInfoProps {
   className?: string;
-  selectedAddress: any;
-  onChangeManageAddress: () => void;
+  selectedAddress?: any;
+  onChangeManageAddress?: () => void;
 }
 
 type FormValues = {
