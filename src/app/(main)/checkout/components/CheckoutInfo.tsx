@@ -77,7 +77,183 @@ const PRODUCTS = [
       },
     ],
   },
-
+  {
+    id: "6",
+    name: "Bluetooth Speaker",
+    price: 3500,
+    stock:36,
+    discount:47,
+    productRole:"active",
+    // image: productSport5,
+  
+    category: "Audio",
+    subCategory: "speaker",
+    color: "Red",
+    status: "New in",
+    sizes: ["LARGE","SMALL"],
+    productContent: [
+      {
+        name: "Description",
+        content:`  
+             <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl">
+            
+              <p>
+                The St. Louis Meramec Canoe Company was founded by Alfred Wickett in
+                1922. Wickett had previously worked for the Old Town Canoe Co from
+                1900 to 1914. Manufacturing of the classic wooden canoes in Valley
+                Park, Missouri ceased in 1978.
+              </p>
+    
+              <ul class="list-disc list-inside leading-7 mt-3"
+               <li> </li>
+                <li> Regular fit, mid-weight t-shirt </li>
+                <li>Natural color, 100% premium combed organic cotton</li>
+                <li>Natural color, 100% premium combed organic cotton</li>
+                <li>
+                  Quality cotton grown without the use of herbicides or pesticides -
+                  GOTS certified
+                </li>
+                <li>Soft touch water based printed in the USA</li>
+              </ul>
+              </div>
+            `,
+      },
+    ],
+    reviews: [
+      {
+        userId: "7",
+        message: "Perfect for outdoor use.",
+        username: "james",
+        rating: 4,
+      
+      },
+    ],
+    variants: [
+      {
+        productId: "jgh2345dsfg",
+    
+        color: "red",
+      },
+    ],
+  },
+  {
+    id: "6",
+    name: "Bluetooth Speaker",
+    price: 3500,
+    stock:36,
+    discount:47,
+    productRole:"active",
+    // image: productSport5,
+  
+    category: "Audio",
+    subCategory: "speaker",
+    color: "Red",
+    status: "New in",
+    sizes: ["LARGE","SMALL"],
+    productContent: [
+      {
+        name: "Description",
+        content:`  
+             <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl">
+            
+              <p>
+                The St. Louis Meramec Canoe Company was founded by Alfred Wickett in
+                1922. Wickett had previously worked for the Old Town Canoe Co from
+                1900 to 1914. Manufacturing of the classic wooden canoes in Valley
+                Park, Missouri ceased in 1978.
+              </p>
+    
+              <ul class="list-disc list-inside leading-7 mt-3"
+               <li> </li>
+                <li> Regular fit, mid-weight t-shirt </li>
+                <li>Natural color, 100% premium combed organic cotton</li>
+                <li>Natural color, 100% premium combed organic cotton</li>
+                <li>
+                  Quality cotton grown without the use of herbicides or pesticides -
+                  GOTS certified
+                </li>
+                <li>Soft touch water based printed in the USA</li>
+              </ul>
+              </div>
+            `,
+      },
+    ],
+    reviews: [
+      {
+        userId: "7",
+        message: "Perfect for outdoor use.",
+        username: "james",
+        rating: 4,
+      
+      },
+    ],
+    variants: [
+      {
+        productId: "jgh2345dsfg",
+    
+        color: "red",
+      },
+    ],
+  },
+  {
+    id: "6",
+    name: "Bluetooth Speaker",
+    price: 3500,
+    stock:36,
+    discount:47,
+    productRole:"active",
+    // image: productSport5,
+  
+    category: "Audio",
+    subCategory: "speaker",
+    color: "Red",
+    status: "New in",
+    sizes: ["LARGE","SMALL"],
+    productContent: [
+      {
+        name: "Description",
+        content:`  
+             <div className="prose prose-sm sm:prose dark:prose-invert sm:max-w-4xl">
+            
+              <p>
+                The St. Louis Meramec Canoe Company was founded by Alfred Wickett in
+                1922. Wickett had previously worked for the Old Town Canoe Co from
+                1900 to 1914. Manufacturing of the classic wooden canoes in Valley
+                Park, Missouri ceased in 1978.
+              </p>
+    
+              <ul class="list-disc list-inside leading-7 mt-3"
+               <li> </li>
+                <li> Regular fit, mid-weight t-shirt </li>
+                <li>Natural color, 100% premium combed organic cotton</li>
+                <li>Natural color, 100% premium combed organic cotton</li>
+                <li>
+                  Quality cotton grown without the use of herbicides or pesticides -
+                  GOTS certified
+                </li>
+                <li>Soft touch water based printed in the USA</li>
+              </ul>
+              </div>
+            `,
+      },
+    ],
+    reviews: [
+      {
+        userId: "7",
+        message: "Perfect for outdoor use.",
+        username: "james",
+        rating: 4,
+      
+      },
+    ],
+    variants: [
+      {
+        productId: "jgh2345dsfg",
+    
+        color: "red",
+      },
+    ],
+  },
 ]
 
 interface CheckoutInfoProps {
@@ -323,7 +499,7 @@ const CheckoutInfo: FC<CheckoutInfoProps> = () => {
           <div className="w-full lg:w-[36%] ">
             <h3 className="text-lg font-semibold">Order summary</h3>
             <div className="mt-8 divide-y divide-slate-200/70 dark:divide-slate-700 ">
-              {[PRODUCTS[0]].map(renderProduct)}
+              {PRODUCTS.map(renderProduct)}
             </div>
 
             <div className="mt-10 pt-6 text-sm text-slate-500 dark:text-slate-400 border-t border-slate-200/70 dark:border-slate-700 ">

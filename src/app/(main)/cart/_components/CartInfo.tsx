@@ -13,19 +13,57 @@ import { calculateCartTotal } from '@/utils/calculateCartTotal';
 // import useAuthData from '@/hooks/useAuthData';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import useCart from '@/hooks/useCart';
-
+import Label from '@/components/Label/Label';
+import SelectValue from '@/components/SelectValue';
+import { useForm } from 'react-hook-form';
+import useAuthData from '@/hooks/useAuthData';
+import { redirect, useRouter } from 'next/navigation';
+import Radio from '@/shared/Radio/Radio';
+import Input from '@/shared/Input/Input';
+// import { createCharge } from '@/services/uddoktaPayService';
+import axios from 'axios';
 
 interface CartInfoProps {
   className?: string;
 }
 
 const CartInfo: FC<CartInfoProps> = () => {
+  const {
+    authDataFetch: { authData },
+  } = useAuthData() as any;
 
-  // const {authDataFetch:{authData,isFetchingAuthData},cartDelete:{handleRemoveFromCart}} = useAuthData() as any;
-  const {cartDataFetch:{cartData,isFetchingCart},cartDelete:{handleRemoveFromCart,isRemoving}} = useCart() as any;
-  // console.log("cartData ",cartData);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control, // Extract control from useForm
+    setError,
+    setValue, // Add this line
+    formState: { errors },
+    watch
+  } = useForm({
+    defaultValues: {
+      deliveryType: 'regular',
+      shipping: 'all-bangladesh', // Default shipping value
+      address:authData?.address[0]?._id.toString() ,
+    }
+    
+  });
+  const router = useRouter();
   
+  const {
+    cartDataFetch: { cartData, isFetchingCart },
+    cartDelete: { handleRemoveFromCart, isRemoving },
+  } = useCart() as any;
+  // console.log("cartData ",cartData);
+  // console.log('authData ', authData);
+  const deliveryType = watch('deliveryType'); 
+
+  // console.log("deliveryType ",deliveryType);
+  
+
   const cartTotalAmount = calculateCartTotal(cartData?.products);
+  const advancePay = cartTotalAmount > 3000 ? 500 : 200
 
   const renderStatusInstock = () => {
     return (
@@ -36,9 +74,7 @@ const CartInfo: FC<CartInfoProps> = () => {
     );
   };
 
-
   const renderProduct = (item: any) => {
-
     return (
       <div
         key={item._id.toString()}
@@ -173,20 +209,90 @@ const CartInfo: FC<CartInfoProps> = () => {
 
           <div className='flex mt-auto pt-4 items-end justify-between text-sm'>
             {renderStatusInstock()}
-           {isRemoving ? <LoadingIndicator/> :    <button
-               onClick={()=> handleRemoveFromCart(item._id.toString())}
-         
-              className='relative z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm '>
-              <span>Remove</span>
-            </button>}
-         
+            {isRemoving ? (
+              <LoadingIndicator />
+            ) : (
+              <button
+                onClick={() => handleRemoveFromCart(item._id.toString())}
+                className='relative z-10 flex items-center mt-3 font-medium text-primary-6000 hover:text-primary-500 text-sm '>
+                <span>Remove</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
     );
   };
 
-  if(isFetchingCart)   return <LoadingIndicator />;
+  const handleOnSubmit =async (data: any) => {
+    console.log('data ', data);
+    if (authData?.address?.length === 0) {
+      return router.push('/account');
+    }
+
+
+    try {
+      const metadata = { user_id: '123', order_id: '456' };
+      // const redirectUrl = 'https://techbdt.com/orders';
+      // const cancelUrl = 'https://techbdt.com/cancel';
+      // const webhookUrl = 'https://techbdt.com/ipn';
+
+
+     // UddoktaPay পেমেন্ট রিকোয়েস্ট তৈরির জন্য ডেটা প্রস্তুত করুন
+     const paymentRequest = {
+      full_name: authData?.name || "Customer",
+      email: authData?.email || "customer@example.com",
+      amount: calculateCartTotal(cartData?.products).toString(), // মোট অর্ডারের মূল্য
+      metadata: {
+        user_id: authData?._id,
+        order_id: `order_${Date.now()}`, // ইউনিক অর্ডার আইডি
+      },
+      redirect_url: `${process.env.NEXT_PUBLIC_SITE_URL}/account-order`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cart`,
+      webhook_url: `${process.env.NEXT_PUBLIC_SITE_URL}/ipn`,
+    };
+
+       // UddoktaPay এন্ডপয়েন্টে POST রিকোয়েস্ট করুন
+       const response = await axios.post(
+        '/api/get-payment-url',
+        paymentRequest,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "RT-UDDOKTAPAY-API-KEY": "TkGiKx2HVtGUPcCEmj7la12bNtyr1MQdi5i2pu0L", // UddoktaPay থেকে সংগ্রহ করা API কী
+          },
+        }
+      );
+  
+
+
+      const result = response.data;
+
+      console.log("cart response result",result);
+      
+
+      if (result?.status === 200) {
+        window.location.href = result.res_data.payment_url!;
+        // router.push(result.payment_url);
+        // redirect(result.payment_url!);
+      } else {
+        alert('Failed to create payment: ' + result.message);
+      }
+    } catch (error: any) {
+      alert('Error: ' + error.message);
+    } 
+
+
+  };
+
+  // const handleOnChangeCod = () => {
+  //   const deliveryType = watch('deliveryType'); // Get the current value of deliveryType
+  //   console.log('Current delivery type:', deliveryType);
+  //   setValue('deliveryType', 'cod'); // Set the value to 'cod'
+  // };
+
+  if (isFetchingCart) return <LoadingIndicator />;
 
   return (
     <div className='flex flex-col lg:flex-row'>
@@ -195,73 +301,204 @@ const CartInfo: FC<CartInfoProps> = () => {
       </div>
       <div className='border-t lg:border-t-0 lg:border-l border-slate-200 dark:border-slate-700 my-10 lg:my-0 lg:mx-10 xl:mx-16 2xl:mx-20 flex-shrink-0'></div>
       <div className='flex-1'>
-        <div className='sticky top-28'>
-          <h3 className='text-lg font-semibold '>Order Summary</h3>
-          <div className='mt-7 text-sm text-slate-500 dark:text-slate-400 divide-y divide-slate-200/70 dark:divide-slate-700/80'>
-            <div className='flex justify-between pb-4'>
-              <span>Subtotal</span>
-              <span className='font-semibold text-slate-900 dark:text-slate-200'>
-                {formatNumber(cartTotalAmount)}
-              </span>
+        <form onSubmit={handleSubmit(handleOnSubmit)}>
+          <div className='sticky top-28'>
+            <h3 className='text-lg font-semibold '>Order Summary</h3>
+
+            <div className='mt-7 text-sm text-slate-500 dark:text-slate-400 divide-y divide-slate-200/70 dark:divide-slate-700/80'>
+
+              <div>
+                <Label className="text-sm">Discount code</Label>
+                <div className="flex mt-1.5 pb-4">
+                  <Input sizeClass="h-10 px-4 py-3" className="flex-1" />
+                  <button className="text-neutral-700 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 rounded-2xl px-4 ml-3 font-medium text-sm bg-neutral-200/70 dark:bg-neutral-700 dark:hover:bg-neutral-800 w-24 flex justify-center items-center transition-colors">
+                    Apply
+                  </button>
+                </div>
+              </div>
+
+              {/* Select Address */}
+              {authData?.address?.length > 0 ? (
+                <div className=' py-4'>
+                  <Label>Select Address</Label>
+                  <SelectValue
+                    // value={selectedDivision}
+                    className='mt-1.5'
+                    {...register('address')}
+                   
+                    // onChange={handleDivisionChange} // Add onChange
+                  >
+                    {authData?.address?.map((address: any) => (
+                      <option
+                        value={address?._id?.toString()}
+                        key={address?._id?.toString()}>
+                        {`${address?.house}, ${address?.division}, ${address?.district},  ${address?.upzila}, ${address?.union}`}
+                      </option>
+                    ))}
+                  </SelectValue>
+                </div>
+              ) : (
+                <div className='mb-4'>
+                  <Link
+                    href={'/account'}
+                    className='bg-red-500 text-white p-2 w-full   rounded'>
+                    Add Address
+                  </Link>
+                </div>
+              )}
+            {/* delivery */}
+            <div className="py-4">
+              <Label className="text-sm">Delivery type</Label>
+              <div className="flex flex-col gap-4 mt-1.5">
+                <Radio
+                  label={`<span class="text-sm font-medium">Regular Delivery</span>`}
+                  id="regular-delivery"
+                  {...register('deliveryType')}
+                  onChange={() => setValue('deliveryType', 'regular')}
+                  defaultChecked
+                />
+                <Radio
+                  label={`<span class="text-sm font-medium">Cash On Delivery <span class="font-light">(COD)</span></span>`}
+                  id="cod"
+                  {...register('deliveryType')}
+                  onChange={() => setValue('deliveryType', 'cod')}
+                />
+              </div>
+              {/* {errors.deliveryType && (
+                <span className="text-red-500 text-sm">Please select a delivery type</span>
+              )} */}
             </div>
-            <div className='flex justify-between py-4'>
-              <span>Tax estimate</span>
-              <span className='font-semibold text-slate-900 dark:text-slate-200'>
-                BDT 00.00
-              </span>
+
+            {/* shipping */}
+            <div className="py-4">
+              <Label className="text-sm">Shipping</Label>
+              <div className="flex flex-col gap-4 mt-1.5">
+               <div className='flex justify-between items-center'>
+                <Radio
+                    label={`<span class="text-sm font-medium">All Bangladesh (Pathao Courier): </span>`}
+                    id="shipping"
+                    {...register('shipping', { required: true })}
+                    onChange={() => setValue('shipping', 'all-bangladesh')}
+                    defaultChecked
+                  />
+                  <p className='font-semibold text-slate-900 dark:text-slate-200'>120 BDT</p>
+               </div>
+               <div className='flex justify-between items-center'>
+                <Radio
+                    label={`<span class="text-sm font-medium">Dhaka City Corporation: </span>`}
+                    id="shipping"
+                    {...register('shipping', { required: true })}
+                    onChange={() => setValue('shipping', 'dhaka-city-corporation')}
+                 
+                  />
+                  <p className='font-semibold text-slate-900 dark:text-slate-200'>60 BDT</p>
+               </div>
+           
+              </div>
+              {errors.shipping && (
+                <span className="text-red-500 text-sm">Please select a Shipping</span>
+              )}
             </div>
-            <div className='flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4'>
-              <span>Order total</span>
-              <span>{formatNumber(cartTotalAmount)}</span>
+
+           
+
+{/* Subtotal */}
+              <div className='flex justify-between py-4'>
+                <span>Subtotal</span>
+                <span className='font-semibold text-slate-900 dark:text-slate-200'>
+                  {formatNumber(cartTotalAmount)}
+                </span>
+              </div>
+           
+
+              <div className='flex justify-between py-4'>
+                <span>Tax estimate</span>
+                <span className='font-semibold text-slate-900 dark:text-slate-200'>
+                  BDT 00.00
+                </span>
+              </div>
+
+              <div className='flex justify-between font-semibold text-slate-900 dark:text-slate-200 text-base pt-4'>
+                <span>Order total</span>
+                <span>{formatNumber(cartTotalAmount)}</span>
+              </div>
+
+              { deliveryType === 'cod' && 
+              <>
+                {/* Advance pay */}
+                 <div className='flex justify-between py-4 mt-4'>
+                <span>Advance pay </span>
+                <span className='font-semibold text-slate-900 dark:text-slate-200'>
+                  BDT {advancePay}
+                </span>
+              </div>
+
+              {/* Due payment */}
+              <div className='flex justify-between py-4'>
+                <span>Due payment </span>
+                <span className='font-semibold text-slate-900 dark:text-slate-200'>
+                  {formatNumber(cartTotalAmount - advancePay)}
+                </span>
+              </div>
+              </>
+              }
+
+            <div className='fpy-4 mt-4'>
+                <h2 className='font-semibold text-slate-900 dark:text-slate-200 text-base'>Payment Methods </h2>
+                <span className='font-semibold text-slate-900 dark:text-slate-200'>
+                 Rocket
+                </span>
+              </div>
+
+         
+            </div>
+            <ButtonPrimary type='submit' className='mt-8 w-full'>
+              Confirm order
+            </ButtonPrimary>
+            <div className='mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center'>
+              <p className='block relative pl-5'>
+                <svg
+                  className='w-4 h-4 absolute -left-1 top-0.5'
+                  viewBox='0 0 24 24'
+                  fill='none'>
+                  <path
+                    d='M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M12 8V13'
+                    stroke='currentColor'
+                    strokeWidth='1.5'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                  <path
+                    d='M11.9945 16H12.0035'
+                    stroke='currentColor'
+                    strokeWidth='2'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </svg>
+                Learn more
+                <span>
+                  {` `}and{` `}
+                </span>
+                <a
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  href='##'
+                  className='text-slate-900 dark:text-slate-200 underline font-medium'>
+                  Shipping
+                </a>
+                {` `} infomation
+              </p>
             </div>
           </div>
-          <ButtonPrimary href='/checkout' className='mt-8 w-full'>
-            Checkout
-          </ButtonPrimary>
-          <div className='mt-5 text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center'>
-            <p className='block relative pl-5'>
-              <svg
-                className='w-4 h-4 absolute -left-1 top-0.5'
-                viewBox='0 0 24 24'
-                fill='none'>
-                <path
-                  d='M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z'
-                  stroke='currentColor'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-                <path
-                  d='M12 8V13'
-                  stroke='currentColor'
-                  strokeWidth='1.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-                <path
-                  d='M11.9945 16H12.0035'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-              </svg>
-              Learn more 
-            
-              <span>
-                {` `}and{` `}
-              </span>
-              <a
-                target='_blank'
-                rel='noopener noreferrer'
-                href='##'
-                className='text-slate-900 dark:text-slate-200 underline font-medium'>
-                Shipping
-              </a>
-              {` `} infomation
-            </p>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   );
