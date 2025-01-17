@@ -1,6 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { getCategoriesWithSubCategories } from '@/queries/categories';
+
 import { getLastProducts, getNewArrivals } from '@/queries/products';
 import Link from 'next/link';
 
@@ -16,9 +16,7 @@ const SectionGridMoreExplore = dynamic(() => import('@/components/SectionGridMor
 export default async function PageHome() {
 
   const [allCategory, newArrivals, last40Products] = await Promise.all([
-    fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
-      cache: 'no-store', // Fetch fresh data
-    })
+    fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`)
       .then((res) => {
         if (!res.ok) {
           throw new Error('Failed to fetch categories');

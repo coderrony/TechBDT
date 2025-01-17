@@ -12,7 +12,7 @@ import SelectValue from '@/components/SelectValue';
 import { CategoryAndSubType } from '@/types/CategoryType';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { DropShopType } from '@/types/DropShopType';
-import { MongoDocumentWithId, replaceMongoIdInArray } from '@/lib/convertData';
+import {  replaceMongoIdInArray } from '@/lib/convertData';
 import { createProduct } from '@/queries/products';
 
 interface AddProductProps {

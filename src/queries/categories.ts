@@ -8,21 +8,21 @@ import { connectDB } from '@/services/mongo';
 
 
 
-export async function getCategoriesWithSubCategories() {
-  await connectDB()
-  try {
-    const categoriesWithSubCategories = await Category.find({}).populate({
-        path: "sub_categories",
-        model: SubCategory
-    }).lean() as any[]; 
+// export async function getCategoriesWithSubCategories() {
+//   await connectDB()
+//   try {
+//     const categoriesWithSubCategories = await Category.find({}).populate({
+//         path: "sub_categories",
+//         model: SubCategory
+//     }).lean() as any[]; 
 
-    if (categoriesWithSubCategories.length > 0) {
-      return replaceMongoIdInArray(categoriesWithSubCategories);
-    }
-    return null;
-  } catch (error: any) {
-    throw new Error(
-      `Error fetching categories with subcategories ' ${error.message}`,
-    );
-  }
-}
+//     if (categoriesWithSubCategories.length > 0) {
+//       return replaceMongoIdInArray(categoriesWithSubCategories);
+//     }
+//     return null;
+//   } catch (error: any) {
+//     throw new Error(
+//       `Error fetching categories with subcategories ' ${error.message}`,
+//     );
+//   }
+// }

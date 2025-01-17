@@ -31,8 +31,7 @@ export const POST = async (request: NextRequest) => {
 };
 
 export const GET = async (req: any) => {
-  console.log("i am in get");
-  
+
   try {
     // Connect to the database
     await connectDB();
@@ -44,7 +43,7 @@ export const GET = async (req: any) => {
       })
       .lean()) as any[];
 
-      console.log("categoriesWithSubCategories ",categoriesWithSubCategories);
+      // console.log("categoriesWithSubCategories ",categoriesWithSubCategories);
       
 
     if (categoriesWithSubCategories) {

@@ -1,12 +1,10 @@
-import { getCategoriesWithSubCategories } from "@/queries/categories";
-import ManageTabs, { TabsType } from "../_components/ManageTabs";
 
+import ManageTabs, { TabsType } from "../_components/ManageTabs";
 import AddProduct from "./_components/AddProduct";
 import ProductPreview from "./_components/ProductPreview";
 import { notFound } from "next/navigation";
 import { getDropShops } from "@/queries/dropshop";
 import { DropShopType } from "@/types/DropShopType";
-import { CategoryAndSubType } from "@/types/CategoryType";
 
 
 async function ProductsPage() {
@@ -21,16 +19,8 @@ async function ProductsPage() {
     })
     .then((data) => data.res_data)
 
-    console.log("categoriesData ",categoriesData);
-    
    const dropshops = await getDropShops() as DropShopType[];
    
-  //  console.log("dropshops ",dropshops);
-   
-  
-    // console.log("product ",product[0]);
-    
-  //  console.log(" dropshops ",dropshops)
    if(!dropshops) notFound()
   
 
