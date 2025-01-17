@@ -1,10 +1,9 @@
 "use client";
+
 import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 import Heading from "@/components/Heading/Heading";
 // @ts-ignore
 import Glide from "@glidejs/glide/dist/glide.esm";
-
-
 
 interface SectionSliderProps {
   className?: string;
@@ -13,8 +12,7 @@ interface SectionSliderProps {
   headingFontClassName?: string;
   headingClassName?: string;
   subHeading?: string;
-
-  children:ReactNode;
+  children: ReactNode;
 }
 
 const SectionSlider: FC<SectionSliderProps> = ({
@@ -24,70 +22,54 @@ const SectionSlider: FC<SectionSliderProps> = ({
   headingClassName,
   heading,
   subHeading = "REY backpacks",
-
   children,
 }) => {
-  const sliderRef = useRef(null);
-  const [isShow, setIsShow] = useState(false);
+  const sliderRef = useRef<HTMLDivElement | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
- 
   useEffect(() => {
     const OPTIONS: Partial<Glide.Options> = {
       perView: 5,
       gap: 30,
       bound: true,
-      autoplay: 3000, // Autoplay every 3 seconds
-      hoverpause: true, // Pause when hovered
+      autoplay: 3000,
+      hoverpause: true,
       breakpoints: {
-        1280: {
-          perView: 4, 
-        },
-        1024: {
-          gap: 20,
-          perView: 4,
-        },
-        768: {
-          gap: 20,
-          perView: 3,
-        },
-        640: {
-          gap: 20,
-          perView: 1.5,
-        },
-        500: {
-          gap: 20,
-          perView: 1.3,
-        },
+        1280: { perView: 4 },
+        1024: { gap: 20, perView: 4 },
+        768: { gap: 20, perView: 3 },
+        640: { gap: 20, perView: 1.5 },
+        500: { gap: 20, perView: 1.3 },
       },
     };
-  
-    if (!sliderRef.current) return;
-  
-    // Check if the sliderRef.current is a valid DOM node
+
+    if (!sliderRef.current) {
+      console.error("Slider reference is null. Ensure the element exists.");
+      return;
+    }
+
     const sliderElement = sliderRef.current;
-    if (!sliderElement) return;
-  
-    let slider = new Glide(sliderElement, OPTIONS);
-    
-    // Try-catch block to handle unexpected errors gracefully
+    let glideInstance: Glide | null = null;
+
     try {
-      slider.mount();  // Mount the Glide slider
-      setIsShow(true); // Set the slider as visible
+      glideInstance = new Glide(sliderElement, OPTIONS);
+      glideInstance.mount();
+      setIsInitialized(true);
     } catch (error) {
       console.error("Error mounting the Glide slider:", error);
+     
     }
-  
+
     return () => {
-      if (slider) {
-        slider.destroy();  // Cleanup on unmount
+      if (glideInstance) {
+        glideInstance.destroy();
       }
     };
-  }, [sliderRef]);
-  
+  }, []);
+
   return (
     <div className={`nc-SectionSliderProductCard ${className}`}>
-
-      <div ref={sliderRef} className={`flow-root ${isShow ? "" : "invisible"}`}>
+      <div ref={sliderRef} className={`flow-root ${isInitialized ? "" : "invisible"}`}>
         <Heading
           className={headingClassName}
           fontClass={headingFontClassName}
@@ -97,9 +79,7 @@ const SectionSlider: FC<SectionSliderProps> = ({
           {heading || `New Arrivals`}
         </Heading>
         <div className="glide__track" data-glide-el="track">
-          <ul className="glide__slides">
-            {children}
-          </ul>
+          <ul className="glide__slides">{children}</ul>
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ import { CategoryAndSubType } from "@/types/CategoryType";
 
 
 async function ProductsPage() {
-   const categoriesData = await getCategoriesWithSubCategories() as CategoryAndSubType[] || [];
+  //  const categoriesData = await getCategoriesWithSubCategories() as CategoryAndSubType[] || [];
    const dropshops = await getDropShops() as DropShopType[];
    
   //  console.log("dropshops ",dropshops);
@@ -26,7 +26,7 @@ async function ProductsPage() {
     {
       id: 'add_product',
       label: 'Add Products',
-      content: <AddProduct categoriesData={categoriesData} dropshops={dropshops} />,
+      content: <AddProduct  dropshops={dropshops} />,
     },
     {
       id: 'product_preview',

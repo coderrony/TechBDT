@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 // import { createAddToCart, deleteCart, updateCart } from '@/queries/addToCart';
 // import { queryClient } from '@/lib/react-query';
 import axios from 'axios';
-import { queryClient } from '@/lib/react-query';
+
 
 const useAuthData = () => {
   const { data: session } = useSession();

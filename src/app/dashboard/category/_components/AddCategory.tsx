@@ -1,11 +1,10 @@
 'use client';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import Input from '@/shared/Input/Input';
-import Image from 'next/image';
-import { FC, useTransition, useState } from 'react';
+
+import { FC, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 
-import imgIcon from '@/images/icons/photo.png';
 
 import LoadingIndicator from '@/components/LoadingIndicator';
 import axios from 'axios';
@@ -24,7 +23,7 @@ interface CategoriesFormData {
 
 const AddCategories: FC<AddCategoriesProps> = () => {
   const [isPending, startTransition] = useTransition();
-  const [preview, setPreview] = useState<string | null>(null); // State for image preview
+
   const {
     register,
     handleSubmit,
@@ -45,7 +44,6 @@ const AddCategories: FC<AddCategoriesProps> = () => {
         
         if (result.data.status === 200) {
           reset();
-          setPreview(null)
           alert(result.data.message);
         }
 
@@ -60,12 +58,7 @@ const AddCategories: FC<AddCategoriesProps> = () => {
   
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file)); // Create image preview
-    }
-  };
+ 
 
   if (isPending) return <LoadingIndicator />;
 

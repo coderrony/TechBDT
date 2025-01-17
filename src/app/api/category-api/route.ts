@@ -1,4 +1,6 @@
+import { replaceMongoIdInArray } from '@/lib/convertData';
 import { Category } from '@/model/category-model';
+import { SubCategory } from '@/model/sub-category-model';
 import { connectDB } from '@/services/mongo';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -6,23 +8,58 @@ export const POST = async (request: NextRequest) => {
   const formData = await request.formData();
   const name = formData.get('name') as string;
 
-  console.log("post category name ",name);
-  
   try {
     await connectDB();
-   
-  const category = await Category.create({name});
 
-  if(category){ 
-    return NextResponse.json(
-      { message: 'Category Create Successfully', status: 200 },
-      { status: 200 },
-    );
-  }else{ 
-    return NextResponse.json({ message:"fail to Crate Category!", status: 500 });
-  }
+    const category = await Category.create({ name });
 
+    if (category) {
+      return NextResponse.json(
+        { message: 'Category Create Successfully', status: 200 },
+        { status: 200 },
+      );
+    } else {
+      return NextResponse.json({
+        message: 'fail to Crate Category!',
+        status: 500,
+      });
+    }
   } catch (err: any) {
+    return NextResponse.json({ message: err.message, status: 500 });
+  }
+};
+
+export const GET = async (req: any) => {
+  console.log("i am in get");
+  
+  try {
+    // Connect to the database
+    await connectDB();
+
+    const categoriesWithSubCategories = (await Category.find({})
+      .populate({
+        path: 'sub_categories',
+        model: SubCategory,
+      })
+      .lean()) as any[];
+
+      console.log("categoriesWithSubCategories ",categoriesWithSubCategories);
+      
+
+    if (categoriesWithSubCategories) {
+      return NextResponse.json(
+        {
+          res_data: replaceMongoIdInArray(categoriesWithSubCategories),
+          message: 'fetched successfully',
+          status: 200,
+        },
+        { status: 200 },
+      );
+    } else {
+      return NextResponse.json({ message: 'Failed to fetch', status: 500 });
+    }
+  } catch (err: any) {
+    // console.error('Error fetching user:', err);
     return NextResponse.json({ message: err.message, status: 500 });
   }
 };
