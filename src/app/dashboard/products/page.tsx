@@ -10,7 +10,19 @@ import { CategoryAndSubType } from "@/types/CategoryType";
 
 
 async function ProductsPage() {
-  //  const categoriesData = await getCategoriesWithSubCategories() as CategoryAndSubType[] || [];
+   const categoriesData = await  fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
+    cache: 'no-store', // Fetch fresh data
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+      return res.json();
+    })
+    .then((data) => data.res_data)
+
+    console.log("categoriesData ",categoriesData);
+    
    const dropshops = await getDropShops() as DropShopType[];
    
   //  console.log("dropshops ",dropshops);
@@ -26,7 +38,7 @@ async function ProductsPage() {
     {
       id: 'add_product',
       label: 'Add Products',
-      content: <AddProduct  dropshops={dropshops} />,
+      content: <AddProduct categoriesData={categoriesData} dropshops={dropshops} />,
     },
     {
       id: 'product_preview',

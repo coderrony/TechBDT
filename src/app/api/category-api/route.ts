@@ -3,7 +3,7 @@ import { Category } from '@/model/category-model';
 import { SubCategory } from '@/model/sub-category-model';
 import { connectDB } from '@/services/mongo';
 import { NextRequest, NextResponse } from 'next/server';
-
+import { revalidatePath } from 'next/cache';
 export const POST = async (request: NextRequest) => {
   const formData = await request.formData();
   const name = formData.get('name') as string;
@@ -14,6 +14,7 @@ export const POST = async (request: NextRequest) => {
     const category = await Category.create({ name });
 
     if (category) {
+      revalidatePath('/'); // আপনার UI path এখানে দিন
       return NextResponse.json(
         { message: 'Category Create Successfully', status: 200 },
         { status: 200 },

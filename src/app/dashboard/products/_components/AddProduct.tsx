@@ -14,18 +14,14 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import { DropShopType } from '@/types/DropShopType';
 import { MongoDocumentWithId, replaceMongoIdInArray } from '@/lib/convertData';
 import { createProduct } from '@/queries/products';
-import useCategory from '@/hooks/useCategory';
 
 interface AddProductProps {
   className?: string;
-
+  categoriesData: CategoryAndSubType[];
   dropshops: DropShopType[];
 }
 
-const AddProduct: FC<AddProductProps> = ({  dropshops }) => {
-  const {categoryDataFetch:{categoryData}} = useCategory()
-  console.log("categoryData ",categoryData);
-  
+const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
   const [subCategories, setSubCategories] = useState<
     CategoryAndSubType['sub_categories']
   >([]);
@@ -60,8 +56,8 @@ const AddProduct: FC<AddProductProps> = ({  dropshops }) => {
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategoryId = e.target.value;
-    const selectedCategory = categoryData.find(
-      (category: any) => category.id === selectedCategoryId,
+    const selectedCategory = categoriesData.find(
+      category => category.id === selectedCategoryId,
     );
 
     const subCategories = selectedCategory?.sub_categories || [];
@@ -182,7 +178,7 @@ const AddProduct: FC<AddProductProps> = ({  dropshops }) => {
               onChange={handleCategoryChange} // Add onChange
             >
               <option value=''>Select Category</option>
-              {categoryData.map((item:any) => (
+              {categoriesData.map(item => (
                 <option value={item.id} key={item.id}>
                   {item.name}
                 </option>
