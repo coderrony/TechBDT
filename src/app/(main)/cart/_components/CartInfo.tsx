@@ -232,17 +232,13 @@ const CartInfo: FC<CartInfoProps> = () => {
 
 
     try {
-      const metadata = { user_id: '123', order_id: '456' };
-      // const redirectUrl = 'https://techbdt.com/orders';
-      // const cancelUrl = 'https://techbdt.com/cancel';
-      // const webhookUrl = 'https://techbdt.com/ipn';
-
 
      // UddoktaPay পেমেন্ট রিকোয়েস্ট তৈরির জন্য ডেটা প্রস্তুত করুন
      const paymentRequest = {
       full_name: authData?.name || "Customer",
       email: authData?.email || "customer@example.com",
-      amount: calculateCartTotal(cartData?.products).toString(), // মোট অর্ডারের মূল্য
+      // amount: calculateCartTotal(cartData?.products).toString(), // মোট অর্ডারের মূল্য
+      amount: '1000', // মোট অর্ডারের মূল্য
       metadata: {
         user_id: authData?._id,
         order_id: `order_${Date.now()}`, // ইউনিক অর্ডার আইডি
@@ -265,8 +261,6 @@ const CartInfo: FC<CartInfoProps> = () => {
         }
       );
   
-
-
       const result = response.data;
 
       console.log("cart response result",result);

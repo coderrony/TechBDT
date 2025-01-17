@@ -4,13 +4,16 @@ import '@/fonts/line-awesome-1.3.0/css/line-awesome.css';
 import '@/styles/index.scss';
 import 'rc-slider/assets/index.css';
 
-import CommonClient from './CommonClient';
+// import CommonClient from './CommonClient';
 import { Metadata } from 'next';
-import { connectDB } from '@/services/mongo';
+// import { connectDB } from '@/services/mongo';
 import { SessionProvider } from 'next-auth/react';
 import { queryClient } from '@/lib/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import dynamic from 'next/dynamic';
+
+
 const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
@@ -80,26 +83,23 @@ export const metadata: Metadata = {
     images: ['/opengraph-image.png'],
   },
 };
-
-export default async function RootLayout({
+const CommonClient = dynamic(() => import('./CommonClient'), { ssr: false });
+export default function RootLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: any;
 }) {
-  await connectDB();
-
   return (
-    <html lang='en' dir='' className={poppins.className}>
-      <body className='bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200'>
+    <html lang='en' className={poppins.className}>
+      <body className='bg-white text-neutral-900'>
         <SessionProvider>
           <QueryClientProvider client={queryClient}>
             {children}
-            <ReactQueryDevtools initialIsOpen={false} />
+            {process.env.NODE_ENV === 'development' && (
+              <ReactQueryDevtools initialIsOpen={false} />
+            )}
           </QueryClientProvider>
         </SessionProvider>
-
         <CommonClient />
       </body>
     </html>

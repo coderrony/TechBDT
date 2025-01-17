@@ -110,17 +110,117 @@ export const getProductInfoForMetaData  = async () => {
   return replaceMongoIdInArray(products as any[]) || [];
 }
 
+// new-arrivals fetch first 40 products use select and limit
+
+
+// export const getNewArrivals = async () => {
+//   await connectDB(); // Ensure the database connection is established
+
+//   // Calculate the date 60 days ago
+//   const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+
+//   try {
+//     // Fetch products created in the last 60 days
+//     const products = await Product.find({
+//       createdAt: { $gte: sixtyDaysAgo },
+//     })
+//       .sort({ createdAt: -1 }) // Sort by newest first
+//       .limit(40) // Limit the results to 40 products
+//       .populate({
+//         path: "reviews", // Populate the "reviews" field
+//         model: Review, // Use the Review model for population
+//       })
+//       .lean(); // Return plain objects
+
+//     // Replace MongoDB `_id` with `id` in the results
+//     return replaceMongoIdInArray(products as any[]) || [];
+//   } catch (error) {
+//     console.error("Error fetching new arrivals:", error);
+//     return []; // Return an empty array on error
+//   }
+// };
+
+// export const getLast40Products = async () => {
+//   await connectDB(); // ডাটাবেস কানেকশন করুন
+
+//   try {
+//     // প্রোডাক্ট নিয়ে আসুন, তৈরি হওয়ার তারিখ অনুযায়ী (সর্বশেষ থেকে প্রাচীন)
+//     const products = await Product.find({})
+//       .sort({ createdAt: -1 }) // সর্বশেষ প্রোডাক্ট প্রথমে আনবে
+//       .limit(40)
+//       .populate({
+//         path: "reviews", // Populate the "reviews" field
+//         model: Review, // Use the Review model for population
+//       }).lean(); // প্লেইন জাভাস্ক্রিপ্ট অবজেক্ট রিটার্ন করবে
+
+//       return replaceMongoIdInArray(products as any[]) || [];
+//   } catch (error) {
+//     console.error("Error fetching last 40 products:", error);
+//     return []; // যদি কোনো সমস্যা হয়, খালি অ্যারে রিটার্ন করুন
+//   }
+// };
+
+
+export const getNewArrivals = async () => {
+  await connectDB(); // Ensure the database connection is established
+
+  // Calculate the date 60 days ago
+  const sixtyDaysAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000);
+
+  try {
+    // Fetch products created in the last 60 days
+    const products = await Product.find({
+      createdAt: { $gte: sixtyDaysAgo }, // ৬০ দিনের মধ্যে তৈরি প্রোডাক্ট
+    })
+      .sort({ createdAt: -1 }) // Sort by newest first
+      .populate({
+        path: "reviews", // Populate the "reviews" field
+        model: Review, // Use the Review model for population
+      })
+      .lean(); // Return plain objects
+
+    // Replace MongoDB `_id` with `id` in the results
+    return replaceMongoIdInArray(products as any[]) || [];
+  } catch (error) {
+    console.error("Error fetching new arrivals:", error);
+    return []; // Return an empty array on error
+  }
+};
+
+
+export const getLastProducts = async () => {
+  await connectDB(); // ডাটাবেস কানেকশন করুন
+
+  try {
+    // সর্বশেষ ৪০টি প্রোডাক্ট নিয়ে আসুন
+    const products = await Product.find({})
+      .sort({ createdAt: 1 }) // সর্বশেষ প্রোডাক্ট প্রথমে আনবে
+      .limit(20) // সর্বশেষ 20টি প্রোডাক্ট সীমাবদ্ধ করুন
+      .populate({
+        path: "reviews", // Populate the "reviews" field
+        model: Review, // Use the Review model for population
+      })
+      .lean(); // প্লেইন জাভাস্ক্রিপ্ট অবজেক্ট রিটার্ন করবে
+
+    // Replace MongoDB `_id` with `id` in the results
+    return replaceMongoIdInArray(products as any[]) || [];
+  } catch (error) {
+    console.error("Error fetching last 40 products:", error);
+    return []; // Return an empty array on error
+  }
+};
+
 
 // *** getProducts should be optimized not fetch all product use limit and select fields
-export const getProducts = async () => {
-  await connectDB(); 
-  const products = await Product.find({}).populate({
-    path: "reviews",
-    model: Review
-}).lean(); 
+// export const getProducts = async () => {
+//   await connectDB(); 
+//   const products = await Product.find({}).populate({
+//     path: "reviews",
+//     model: Review
+// }).lean(); 
 
-  return replaceMongoIdInArray(products as any[]) || [];
-};
+//   return replaceMongoIdInArray(products as any[]) || [];
+// };
 
 export async function getProductBySlug(slug: string) {
   await connectDB();
@@ -137,21 +237,21 @@ export async function getProductBySlug(slug: string) {
 }
 
 // Sample function to create a review for a product
-export async function createReviewForProduct(productId: string, reviewData: any) {
-  // Create a new review
-  const newReview = new Review({
-    product: productId,
-    ...reviewData, // Assuming reviewData contains full_name, comment, rating, etc.
-  });
+// export async function createReviewForProduct(productId: string, reviewData: any) {
+//   // Create a new review
+//   const newReview = new Review({
+//     product: productId,
+//     ...reviewData, // Assuming reviewData contains full_name, comment, rating, etc.
+//   });
 
-  await newReview.save();
+//   await newReview.save();
 
-  // Add review to the product
-  await Product.findByIdAndUpdate(
-    productId,
-    { $push: { reviews: newReview._id } },
-    { new: true }
-  );
+//   // Add review to the product
+//   await Product.findByIdAndUpdate(
+//     productId,
+//     { $push: { reviews: newReview._id } },
+//     { new: true }
+//   );
 
-  return newReview;
-}
+//   return newReview;
+// }

@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export const POST = async (req: any) => {
   const data = await req.json();
-  // console.log("data in post ",data);
+  console.log("data in post ",data);
   // console.log(process.env.NEXT_PUBLIC_SITE_URL);
   // console.log(process.env.NEXT_PUBLIC_UDDOKTAPAY_API_KEY);
 

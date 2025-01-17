@@ -8,11 +8,11 @@ import Input from "@/shared/Input/Input";
 import ButtonCircle from "@/shared/Button/ButtonCircle";
 
 import ProductCard from "@/components/ProductCardSectionSlider/ProductCard";
-import { getProducts } from "@/queries/products";
+import { getNewArrivals } from "@/queries/products";
 
 
 const PageSearch =async () => {
-    const allProducts = await getProducts() || []
+    const allProducts = await getNewArrivals() || []
   return (
     <div className={`nc-PageSearch`} data-nc-id="PageSearch">
       <div

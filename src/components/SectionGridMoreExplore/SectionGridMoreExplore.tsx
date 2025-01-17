@@ -22,9 +22,6 @@ const SectionGridMoreExplore: FC<SectionGridMoreExploreProps> = ({
   data = [],
 }) => {
 
-  
-  
-
   const [tabActive, setTabActive] = useState(data[0].name);
   const [productPreview, setProductPreview] = useState<any[]>([]);
   // console.log("data ",data);

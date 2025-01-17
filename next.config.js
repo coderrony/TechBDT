@@ -36,6 +36,10 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizeCss: true,
+  },
+  compress: true,
 
 };
 

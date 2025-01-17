@@ -52,9 +52,9 @@ const CardCategory4: FC<CardCategory4Props> = ({
               width={50}
               height={50}
             />
-            <span className="text-xs text-slate-700 dark:text-neutral-300 font-medium">
+            {/* <span className="text-xs text-slate-700 dark:text-neutral-300 font-medium">
               {count} products
-            </span>
+            </span> */}
           </div>
 
           <div className="">

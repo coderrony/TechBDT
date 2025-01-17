@@ -23,7 +23,7 @@ const SectionSlider: FC<SectionSliderProps> = ({
   headingFontClassName,
   headingClassName,
   heading,
-  subHeading = "REY backpacks & bags",
+  subHeading = "REY backpacks",
 
   children,
 }) => {

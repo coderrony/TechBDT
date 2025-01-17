@@ -4,6 +4,7 @@ import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
 import { replaceMongoIdInArray } from '@/lib/convertData';
 import { Category } from '@/model/category-model';
 import { SubCategory } from '@/model/sub-category-model';
+import { connectDB } from '@/services/mongo';
 
 
 export const createCategory = async (formData: any) => {
@@ -46,6 +47,7 @@ export const createCategory = async (formData: any) => {
 
 
 export async function getCategoriesWithSubCategories() {
+  await connectDB()
   try {
     const categoriesWithSubCategories = await Category.find({}).populate({
         path: "sub_categories",
