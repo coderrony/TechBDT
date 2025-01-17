@@ -12,10 +12,7 @@ const categorySchema = new Schema({
         type: String,
         unique:true
     },
-    image_url: {
-        type: String,
-        default: default_category 
-    },
+ 
     count: {
         type: Number,
         default:0
