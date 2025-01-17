@@ -147,9 +147,9 @@ const CartInfo: FC<CartInfoProps> = () => {
 
                     {item.color && <span>{item.color}</span>}
                   </div>
-                  <span className='mx-4 border-l border-slate-200 dark:border-slate-700 '></span>
+              <span className='mx-4 border-l border-slate-200 dark:border-slate-700 '></span>
                   <div className='flex items-center space-x-1.5'>
-                    <svg className='w-4 h-4' viewBox='0 0 24 24' fill='none'>
+                    <svg className='w-4 h-4 ' viewBox='0 0 24 24' fill='none'>
                       <path
                         d='M21 9V3H15'
                         stroke='currentColor'
@@ -192,7 +192,7 @@ const CartInfo: FC<CartInfoProps> = () => {
                 </div>
               </div>
 
-              <div className='hidden sm:block text-center relative'>
+              <div className=' text-center relative'>
                 {/* <NcInputNumber className="relative z-10" defaultValue={item.quantity} cartId={item._id.toString()} /> */}
                 <QuantityBtn
                   className='relative z-10'
