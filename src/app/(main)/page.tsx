@@ -16,7 +16,9 @@ const SectionGridMoreExplore = dynamic(() => import('@/components/SectionGridMor
 export default async function PageHome() {
 
   const [allCategory, newArrivals, last40Products] = await Promise.all([
-    fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`)
+    fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
+      cache: 'no-store', // Fetch fresh data
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error('Failed to fetch categories');

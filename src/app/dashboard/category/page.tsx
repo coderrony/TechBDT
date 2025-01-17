@@ -6,12 +6,19 @@ import SubCategories from "./_components/SubCategories";
 import CategoryPreview from "./_components/CategoryPreview";
 
 import { notFound } from 'next/navigation';
-import { getCategoriesWithSubCategories } from "@/queries/categories";
+
 
 async function CategoryPage() {
   
 
-  const categoryWithSub = await getCategoriesWithSubCategories() || []
+  const categoryWithSub = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`)
+  .then((res) => {
+    if (!res.ok) {
+      throw new Error('Failed to fetch categories');
+    }
+    return res.json();
+  })
+  .then((data) => data.res_data)
   // console.log("categoryWithSub ",categoryWithSub);
   
   
