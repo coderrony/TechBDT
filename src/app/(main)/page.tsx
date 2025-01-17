@@ -14,7 +14,7 @@ const BackgroundSection = dynamic(() => import('@/components/BackgroundSection/B
 const SectionGridMoreExplore = dynamic(() => import('@/components/SectionGridMoreExplore/SectionGridMoreExplore'), { ssr: false });
 
 export default async function PageHome() {
-  // ডাটা ফেচ করা হচ্ছে
+
   const [allCategory, newArrivals, last40Products] = await Promise.all([
     getCategoriesWithSubCategories(),
     getNewArrivals(),
