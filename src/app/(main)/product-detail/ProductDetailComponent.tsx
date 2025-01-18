@@ -50,6 +50,7 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
     colors,
     status,
     price,
+    sku,
     name,
     thumbnail,
     images_gallery,
@@ -81,6 +82,7 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
     quantity: qualitySelected,
   };
 
+  console.log("sku ",sku)
   const handleCart = () => {
     if (session?.user) {
       if (sizeSelected !== '') {
@@ -406,7 +408,7 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
             </a>
             <span className='hidden sm:block mx-2.5'>·</span>
             {renderStatus()}
-
+            <h3 className='ml-4 leading-none text-sm flex items-center  text-slate-900 dark:text-slate-300'>SKU: {sku}</h3>
             <div className='ml-auto'>
               <LikeSaveBtns />
             </div>

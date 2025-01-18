@@ -6,6 +6,7 @@ export interface ProductType {
   name: string;
   slug: string; // Unique slug
   price: number;
+  sku:string;
   description: string;
  
   product_role: string; // Defaults to "active"
