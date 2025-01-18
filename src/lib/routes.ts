@@ -14,11 +14,16 @@ export const PUBLIC_ROUTES = [
   '/not-found',
   '/api/auth/',
   '/api/otp-send',
-  '/api/category-api'
+  '/api/category-api',
  
+  // admin access
+
+  '/api/drop-shop-api'
 //  '/auth/callback', // when login with any provider auto redirect to that api and handle cookies
 ]
 
 export const ADMIN_ROUTES = [
   '/dashboard',
+ 
 ]
+

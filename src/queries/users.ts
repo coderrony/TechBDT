@@ -73,6 +73,19 @@ export async function getUserByEmail(email: string) {
   return replaceMongoIdInObject(user as any);
 }
 
+export async function getUserById(userId: string) {
+  await connectDB();
+  const user = await User.findById(userId).select('-password').lean();
+  // console.log("queries/users 1 ",user);
+
+  if (!user) {
+    return null;
+  }
+
+  return replaceMongoIdInObject(user as any);
+}
+
+
 // export async function getUserById(id: string) {
 //   await connectDB()
 //   try {

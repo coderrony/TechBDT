@@ -16,30 +16,41 @@ export async function middleware(req: any) {
   // console.log('Middleware Token:', token);
   
 
-  const isAdminRoute = (ADMIN_ROUTES.find(route => nextUrl.pathname.startsWith(route)));
+  const isAdminRoute = (ADMIN_ROUTES.find(route => nextUrl.pathname.startsWith(route))) || false;
+  // const isAdminAccessApi = (ADMIN_ACCESS_API.find(route => nextUrl.pathname.startsWith(route))) || false;
   const isPublicRoute = (PUBLIC_ROUTES.find(route => nextUrl.pathname.startsWith(route))) || nextUrl.pathname === ROOT;
   // const isPublicRoute = PUBLIC_ROUTES.some(route => nextUrl.pathname.startsWith(route)) || nextUrl.pathname === ROOT;
 
 
   console.log("nextUrl pathname",nextUrl.pathname);
+  // console.log("isPublicRoute",isPublicRoute);
   // console.log("isAdminRoute",isAdminRoute);
-  // console.log("admin role ",token?.role);
+  // console.log("isAdminAccessApi",isAdminAccessApi);
+  // console.log("admin role ",token?.user?.role);
 
-
+  // if(isAdminAccessApi && token?.user?.role === 'admin'){ 
+  //   return NextResponse.next();
+  // }
+  
   // admin access
   if(isAdminRoute && token?.user?.role !== 'admin'){ 
+    // console.log("1------------");
     return NextResponse.redirect(new URL('/not-found',nextUrl)); // Unauthorized page
   }
 
   // can't access signup  ,login and forgot-pass page when authenticate
   if(token && (nextUrl.pathname.startsWith(LOGIN) || nextUrl.pathname.startsWith(SIGNUP) || nextUrl.pathname.startsWith(FORGET_PASSWORD))){ 
+    // console.log("2------------");
     return NextResponse.redirect(new URL(ROOT,nextUrl)); // Unauthorized page
   }
 
   // public access
-  if(!token && !isPublicRoute && !nextUrl.pathname.startsWith(PRODUCT_DETAILS) ){ 
+  if(!token && !isPublicRoute  && !nextUrl.pathname.startsWith(PRODUCT_DETAILS) ){ 
+    // console.log("3--------------");
+    
     return Response.redirect(new URL(LOGIN,nextUrl))
   }
+  // console.log("==============");
  
   // all authorize route 
   return NextResponse.next();
