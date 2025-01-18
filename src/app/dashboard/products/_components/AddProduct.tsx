@@ -104,6 +104,7 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
     formData.append('category_id', data.category);
     formData.append('sub_category_id', data.sub_category);
     formData.append('price', data.price);
+    formData.append('sku', data.sku);
     formData.append('status', data.status);
     formData.append('discount', data.discount);
     formData.append('description', data.description);
@@ -218,7 +219,6 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
           </div>
 
           {/* price */}
-
           <div className='h-20 '>
             <Label>Price</Label>
             <Input
@@ -234,6 +234,25 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
               </p>
             )}
           </div>
+
+          {/* Sku */}
+          <div className='h-20 '>
+            <Label>Sku</Label>
+            <Input
+              type='text'
+              placeholder='sku'
+              {...register('sku', {
+                required: 'Sku Field is Required!',
+              })}
+            />
+            {errors.sku && typeof errors.sku.message === 'string' && (
+              <p className='text-red-600 text-xs ml-2'>
+                {errors.sku.message}
+              </p>
+            )}
+          </div>
+
+
           {/* discount */}
           <div className='h-20 '>
             <Label>Discount</Label>

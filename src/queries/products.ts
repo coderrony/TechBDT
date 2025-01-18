@@ -17,6 +17,7 @@ export const createProduct = async (formData: any) => {
     const category_id = formData.get('category_id');
     const sub_category_id = formData.get('sub_category_id');
     const price = formData.get('price') as number;
+    const sku = formData.get('sku') as string;
     const status = formData.get('status') as string;
     const discount = formData.get('discount') as number;
     const description = formData.get('description') as string;
@@ -37,6 +38,7 @@ export const createProduct = async (formData: any) => {
       name,
       slug,
       price,
+      sku,
       status,
       discount,
       description,
