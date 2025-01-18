@@ -45,9 +45,6 @@ export const GET = async (req: any) => {
       })
       .lean()) as any[];
 
-      // console.log("categoriesWithSubCategories ",categoriesWithSubCategories);
-      
-
     if (categoriesWithSubCategories) {
       return NextResponse.json(
         {

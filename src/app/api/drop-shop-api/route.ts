@@ -6,8 +6,7 @@ import { getUserById } from '@/queries/users';
 
 export const GET = async (req:any) => {
   const userId = req.nextUrl.searchParams.get('id');
-  console.log("userId ",userId);
-  
+ 
   if (!userId) {
     return NextResponse.json({
       message: 'You are not authenticated!',
@@ -15,14 +14,12 @@ export const GET = async (req:any) => {
     });
   }
 
-
   try {
     // Connect to the database
     await connectDB();
     
     const user = await getUserById(userId)
-    console.log(user);
-
+ 
     if(user?.role === 'admin'){ 
       const dropShop = (await DropShop.find({}).lean()) as any[];
       if (dropShop) { 

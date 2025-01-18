@@ -1,9 +1,6 @@
 
 import { TabsType } from "../_components/ManageTabs";
 
-import { notFound } from "next/navigation";
-// import { getDropShops } from "@/queries/dropshop";
-// import { DropShopType } from "@/types/DropShopType";
 import dynamic from "next/dynamic";
 import { auth } from '@/auth';
 const ManageTabs = dynamic(() => import('../_components/ManageTabs'), { ssr: true });
@@ -37,14 +34,6 @@ async function ProductsPage() {
           .then((data) => data.res_data),
     ]);
 
-    // console.log("session ",session)
-    // console.log("dropshops ",dropshops)
-
-
-
-
-  //  if(!dropshops) notFound()
-  
 
   const tabs: TabsType[] = [
     {
