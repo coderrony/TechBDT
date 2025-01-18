@@ -13,7 +13,7 @@ export const POST = async (request: NextRequest) => {
     const category = formData.get('category') as string;
     const file = formData.get('file') as File;
 
-    console.log('category ', category);
+    // console.log('category ', category);
 
     // save data in category schema
     const data: any = { name, category };
@@ -40,7 +40,7 @@ export const POST = async (request: NextRequest) => {
     await connectDB();
 
     const subCategory = await SubCategory.create(data);
-    console.log('subCategory ', subCategory);
+    // console.log('subCategory ', subCategory);
 
     if (subCategory) {
       // Add Category to the sub category

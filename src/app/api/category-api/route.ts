@@ -4,6 +4,8 @@ import { SubCategory } from '@/model/sub-category-model';
 import { connectDB } from '@/services/mongo';
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
+
+
 export const POST = async (request: NextRequest) => {
   const formData = await request.formData();
   const name = formData.get('name') as string;

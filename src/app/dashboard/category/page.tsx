@@ -11,7 +11,9 @@ import { notFound } from 'next/navigation';
 async function CategoryPage() {
   
 
-  const categoryWithSub = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`)
+  const categoryWithSub = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
+    cache: 'no-store', // Fetch fresh data
+  })
   .then((res) => {
     if (!res.ok) {
       throw new Error('Failed to fetch categories');
