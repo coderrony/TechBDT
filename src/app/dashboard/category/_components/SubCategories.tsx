@@ -12,7 +12,8 @@ import Label from '@/components/Label/Label';
 
 import SelectValue from '@/components/SelectValue';
 import { CategoryAndSubType } from '@/types/CategoryType';
-import { createSubCategory } from '@/queries/subCategory';
+// import { createSubCategory } from '@/queries/subCategory';
+import axios from 'axios';
 // import { default_category } from '@/data/defaultValue';
 
 interface AddCategoriesProps {
@@ -48,12 +49,15 @@ const SubCategories: FC<AddCategoriesProps> = ({ categoriesData }) => {
 
     startTransition(async () => {
       try {
-        const result = await createSubCategory(formData);
+        const result = await axios.post("/api/subCategory-api",formData) as any;
 
-        if (result.status === 200) {
+        console.log("result ",result);
+        
+
+        if (result.data.status === 200) {
           reset();
           setPreview(null);
-          alert(result.message);
+          alert(result.data.message);
         }
       } catch (err: any) {
         alert(`Error Occur ${err?.message}`);
