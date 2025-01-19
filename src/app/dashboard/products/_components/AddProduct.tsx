@@ -15,6 +15,8 @@ import { DropShopType } from '@/types/DropShopType';
 import {  replaceMongoIdInArray } from '@/lib/convertData';
 // import { createProduct } from '@/queries/products';
 import axios from 'axios';
+// import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
+// import cloudinary from '@/services/cloudinary';
 
 interface AddProductProps {
   className?: string;
@@ -92,12 +94,17 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
     console.log('data ', data);
 
     const formData = new FormData();
+    const signalFileFormData = new FormData();
+    const multipleFileFormData = new FormData();
 
     const bnContentJson = JSON.parse(data.BN_content); // Convert string to JSON
     const enContentJson = JSON.parse(data.EN_content); // Convert string to JSON
 
+    // Array.from(data.image_gallery as File[]).forEach(file => {
+    //   formData.append('image_gallery', file);
+    // });
     Array.from(data.image_gallery as File[]).forEach(file => {
-      formData.append('image_gallery', file);
+      multipleFileFormData.append('gallery', file);
     });
 
     formData.append('name', data.name);
@@ -109,13 +116,50 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
     formData.append('status', data.status);
     formData.append('discount', data.discount);
     formData.append('description', data.description);
-    formData.append('thumbnail', data.thumbnail[0]);
+    // formData.append('thumbnail', data.thumbnail[0]);
     formData.append('BN_content', JSON.stringify(bnContentJson));
     formData.append('EN_content', JSON.stringify(enContentJson));
     formData.append('payload', JSON.stringify(payload));
 
     startTransition(async () => {
       try {
+       
+        // 
+
+        if(data?.thumbnail[0]){ 
+            // const thumbnail_upload = await uploadFileByCloudinary(
+            //    data.thumbnail[0],
+            //     `product-image/${data.name.replaceAll(" ","-")}/thumbnail`,
+            //   );
+
+            // const fileBuffer = await data.thumbnail[0].arrayBuffer();
+            // const base64String = `data:${data.thumbnail[0].type};base64,${Buffer.from(fileBuffer).toString('base64')}`;
+            // const uploadResult = await cloudinary.uploader.upload(base64String, {
+            //   folder: `product-image/${data.name.replaceAll(" ","-")}/thumbnail`,
+            // });
+            // console.log("uploadResult ",uploadResult);
+            
+           
+            
+            signalFileFormData.append('path',`product-image/${data.name.replaceAll(" ","-")}/thumbnail`);
+            signalFileFormData.append('file',data.thumbnail[0]);
+            const uploadFileResult = await axios.post("/api/upload-file-api",signalFileFormData) as any
+            console.log("uploadFileResult ",uploadFileResult);
+            formData.append('thumbnail', uploadFileResult.data.res_data);
+        }
+       console.log("data.image_gallery ",data.image_gallery);
+
+        if(data?.image_gallery?.length > 0){
+          console.log("11111",data.image_gallery);
+
+          multipleFileFormData.append('path',`product-image/${data.name.replaceAll(" ","-")}/image_gallery`);
+       
+          const uploadGalleryResult = await axios.post("/api/upload-file-api",multipleFileFormData) as any
+          console.log("uploadGalleryResult ",uploadGalleryResult);
+          formData.append('image_gallery', JSON.stringify(uploadGalleryResult.data.res_data));
+          
+        }
+
         // const result = await createProduct(formData);
         const result = await axios.post('/api/product-api', formData) as any;
 
@@ -131,6 +175,8 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
         }
         setPreview(null);
         setImageGalleryPreview([]);
+
+
       } catch (err: any) {
         alert(`Error Occur ${err?.message}`);
         console.log(err.message);

@@ -18,8 +18,9 @@ export const POST = async (request: NextRequest) => {
   const status = formData.get('status') as string;
   const discount = formData.get('discount');
   const description = formData.get('description') as string;
-  const thumbnail_img = formData.get('thumbnail') as File;
-  const image_gallery = formData.getAll('image_gallery') as File[];
+  const thumbnail = formData.get('thumbnail') as string;
+  // const image_gallery = formData.getAll('image_gallery') as File[];
+  const images_gallery = formData.getAll('image_gallery') as any;
   const dropShop = formData.get('dropshop') as string;
 
   const BN_contentRaw = formData.get('BN_content');
@@ -33,9 +34,13 @@ export const POST = async (request: NextRequest) => {
 
   console.log(price);
   console.log(discount);
+  console.log("thumbnail ",thumbnail);
+  console.log("image_gallery ",images_gallery);
+  console.log("images_gallery parse ",JSON.parse(images_gallery));
   console.log(payload);
-  console.log(BN_content);
-
+  // console.log(BN_content);
+  // console.log(BN_content);
+  
   try {
     await connectDB();
 
@@ -47,6 +52,8 @@ export const POST = async (request: NextRequest) => {
       status,
       discount,
       description,
+      thumbnail,
+      images_gallery:JSON.parse(images_gallery),
       dropShop,
       BN_content,
       EN_content,
@@ -70,45 +77,45 @@ export const POST = async (request: NextRequest) => {
     }
 
     // image gallery url store
-    const imageGalleryUrls: string[] = [];
+    // const imageGalleryUrls: string[] = [];
 
     // thumbnail image upload process
-    if (thumbnail_img) {
-      const fileBuffer = await thumbnail_img.arrayBuffer();
-      const base64String = `data:${thumbnail_img.type};base64,${Buffer.from(
-        fileBuffer,
-      ).toString('base64')}`;
-      const uploadResult = await cloudinary.uploader.upload(base64String, {
-        folder: `product-image/${slug}/thumbnail`,
-        transformation: [
-          {
-            quality: 'auto',
-            fetch_format: 'auto',
-          },
-        ],
-      });
-      product_data['thumbnail'] = uploadResult.secure_url;
-    }
+    // if (thumbnail_img) {
+    //   const fileBuffer = await thumbnail_img.arrayBuffer();
+    //   const base64String = `data:${thumbnail_img.type};base64,${Buffer.from(
+    //     fileBuffer,
+    //   ).toString('base64')}`;
+    //   const uploadResult = await cloudinary.uploader.upload(base64String, {
+    //     folder: `product-image/${slug}/thumbnail`,
+    //     transformation: [
+    //       {
+    //         quality: 'auto',
+    //         fetch_format: 'auto',
+    //       },
+    //     ],
+    //   });
+    //   product_data['thumbnail'] = uploadResult.secure_url;
+    // }
 
     //image gallery upload process
-    for (const image of image_gallery) {
-      const fileBuffer = await image.arrayBuffer();
-      const base64String = `data:${image.type};base64,${Buffer.from(
-        fileBuffer,
-      ).toString('base64')}`;
-      const uploadResult = await cloudinary.uploader.upload(base64String, {
-        folder: `product-image/${slug}/image_gallery`,
-        transformation: [
-          {
-            quality: 'auto',
-            fetch_format: 'auto',
-          },
-        ],
-      });
-      imageGalleryUrls.push(uploadResult.secure_url);
-    }
+    // for (const image of image_gallery) {
+    //   const fileBuffer = await image.arrayBuffer();
+    //   const base64String = `data:${image.type};base64,${Buffer.from(
+    //     fileBuffer,
+    //   ).toString('base64')}`;
+    //   const uploadResult = await cloudinary.uploader.upload(base64String, {
+    //     folder: `product-image/${slug}/image_gallery`,
+    //     transformation: [
+    //       {
+    //         quality: 'auto',
+    //         fetch_format: 'auto',
+    //       },
+    //     ],
+    //   });
+    //   imageGalleryUrls.push(uploadResult.secure_url);
+    // }
 
-    product_data['images_gallery'] = imageGalleryUrls;
+    // product_data['images_gallery'] = imageGalleryUrls;
 
     //  product create process
     const product = await Product.create(product_data);
