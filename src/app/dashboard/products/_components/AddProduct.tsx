@@ -13,7 +13,8 @@ import { CategoryAndSubType } from '@/types/CategoryType';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { DropShopType } from '@/types/DropShopType';
 import {  replaceMongoIdInArray } from '@/lib/convertData';
-import { createProduct } from '@/queries/products';
+// import { createProduct } from '@/queries/products';
+import axios from 'axios';
 
 interface AddProductProps {
   className?: string;
@@ -115,17 +116,18 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
 
     startTransition(async () => {
       try {
-        const result = await createProduct(formData);
+        // const result = await createProduct(formData);
+        const result = await axios.post('/api/product-api', formData) as any;
 
-        console.log('result ', result);
+        console.log('result ', result.data);
 
-        if (result?.status === 200) {
+        if (result?.data.status === 200) {
           reset();
-          alert(result?.message);
+          alert(result?.data.message);
         }
-        if (result?.status === 500) {
-          console.log(result);
-          alert(result?.message);
+        if (result?.data.status === 500) {
+    
+          alert(result?.data.message);
         }
         setPreview(null);
         setImageGalleryPreview([]);
