@@ -21,8 +21,9 @@ export const createProduct = async (formData: any) => {
     const status = formData.get('status') as string;
     const discount = formData.get('discount') as number;
     const description = formData.get('description') as string;
-    const thumbnail_img = formData.get('thumbnail') as File;
-    const image_gallery = formData.getAll('image_gallery') as File[];
+    const thumbnail = formData.get('thumbnail') as string;
+    // const image_gallery = formData.getAll('image_gallery') as File[];
+    const images_gallery = formData.getAll('image_gallery') as any;
     const dropShop = formData.get('dropshop') as string;
 
     const BN_contentRaw = formData.get('BN_content');
@@ -42,6 +43,8 @@ export const createProduct = async (formData: any) => {
       status,
       discount,
       description,
+      thumbnail,
+      images_gallery:JSON.parse(images_gallery),
       dropShop,
       BN_content,
       EN_content,
@@ -63,26 +66,6 @@ export const createProduct = async (formData: any) => {
     if (payload.variants.length > 0) {
       product_data['variants'] = payload.variants;
     }
-
-    // image gallery url store
-    const imageGalleryUrls: string[] = [];
-
-    // thumbnail image upload process
-    const thumbnail_upload = await uploadFileByCloudinary(
-      thumbnail_img,
-      `product-image/${slug}/thumbnail`,
-    );
-    product_data['thumbnail'] = thumbnail_upload.secure_url;
-
-    //image gallery upload process
-    for (const image of image_gallery) {
-      const image_gallery_upload = await uploadFileByCloudinary(
-        image,
-        `product-image/${slug}/image_gallery`,
-      );
-      imageGalleryUrls.push(image_gallery_upload.secure_url);
-    }
-    product_data['images_gallery'] = imageGalleryUrls;
 
     const product = await Product.create(product_data);
 

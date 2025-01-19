@@ -15,6 +15,7 @@ import { DropShopType } from '@/types/DropShopType';
 import {  replaceMongoIdInArray } from '@/lib/convertData';
 // import { createProduct } from '@/queries/products';
 import axios from 'axios';
+import { createProduct } from '@/queries/products';
 // import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
 // import cloudinary from '@/services/cloudinary';
 
@@ -160,18 +161,18 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
           
         }
 
-        // const result = await createProduct(formData);
-        const result = await axios.post('/api/product-api', formData) as any;
+        const result = await createProduct(formData);
+        // const result = await axios.post('/api/product-api', formData) as any;
 
-        console.log('result ', result.data);
+        console.log('result ', result);
 
-        if (result?.data.status === 200) {
+        if (result?.status === 200) {
           reset();
-          alert(result?.data.message);
+          alert(result?.message);
         }
-        if (result?.data.status === 500) {
+        if (result?.status === 500) {
     
-          alert(result?.data.message);
+          alert(result?.message);
         }
         setPreview(null);
         setImageGalleryPreview([]);

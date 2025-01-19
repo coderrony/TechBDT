@@ -9,9 +9,9 @@ export const POST = async (request: NextRequest) => {
     const file = formData.get("file") as File;
     const gallery = formData.getAll("gallery") as File[];
 
-    console.log("path ", path);
-    console.log("file ", file);
-    console.log("gallery ", gallery);
+    // console.log("path ", path);
+    // console.log("file ", file);
+    // console.log("gallery ", gallery);
 
     if (gallery.length > 0) {
       console.log("I am in image gallery");

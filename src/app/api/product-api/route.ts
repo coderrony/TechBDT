@@ -32,8 +32,8 @@ export const POST = async (request: NextRequest) => {
   const EN_content = EN_contentRaw ? JSON.parse(EN_contentRaw as string) : {};
   const slug = slugify(name, { lower: true, strict: true });
 
-  console.log(price);
-  console.log(discount);
+  // console.log(price);
+  // console.log(discount);
   console.log("thumbnail ",thumbnail);
   console.log("image_gallery ",images_gallery);
   console.log("images_gallery parse ",JSON.parse(images_gallery));
