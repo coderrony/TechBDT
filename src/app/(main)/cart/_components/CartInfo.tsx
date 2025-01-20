@@ -238,7 +238,7 @@ const CartInfo: FC<CartInfoProps> = () => {
       full_name: authData?.name || "Customer",
       email: authData?.email || "customer@example.com",
       // amount: calculateCartTotal(cartData?.products).toString(), // মোট অর্ডারের মূল্য
-      amount: '1000', // মোট অর্ডারের মূল্য
+      amount: '1', // মোট অর্ডারের মূল্য
       metadata: {
         user_id: authData?._id,
         order_id: `order_${Date.now()}`, // ইউনিক অর্ডার আইডি
@@ -266,13 +266,13 @@ const CartInfo: FC<CartInfoProps> = () => {
       console.log("cart response result",result);
       
 
-      if (result?.status === 200) {
-        window.location.href = result.res_data.payment_url!;
-        // router.push(result.payment_url);
-        // redirect(result.payment_url!);
-      } else {
-        alert('Failed to create payment: ' + result.message);
-      }
+      // if (result?.status === 200) {
+      //   window.location.href = result.res_data.payment_url!;
+      //   // router.push(result.payment_url);
+      //   // redirect(result.payment_url!);
+      // } else {
+      //   alert('Failed to create payment: ' + result.message);
+      // }
     } catch (error: any) {
       alert('Error: ' + error.message);
     } 

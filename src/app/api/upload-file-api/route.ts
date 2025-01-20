@@ -14,7 +14,7 @@ export const POST = async (request: NextRequest) => {
     // console.log("gallery ", gallery);
 
     if (gallery.length > 0) {
-      console.log("I am in image gallery");
+   
       const imageGalleryUrls: string[] = [];
 
       for (const image of gallery) {
