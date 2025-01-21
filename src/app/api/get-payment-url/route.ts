@@ -7,15 +7,14 @@ export const POST = async (req: any) => {
   console.log("data in post ",data);
   // console.log(process.env.NEXT_PUBLIC_SITE_URL);
   // console.log(process.env.NEXT_PUBLIC_UDDOKTAPAY_API_KEY);
-
+  
   try {
-    const response = await axios.post(
-      `https://techbdt.paymently.io/api/checkout-v2`,
+    const response = await axios.post(`${process.env.UDDOKTAPAY_BASE_URL!}/checkout-v2`,
       data,
       {
         headers: {
           accept: 'application/json',
-          'RT-UDDOKTAPAY-API-KEY': 'TkGiKx2HVtGUPcCEmj7la12bNtyr1MQdi5i2pu0L',
+          'RT-UDDOKTAPAY-API-KEY': process.env.UDDOKTAPAY_API_KEY!,
           'content-type': 'application/json',
         },
       },

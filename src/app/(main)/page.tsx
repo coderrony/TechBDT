@@ -16,7 +16,7 @@ export default async function PageHome() {
   // Fetch data inside the component
   const [allCategory, newArrivals, last40Products] = await Promise.all([
     fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
-      next: { revalidate: 30 }, // Revalidate every 30 seconds
+      next: { revalidate: 3600 }, // Revalidate every 1 hours
     })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch categories');

@@ -25,13 +25,10 @@ export async function middleware(req: any) {
   console.log("nextUrl pathname",nextUrl.pathname);
   // console.log("isPublicRoute",isPublicRoute);
   // console.log("isAdminRoute",isAdminRoute);
-  // console.log("isAdminAccessApi",isAdminAccessApi);
+
   // console.log("admin role ",token?.user?.role);
 
-  // if(isAdminAccessApi && token?.user?.role === 'admin'){ 
-  //   return NextResponse.next();
-  // }
-  
+
   // admin access
   if(isAdminRoute && token?.user?.role !== 'admin'){ 
     // console.log("1------------");

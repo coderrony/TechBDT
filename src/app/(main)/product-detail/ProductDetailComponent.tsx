@@ -82,7 +82,7 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
     quantity: qualitySelected,
   };
 
-  console.log("sku ",sku)
+ 
   const handleCart = () => {
     if (session?.user) {
       if (sizeSelected !== '') {

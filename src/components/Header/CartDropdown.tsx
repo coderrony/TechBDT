@@ -172,14 +172,14 @@ export default function CartDropdown() {
                       <span className=''>{formatNumber(cartTotalAmount)}</span>
                     </p>
                     <div className='flex space-x-2 mt-5'>
-                      <ButtonSecondary
+                      {/* <ButtonSecondary
                         href='/cart'
                         className='flex-1 border border-slate-200 dark:border-slate-700'
                         onClick={close}>
                         View cart
-                      </ButtonSecondary>
+                      </ButtonSecondary> */}
                       <ButtonPrimary
-                        href='/checkout'
+                        href='/cart'
                         onClick={close}
                         className='flex-1'>
                         Check out
