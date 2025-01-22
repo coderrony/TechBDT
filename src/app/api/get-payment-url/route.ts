@@ -4,12 +4,10 @@ import { NextResponse } from 'next/server';
 
 export const POST = async (req: any) => {
   const data = await req.json();
-  console.log("data in post ",data);
-  // console.log(process.env.NEXT_PUBLIC_SITE_URL);
-  // console.log(process.env.NEXT_PUBLIC_UDDOKTAPAY_API_KEY);
-  
+
   try {
-    const response = await axios.post(`${process.env.UDDOKTAPAY_BASE_URL!}/checkout-v2`,
+    const response = await axios.post(
+      `${process.env.UDDOKTAPAY_BASE_URL!}/checkout-v2`,
       data,
       {
         headers: {
@@ -20,9 +18,7 @@ export const POST = async (req: any) => {
       },
     );
 
-    // console.log('response in get-payment-url ', response);
-
-    if(response.data.status) {
+    if (response.data.status) {
       return NextResponse.json(
         {
           res_data: response.data,
@@ -33,16 +29,13 @@ export const POST = async (req: any) => {
       );
     }
 
-    return NextResponse.json(
-      {
-        res_data: response.data,
-        message: 'Error for getting payment',
-        status: 500,
-      },
-
-    );
+    return NextResponse.json({
+      res_data: response.data,
+      message: 'Error for getting payment',
+      status: 500,
+    });
   } catch (err: any) {
-    // console.log("err ",err)
+    console.log('err ', err);
     return NextResponse.json({ message: err.message, status: 500 });
   }
 };

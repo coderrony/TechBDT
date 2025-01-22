@@ -8,9 +8,7 @@ import { NextResponse } from 'next/server';
 
 export const POST = async (req: any) => {
   const data = await req.json();
-  console.log('verify-payment api ', data);
-  // console.log(process.env.NEXT_PUBLIC_SITE_URL);
-  // console.log(process.env.NEXT_PUBLIC_UDDOKTAPAY_API_KEY);
+  // console.log('verify-payment api ', data);
 
   try {
     const response = await axios.post(
@@ -25,7 +23,7 @@ export const POST = async (req: any) => {
       },
     );
 
-    console.log('verify-payment api result ', response.data);
+    // console.log('verify-payment api result ', response.data);
     const result = response.data;
 
     if (result.status === 'COMPLETED') {
@@ -42,9 +40,13 @@ export const POST = async (req: any) => {
       } = result.metadata;
       // const cart = await AddToCart.findOne({ user:user_id });
 
-      const isExistOrder =await Order.findOne({ user: user_id,transaction_id: result.transaction_id,sender_number:result.sender_number}) as any;
+      const isExistOrder = (await Order.findOne({
+        user: user_id,
+        transaction_id: result.transaction_id,
+        sender_number: result.sender_number,
+      })) as any;
 
-      console.log('isExistOrder ', isExistOrder);
+      // console.log('isExistOrder ', isExistOrder);
       if (isExistOrder) {
         return NextResponse.json({
           message: 'Order already exist',
@@ -59,12 +61,12 @@ export const POST = async (req: any) => {
           })
           .lean()) as any;
 
-          // console.log('cart ', cart);
+        // console.log('cart ', cart);
 
         const products = cart.products.map((item: any) => {
           return {
             product_name: item.product.name,
-            slug: item.product.slug , 
+            slug: item.product.slug,
             price: item.product.price,
             sku: item.product.sku,
             dropShop: item.product.dropShop,
@@ -106,12 +108,9 @@ export const POST = async (req: any) => {
           },
           { status: 200 },
         );
-
-      
       }
-
     }
-    return NextResponse.json({ message: "Request Failed", status: 500 });
+    return NextResponse.json({ message: 'Request Failed', status: 500 });
   } catch (err: any) {
     // console.log("err ",err)
     return NextResponse.json({ message: err.message, status: 404 });

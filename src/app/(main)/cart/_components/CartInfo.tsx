@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FC, useTransition } from 'react';
 import QuantityBtn from './QuantityBtn';
-import { NoSymbolIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { CheckIcon } from '@heroicons/react/24/outline';
 import { calculateCartTotal } from '@/utils/calculateCartTotal';
 
 // import useAuthData from '@/hooks/useAuthData';
@@ -17,7 +17,7 @@ import Label from '@/components/Label/Label';
 import SelectValue from '@/components/SelectValue';
 import { useForm } from 'react-hook-form';
 import useAuthData from '@/hooks/useAuthData';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Radio from '@/shared/Radio/Radio';
 import Input from '@/shared/Input/Input';
 // import { createCharge } from '@/services/uddoktaPayService';
@@ -30,6 +30,7 @@ interface CartInfoProps {
 
 // http://localhost:3000/account-order?invoice_id=TVmw1pDSkHMUofrHyPsb41tTFtUifMDk1SFknNkX&status=success
 
+// https://www.techbdt.com/account-order?invoice_id=7wO15qlnqpAvdW2yytqhzLuuHubgZsIRsZJ0nmwc&status=success
 
 const CartInfo: FC<CartInfoProps> = () => {
   const {
@@ -44,33 +45,28 @@ const CartInfo: FC<CartInfoProps> = () => {
     setError,
     setValue, // Add this line
     formState: { errors },
-    watch
+    watch,
   } = useForm({
     defaultValues: {
       deliveryType: 'Regular',
       shipping: 'All Bangladesh (Pathao Courier)', // Default shipping value
-      address:authData?.address[0]?._id.toString() ,
-    }
-    
+      address: authData?.address[0]?._id.toString(),
+    },
   });
   const router = useRouter();
-  
+
   const {
     cartDataFetch: { cartData, isFetchingCart },
     cartDelete: { handleRemoveFromCart, isRemoving },
   } = useCart() as any;
   // console.log("cartData ",cartData);
   // console.log('authData ', authData);
-  const deliveryType = watch('deliveryType'); 
-  const shipping_cost = watch('shipping') === 'Dhaka City Corporation' ? 60 : 120 
-
-  // console.log("deliveryType ",deliveryType);
-  // console.log("shippingWatch ",shippingWatch);
-
-  
+  const deliveryType = watch('deliveryType');
+  const shipping_cost =
+    watch('shipping') === 'Dhaka City Corporation' ? 60 : 120;
 
   const cartTotalAmount = calculateCartTotal(cartData?.products);
-  const advancePay = cartTotalAmount > 3000 ? 500 : 200
+  const advancePay = cartTotalAmount > 3000 ? 500 : 200;
 
   const renderStatusInstock = () => {
     return (
@@ -154,7 +150,7 @@ const CartInfo: FC<CartInfoProps> = () => {
 
                     {item.color && <span>{item.color}</span>}
                   </div>
-              <span className='mx-4 border-l border-slate-200 dark:border-slate-700 '></span>
+                  <span className='mx-4 border-l border-slate-200 dark:border-slate-700 '></span>
                   <div className='flex items-center space-x-1.5'>
                     <svg className='w-4 h-4 ' viewBox='0 0 24 24' fill='none'>
                       <path
@@ -231,85 +227,64 @@ const CartInfo: FC<CartInfoProps> = () => {
     );
   };
 
-  const handleOnSubmit =async (data: any) => {
-    console.log('data ', data);
+  const handleOnSubmit = async (data: any) => {
     if (authData?.address?.length === 0) {
       return router.push('/account');
     }
 
-    if(cartData?.products?.length === 0){ 
+    if (cartData?.products?.length === 0) {
       return router.push('/');
     }
 
-    startTransition(async()=>{
- 
+    startTransition(async () => {
       try {
-        //  const  shipping_cost = data.shipping === 'Dhaka City Corporation' ? 60 : 120
-        // UddoktaPay পেমেন্ট রিকোয়েস্ট তৈরির জন্য ডেটা প্রস্তুত করুন
+        // UddoktaPay payment request
         const paymentRequest = {
           full_name: authData.full_name,
-         email: authData?.email || "customer@example.com",
-         // amount: calculateCartTotal(cartData?.products).toString(), // মোট অর্ডারের মূল্য
-        //  amount: data.deliveryType === 'Regular'  ? calculateCartTotal(cartData?.products) + shipping_cost  : advancePay, // মোট অর্ডারের মূল্য
-         amount: '4', // মোট অর্ডারের মূল্য
-         metadata: {
-           user_id: authData.id,
-           full_name: authData.full_name,
-           phone: authData.phone,
-           subtotal: calculateCartTotal(cartData?.products),
-           // order_id: `order_${Date.now()}`, // ইউনিক অর্ডার আইডি
-           shipping_address:authData.address.find((item:any)=> item._id.toString() === data.address),
-           delivery_type:data.deliveryType,
-           shipping_cost,
-         },
-         redirect_url: `${process.env.NEXT_PUBLIC_SITE_URL}/account-order`,
-         cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cart`,
-         webhook_url: `${process.env.NEXT_PUBLIC_SITE_URL}/ipn`,
-       };
-   
-       console.log("paymentRequest ",paymentRequest);
-       
-   
-          // UddoktaPay এন্ডপয়েন্টে POST রিকোয়েস্ট করুন
-          const response = await axios.post(
-           '/api/get-payment-url',
-           paymentRequest
-         );
-     
-         const result = response.data;
-   
-         console.log("cart response result",result);
-         
-   
-         if (result?.status === 200) {
-           window.location.href = result.res_data.payment_url!;
-           // router.push(result.payment_url);
-           // redirect(result.payment_url!);
-         } else {
-           alert('Failed to create payment: ' + result.message);
-         }
+          email: authData?.email || 'customer@example.com',
 
+          //  amount: data.deliveryType === 'Regular'  ? calculateCartTotal(cartData?.products) + shipping_cost  : advancePay, // মোট অর্ডারের মূল্য
+          amount: '4',
+          metadata: {
+            user_id: authData.id,
+            full_name: authData.full_name,
+            phone: authData.phone,
+            subtotal: calculateCartTotal(cartData?.products),
+            shipping_address: authData.address.find(
+              (item: any) => item._id.toString() === data.address,
+            ),
+            delivery_type: data.deliveryType,
+            shipping_cost,
+          },
+          redirect_url: `${process.env.NEXT_PUBLIC_SITE_URL}/account-order`,
+          cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cart`,
+          webhook_url: `${process.env.NEXT_PUBLIC_SITE_URL}/ipn`,
+        };
 
-       } catch (error: any) {
-         alert('Error: ' + error.message);
-       } 
+        //  console.log("paymentRequest ",paymentRequest);
 
-    })
+        // UddoktaPay এন্ডপয়েন্টে POST রিকোয়েস্ট করুন
+        const response = await axios.post(
+          '/api/get-payment-url',
+          paymentRequest,
+        );
 
+        const result = response.data;
 
+        console.log('cart response result', result);
 
-
-
+        if (result?.status === 200) {
+          window.location.href = result.res_data.payment_url!;
+        } else {
+          alert('Failed to create payment: ' + result.message);
+        }
+      } catch (error: any) {
+        alert('Error: ' + error.message);
+      }
+    });
   };
 
-  // const handleOnChangeCod = () => {
-  //   const deliveryType = watch('deliveryType'); // Get the current value of deliveryType
-  //   console.log('Current delivery type:', deliveryType);
-  //   setValue('deliveryType', 'cod'); // Set the value to 'cod'
-  // };
-
   if (isFetchingCart || isPending) return <LoadingIndicator />;
-
 
   return (
     <div className='flex flex-col lg:flex-row'>
@@ -323,12 +298,11 @@ const CartInfo: FC<CartInfoProps> = () => {
             <h3 className='text-lg font-semibold '>Order Summary</h3>
 
             <div className='mt-7 text-sm text-slate-500 dark:text-slate-400 divide-y divide-slate-200/70 dark:divide-slate-700/80'>
-
               <div>
-                <Label className="text-sm">Discount code</Label>
-                <div className="flex mt-1.5 pb-4">
-                  <Input sizeClass="h-10 px-4 py-3" className="flex-1" />
-                  <span className="text-neutral-700 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 rounded-2xl px-4 ml-3 font-medium text-sm bg-neutral-200/70 dark:bg-neutral-700 dark:hover:bg-neutral-800 w-24 flex justify-center items-center transition-colors">
+                <Label className='text-sm'>Discount code</Label>
+                <div className='flex mt-1.5 pb-4'>
+                  <Input sizeClass='h-10 px-4 py-3' className='flex-1' />
+                  <span className='text-neutral-700 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 rounded-2xl px-4 ml-3 font-medium text-sm bg-neutral-200/70 dark:bg-neutral-700 dark:hover:bg-neutral-800 w-24 flex justify-center items-center transition-colors'>
                     Apply
                   </span>
                 </div>
@@ -342,7 +316,7 @@ const CartInfo: FC<CartInfoProps> = () => {
                     // value={selectedDivision}
                     className='mt-1.5'
                     {...register('address')}
-                   
+
                     // onChange={handleDivisionChange} // Add onChange
                   >
                     {authData?.address?.map((address: any) => (
@@ -363,73 +337,80 @@ const CartInfo: FC<CartInfoProps> = () => {
                   </Link>
                 </div>
               )}
-            {/* delivery */}
-            <div className="py-4">
-              <Label className="text-sm">Delivery type</Label>
-              <div className="flex flex-col gap-4 mt-1.5">
-                <Radio
-                  label={`<span class="text-sm font-medium">Regular Delivery</span>`}
-                  id="regular-delivery"
-                  {...register('deliveryType')}
-                  onChange={() => setValue('deliveryType', 'Regular')}
-                  defaultChecked
-                />
-                <Radio
-                  label={`<span class="text-sm font-medium">Cash On Delivery <span class="font-light">(COD)</span></span>`}
-                  id="cod"
-                  {...register('deliveryType')}
-                  // onChange={() => setValue('deliveryType', 'cod')}
-                  onChange={() => setValue('deliveryType', 'Cash On Delivery (COD)')}
-                />
-              </div>
-              {/* {errors.deliveryType && (
-                <span className="text-red-500 text-sm">Please select a delivery type</span>
-              )} */}
-            </div>
-
-            {/* shipping */}
-            <div className="py-4">
-              <Label className="text-sm">Shipping</Label>
-              <div className="flex flex-col gap-4 mt-1.5">
-               <div className='flex justify-between items-center'>
-                <Radio
-                    label={`<span class="text-sm font-medium">All Bangladesh (Pathao Courier): </span>`}
-                    id="shipping"
-                    {...register('shipping', { required: true })}
-                    // onChange={() => setValue('shipping', 'all-bangladesh')}
-                    onChange={() => setValue('shipping', 'All Bangladesh (Pathao Courier)')}
+              {/* delivery */}
+              <div className='py-4'>
+                <Label className='text-sm'>Delivery type</Label>
+                <div className='flex flex-col gap-4 mt-1.5'>
+                  <Radio
+                    label={`<span class="text-sm font-medium">Regular Delivery</span>`}
+                    id='regular-delivery'
+                    {...register('deliveryType')}
+                    onChange={() => setValue('deliveryType', 'Regular')}
                     defaultChecked
                   />
-                  <p className='font-semibold text-slate-900 dark:text-slate-200'>120 BDT</p>
-               </div>
-               <div className='flex justify-between items-center'>
-                <Radio
-                    label={`<span class="text-sm font-medium">Dhaka City Corporation: </span>`}
-                    id="shipping"
-                    {...register('shipping', { required: true })}
-                    // onChange={() => setValue('shipping', 'dhaka-city-corporation')}
-                    onChange={() => setValue('shipping', 'Dhaka City Corporation')}
-                 
+                  <Radio
+                    label={`<span class="text-sm font-medium">Cash On Delivery <span class="font-light">(COD)</span></span>`}
+                    id='cod'
+                    {...register('deliveryType')}
+                    // onChange={() => setValue('deliveryType', 'cod')}
+                    onChange={() =>
+                      setValue('deliveryType', 'Cash On Delivery (COD)')
+                    }
                   />
-                  <p className='font-semibold text-slate-900 dark:text-slate-200'>60 BDT</p>
-               </div>
-           
+                </div>
+                {/* {errors.deliveryType && (
+                <span className="text-red-500 text-sm">Please select a delivery type</span>
+              )} */}
               </div>
-              {errors.shipping && (
-                <span className="text-red-500 text-sm">Please select a Shipping</span>
-              )}
-            </div>
 
-           
+              {/* shipping */}
+              <div className='py-4'>
+                <Label className='text-sm'>Shipping</Label>
+                <div className='flex flex-col gap-4 mt-1.5'>
+                  <div className='flex justify-between items-center'>
+                    <Radio
+                      label={`<span class="text-sm font-medium">All Bangladesh (Pathao Courier): </span>`}
+                      id='shipping'
+                      {...register('shipping', { required: true })}
+                      // onChange={() => setValue('shipping', 'all-bangladesh')}
+                      onChange={() =>
+                        setValue('shipping', 'All Bangladesh (Pathao Courier)')
+                      }
+                      defaultChecked
+                    />
+                    <p className='font-semibold text-slate-900 dark:text-slate-200'>
+                      120 BDT
+                    </p>
+                  </div>
+                  <div className='flex justify-between items-center'>
+                    <Radio
+                      label={`<span class="text-sm font-medium">Dhaka City Corporation: </span>`}
+                      id='shipping'
+                      {...register('shipping', { required: true })}
+                      // onChange={() => setValue('shipping', 'dhaka-city-corporation')}
+                      onChange={() =>
+                        setValue('shipping', 'Dhaka City Corporation')
+                      }
+                    />
+                    <p className='font-semibold text-slate-900 dark:text-slate-200'>
+                      60 BDT
+                    </p>
+                  </div>
+                </div>
+                {errors.shipping && (
+                  <span className='text-red-500 text-sm'>
+                    Please select a Shipping
+                  </span>
+                )}
+              </div>
 
-      {/* Subtotal */}
+              {/* Subtotal */}
               <div className='flex justify-between py-4'>
                 <span>Subtotal</span>
                 <span className='font-semibold text-slate-900 dark:text-slate-200'>
                   {formatNumber(cartTotalAmount)}
                 </span>
               </div>
-           
 
               <div className='flex justify-between py-4'>
                 <span>Shipping Cost</span>
@@ -443,26 +424,25 @@ const CartInfo: FC<CartInfoProps> = () => {
                 <span>{formatNumber(cartTotalAmount + shipping_cost)}</span>
               </div>
 
-              { deliveryType === 'Cash On Delivery (COD)' && 
-              <>
-                {/* Advance pay */}
-                 <div className='flex justify-between py-4 mt-4 text-red-600'>
-                <span >Advance pay </span>
-                <span className='font-semibold  '>
-                  BDT {advancePay}
-                </span>
-              </div>
+              {deliveryType === 'Cash On Delivery (COD)' && (
+                <>
+                  {/* Advance pay */}
+                  <div className='flex justify-between py-4 mt-4 text-red-600'>
+                    <span>Advance pay </span>
+                    <span className='font-semibold  '>BDT {advancePay}</span>
+                  </div>
 
-              {/* Due payment */}
-              <div className='flex justify-between py-4'>
-                <span>Due payment </span>
-                <span className='font-semibold text-slate-900 dark:text-slate-200'>
-                  {formatNumber((cartTotalAmount + shipping_cost) - advancePay)}
-                </span>
-              </div>
-              </>
-              }
-
+                  {/* Due payment */}
+                  <div className='flex justify-between py-4'>
+                    <span>Due payment </span>
+                    <span className='font-semibold text-slate-900 dark:text-slate-200'>
+                      {formatNumber(
+                        cartTotalAmount + shipping_cost - advancePay,
+                      )}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
             <ButtonPrimary type='submit' className='mt-5 w-full'>
               Confirm order
