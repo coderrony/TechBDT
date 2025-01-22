@@ -33,9 +33,7 @@ interface CartInfoProps {
 // https://www.techbdt.com/account-order?invoice_id=7wO15qlnqpAvdW2yytqhzLuuHubgZsIRsZJ0nmwc&status=success
 
 const CartInfo: FC<CartInfoProps> = () => {
-  const {
-    authDataFetch: { authData },
-  } = useAuthData() as any;
+  const {authData} = useAuthData() as any;
   const [isPending, startTransition] = useTransition();
   const {
     register,
@@ -242,9 +240,9 @@ const CartInfo: FC<CartInfoProps> = () => {
         const paymentRequest = {
           full_name: authData.full_name,
           email: authData?.email || 'customer@example.com',
-
+         
           //  amount: data.deliveryType === 'Regular'  ? calculateCartTotal(cartData?.products) + shipping_cost  : advancePay, // মোট অর্ডারের মূল্য
-          amount: '4',
+          amount:  process.env.NODE_ENV === "development" ?  '2' : data.deliveryType === 'Regular'  ? calculateCartTotal(cartData?.products) + shipping_cost  : advancePay,
           metadata: {
             user_id: authData.id,
             full_name: authData.full_name,

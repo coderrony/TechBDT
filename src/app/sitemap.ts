@@ -1,27 +1,25 @@
 import { getProductInfoForMetaData } from '@/queries/products';
-
 import { MetadataRoute } from 'next';
 
-// Replace with your actual domain
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.techbdt.com';
 
 async function fetchProducts() {
   try {
     const products = await getProductInfoForMetaData();
-    if (products?.length > 0) {
-      return products.map((product) => ({
-        url: `${BASE_URL}/product-detail/${product.slug}`,
-        lastModified: new Date(product.createdAt).toISOString(),
-      }));
+    if (!products || products.length === 0) {
+      console.warn('No products found for the sitemap.');
+      return [];
     }
-  } catch (error) {
-    console.error('Error fetching products:', error);
+
+    return products.map((product) => ({
+      url: `${BASE_URL}/product-detail/${product.slug}`,
+      lastModified: new Date(product.createdAt).toISOString(),
+    }));
+  } catch (error: any) {
+    console.error('Error fetching products for sitemap:', error.message);
     return [];
   }
-
-  return [];
 }
-
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages = [
@@ -33,18 +31,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/checkout',
     '/search',
     '/signup',
-  ];
-
-  // Fetch dynamic product pages
-  const dynamicProductPages = await fetchProducts();
-  // Generate URLs for static pages
-  const staticEntries = staticPages.map((page) => ({
+  ].map((page) => ({
     url: `${BASE_URL}${page}`,
     lastModified: new Date().toISOString(),
   }));
-  if(dynamicProductPages.length > 0){
-    return [ ...staticEntries,...dynamicProductPages]
-  }
 
-  return [ ...staticEntries]
+  const dynamicProductPages = await fetchProducts();
+
+  return [...staticPages, ...dynamicProductPages];
 }

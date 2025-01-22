@@ -12,7 +12,7 @@ import useAuthData from '@/hooks/useAuthData';
 
 export default function AvatarDropdown() {
 
-  const {authDataFetch:{authData}} = useAuthData() as any;
+  const {authData} = useAuthData() as any;
 // console.log("AvatarDropdown authData ",authData);
 
   return (

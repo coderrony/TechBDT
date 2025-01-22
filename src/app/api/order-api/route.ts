@@ -1,3 +1,4 @@
+import { replaceMongoIdInArray } from '@/lib/convertData';
 import { AddToCart } from '@/model/add-to-cart-model';
 import { Order } from '@/model/order-model';
 import { Product } from '@/model/product-model';
@@ -5,6 +6,44 @@ import { connectDB } from '@/services/mongo';
 import axios from 'axios';
 
 import { NextResponse } from 'next/server';
+
+export const GET = async (req: any) => {
+  try {
+    // Extract the ID from the query parameters
+    const userId = req.nextUrl.searchParams.get('id');
+
+    if (!userId) {
+      return NextResponse.json({
+        message: 'You are not authenticated!',
+        status: 400,
+      });
+    }
+    await connectDB()
+
+    const orders = (await Order.find({ user: userId })
+      .sort({ _id: 1 })
+      .limit(5)
+      .lean()) as any;
+
+  
+    if (!orders) {
+      return NextResponse.json({ message: 'Orders not found!', status: 404 });
+    }
+
+    // Return the cart data after replacing the MongoDB ID
+    return NextResponse.json(
+      {
+        orders: replaceMongoIdInArray(orders),
+        message: 'Orders fetched successfully',
+        status: 200,
+      },
+      { status: 200 },
+    );
+  } catch (err: any) {
+    // console.error('Error fetching user:', err);
+    return NextResponse.json({ message: err.message, status: 500 });
+  }
+};
 
 export const POST = async (req: any) => {
   const data = await req.json();

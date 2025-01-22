@@ -57,8 +57,8 @@ const orderSchema = new Schema(
     },
     status: {
       type: String,
-      enum: [ 'processing', 'shipped', 'delivered'],
-      default: 'processing',
+      enum: [ 'Processing', 'Shipped', 'Delivered'],
+      default: 'Processing',
     },
     shipping_address: {
       type: new Schema(

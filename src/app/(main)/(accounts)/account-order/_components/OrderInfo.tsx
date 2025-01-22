@@ -1,20 +1,25 @@
-"use client";
+'use client';
 
-import { FC, useEffect, useRef, useState } from "react";
-import Prices from "@/components/Prices";
-import ButtonSecondary from "@/shared/Button/ButtonSecondary";
-import Image from "next/image";
-import taka from "@/images/taka.png";
-import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
-import LoadingIndicator from "@/components/LoadingIndicator";
+import { FC, useEffect, useRef, useState } from 'react';
+import Prices from '@/components/Prices';
+import ButtonSecondary from '@/shared/Button/ButtonSecondary';
+import Image from 'next/image';
+import taka from '@/images/taka.png';
+import { useRouter, useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import LoadingIndicator from '@/components/LoadingIndicator';
 
-import OrderMsgModel from "./OrderMsgModel";
+import OrderMsgModel from './OrderMsgModel';
+import useOrder from '@/hooks/useOrder';
+import formatNumber from '@/utils/formatNumber';
+import Link from 'next/link';
+import { formatDate } from '@/utils/dateFormat';
 
 // http://localhost:3000/account-order?invoice_id=Hb08RI1lyq0kfYIMA38jR1EXXWkQMak5J3h67iwr&status=success
 
 // http://localhost:3000/account-order?invoice_id=TVmw1pDSkHMUofrHyPsb41tTFtUifMDk1SFknNkX&status=success
 
+//  http://localhost:3000/account-order?invoice_id=7wO15qlnqpAvdW2yytqhzLuuHubgZsIRsZJ0nmwc&status=success
 
 interface OrderInfoProps {
   className?: string;
@@ -23,30 +28,33 @@ interface OrderInfoProps {
 const OrderInfo: FC<OrderInfoProps> = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
-  const [statusCode,setStatusCode] = useState<number>(0)
-
+  const [statusCode, setStatusCode] = useState<number>(0);
+  const {
+    orderDataFetch: { orderData, isFetchingOrders },
+  } = useOrder();
   // Extract query parameters using searchParams
-  const invoice_id = searchParams.get("invoice_id");
-  const status = searchParams.get("status");
+  const invoice_id = searchParams.get('invoice_id');
+  const status = searchParams.get('status');
 
   // Use a ref to track if the request has already been sent
   const hasVerifiedPayment = useRef(false);
+
+  console.log("orderData ",orderData);
 
   useEffect(() => {
     const paymentVerification = async () => {
       setLoading(true);
       try {
-        const result = await axios.post("/api/verify-payment", { invoice_id });
-        console.log("Verification Result:", result.data);
-          setStatusCode(result.data.status);
-          setShow(true);
-       
+        const result = await axios.post('/api/order-api', { invoice_id });
+        console.log('Verification Result:', result.data);
+        setStatusCode(result.data.status);
+        setShow(true);
       } catch (error) {
-        console.error("Payment verification failed:", error);
-        router.push("/");
-      }finally{ 
+        console.error('Payment verification failed:', error);
+        router.push('/');
+      } finally {
         setLoading(false);
       }
     };
@@ -57,97 +65,67 @@ const OrderInfo: FC<OrderInfoProps> = () => {
     }
   }, [invoice_id, status]);
 
-  const renderProductItem = (product: any, index: number) => {
-    const { name } = product;
+  const renderOrder = (item: any) => {
+    // console.log('item ', item);
+
     return (
-      <div key={index} className="flex py-4 sm:py-7 last:pb-0 first:pt-0">
-        <div className="relative h-24 w-16 sm:w-20 flex-shrink-0 overflow-hidden rounded-xl bg-slate-100">
-          <Image
-            fill
-            sizes="100px"
-            src={taka}
-            alt={name}
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
-
-        <div className="ml-4 flex flex-1 flex-col">
+      <div
+        className='border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0'
+        key={item.id}>
+        <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 sm:p-8 bg-slate-50 dark:bg-slate-500/5'>
           <div>
-            <div className="flex justify-between ">
-              <div>
-                <h3 className="text-base font-medium line-clamp-1">{name}</h3>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                  <span>{"Natural"}</span>
-                  <span className="mx-2 border-l border-slate-200 dark:border-slate-700 h-4"></span>
-                  <span>{"XL"}</span>
-                </p>
-              </div>
-              <Prices className="mt-0.5 ml-2" />
-            </div>
-          </div>
-          <div className="flex flex-1 items-end justify-between text-sm">
-            <p className="text-gray-500 dark:text-slate-400 flex items-center">
-              <span className="hidden sm:inline-block">Qty</span>
-              <span className="inline-block sm:hidden">x</span>
-              <span className="ml-2">1</span>
-            </p>
-
-            <div className="flex">
-              <button
-                type="button"
-                className="font-medium text-indigo-600 dark:text-primary-500 "
-              >
-                Leave review
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderOrder = () => {
-    return (
-      <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden z-0">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 sm:p-8 bg-slate-50 dark:bg-slate-500/5">
-          <div>
-            <p className="text-lg font-semibold">#WU3746HGG12</p>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2">
-              <span>Aug 8, 2023</span>
-              <span className="mx-2">·</span>
-              <span className="text-primary-500">Delivered</span>
+            <p className='text-lg font-semibold'>#{item.id.slice(-12)}</p>
+            <p className='text-slate-500 dark:text-slate-400 text-sm mt-1.5 sm:mt-2'>
+              {/* <span>Aug 8, 2023</span> */}
+              <span>{formatDate(item.date)}</span>
+              <span className='mx-2'>·</span>
+              <span className='text-primary-500'>{item.status}</span>
             </p>
           </div>
-          <div className="mt-3 sm:mt-0">
+          <div className='mt-3 sm:mt-0'>
             <ButtonSecondary
-              sizeClass="py-2.5 px-4 sm:px-6"
-              fontSize="text-sm font-medium"
-            >
+              sizeClass='py-2.5 px-4 sm:px-6'
+              fontSize='text-sm font-medium'>
               View Order
             </ButtonSecondary>
           </div>
         </div>
-        <div className="border-t border-slate-200 dark:border-slate-700 p-2 sm:p-8 divide-y divide-y-slate-200 dark:divide-slate-700">
-          {/* Add dynamic product rendering */}
-        </div>
+
+        {item?.products?.map((product: any) => (
+          <div
+            key={product._id.toString()}
+            className='grid grid-cols-3 gap-4 pl-4 w-full mx-auto items-center text-center border p-4 font-thin text-xs md:text-base'>
+            <div className='hover:underline'>
+              <Link href={`/product-detail/${product.slug}`}>
+                {product.product_name}
+              </Link>
+            </div>
+            <div>{formatNumber(product.price)}</div>
+            <div>QTY:{product.quantity}</div>
+          </div>
+        ))}
       </div>
     );
   };
 
-  const onCloseModal = ()=> { 
-   setShow(false)
-   router.push('/account-order')
-  }
+  const onCloseModal = () => {
+    setShow(false);
+    router.push('/account-order');
+  };
 
+  if (loading || isFetchingOrders) return <LoadingIndicator />;
 
-  if (loading) return <LoadingIndicator />;
   return (
-    <div className="space-y-10 sm:space-y-12">
-      <h2 className="text-2xl sm:text-3xl font-semibold">Order History</h2>
-      {renderOrder()}
-      {renderOrder()}
+    <div className='space-y-10 sm:space-y-12'>
+      <h2 className='text-2xl sm:text-3xl font-semibold'>Order History</h2>
 
-      <OrderMsgModel  show={show} onCloseModal={onCloseModal}  statusCode={statusCode} />
+      {orderData.map((item: any) => renderOrder(item))}
+
+      <OrderMsgModel
+        show={show}
+        onCloseModal={onCloseModal}
+        statusCode={statusCode}
+      />
     </div>
   );
 };

@@ -17,9 +17,7 @@ interface UserAccountProps {
 }
 
 const UserAccount: FC<UserAccountProps> = () => {
-  const {
-    authDataFetch: { authData, refetchAuthData },
-  } = useAuthData() as any;
+  const {authData, refetchAuthData } = useAuthData() as any;
   const [selectedAddress, setSelectedAddress] = useState<any>(null);
   const [isSelectAddress, setIsSelectAddress] = useState(false);
   const [isPending, startTransition] = useTransition();

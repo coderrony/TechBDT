@@ -2,12 +2,15 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient } from '@/lib/react-query';
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
+import useAuthData from './useAuthData';
 
 
 const useCart = () => {
-  const { data: session } = useSession();
+  const { authData } = useAuthData() as any;
 
+  // console.log("authData hook ",authData);
+  
 
  
   // Fetch user data using React Query
@@ -17,11 +20,11 @@ const useCart = () => {
     error: isErrorCart,
     refetch: refetchCart,
   } = useQuery({
-    queryKey: ['cart', session?.user?.id], // Query key
+    queryKey: ['cart', authData?.id], // Query key
     queryFn: async () => {
-      if (session?.user?.id) {
+      if (authData?.id) {
         const result = (await axios.get(`/api/add-to-cart`, {
-          params: { id: session?.user?.id },
+          params: { id: authData?.id },
         })) as any;
     
 
@@ -33,7 +36,7 @@ const useCart = () => {
         }
       }
     },
-    enabled: !!session?.user?.id, // Only fetch when user ID exists
+    enabled: !!authData?.id, // Only fetch when user ID exists
     retry: 1, // Retry once if the query fails
     // staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
   });
@@ -133,25 +136,25 @@ const useCart = () => {
 
   // Function to trigger add to cart mutation
   const handleAddToCart = (productData: any) => {
-    if (session?.user?.id) {
+    if (authData?.id) {
       addToCart({
         ...productData,
-        user: session?.user?.id, // Ensure user ID is included
+        user: authData?.id, // Ensure user ID is included
       });
     }
   };
 
   // Function to trigger product remove in cart mutation
   const handleRemoveFromCart = (cartId: string) => {
-    if (session?.user) {
-      removeFromCart({ cartId, userId: session?.user?.id });
+    if (authData) {
+      removeFromCart({ cartId, userId: authData.id });
     }
   };
 
   // Function to trigger update cart mutation
   const handleUpdateToCartQuantity = (cartId: string, quantity: number) => {
-    if (session?.user) {
-      updateCartQuantity({ cartId, userId: session?.user?.id, quantity });
+    if (authData) {
+      updateCartQuantity({ cartId, userId: authData?.id, quantity });
     }
   };
 

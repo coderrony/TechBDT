@@ -12,6 +12,7 @@ import { queryClient } from '@/lib/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import dynamic from 'next/dynamic';
+import AuthProvider from '@/provider/AuthProvider';
 
 
 const poppins = Poppins({
@@ -93,12 +94,16 @@ export default function RootLayout({
     <html lang='en' className={poppins.className}>
       <body className='bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200'>
         <SessionProvider>
-          <QueryClientProvider client={queryClient}>
-            {children}
-            {process.env.NODE_ENV === 'development' && (
-              <ReactQueryDevtools initialIsOpen={false} />
-            )}
-          </QueryClientProvider>
+      
+            <QueryClientProvider client={queryClient}>
+              <AuthProvider>
+                {children}
+                {process.env.NODE_ENV === 'development' && (
+                  <ReactQueryDevtools initialIsOpen={false} />
+                )}
+              </AuthProvider>
+            </QueryClientProvider>
+        
         </SessionProvider>
         <CommonClient />
       </body>

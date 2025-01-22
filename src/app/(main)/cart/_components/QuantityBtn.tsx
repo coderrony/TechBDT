@@ -1,7 +1,7 @@
 'use client';
 
 import NcInputNumber from '@/components/NcInputNumber';
-// import useAuthData from '@/hooks/useAuthData';
+
 import useCart from '@/hooks/useCart';
 import useDebounce from '@/hooks/useDebounce';
 

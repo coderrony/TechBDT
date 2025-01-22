@@ -55,9 +55,7 @@ const AccountInfo: FC<AccountInfoProps> = ({
   onChangeManageAddress,
 }) => {
   const [preview, setPreview] = useState<string | null>(null);
-  const {
-    authDataFetch: { authData, refetchAuthData },
-  } = useAuthData() as any;
+  const { authData, refetchAuthData  } = useAuthData() as any;
 
   const [divisions, setDivisions] = useState<DivisionType[]>([]);
   const [selectedDivision, setSelectedDivision] = useState<string>('');

@@ -1,60 +1,86 @@
-"use client"
-import { useSession } from "next-auth/react";
-import { notFound } from "next/navigation";
-import { useEffect } from "react";
-// import { getUserByPhoneOrEmail } from "@/queries/users";
+'use client';
+// import { getUserById } from '@/queries/users';
+import { useSession } from 'next-auth/react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+// import { createAddToCart, deleteCart, updateCart } from '@/queries/addToCart';
+// import { queryClient } from '@/lib/react-query';
+import axios from 'axios';
 
 
-import { createGlobalState } from "react-hooks-global-state";
-
-// Create global state
-const { useGlobalState, setGlobalState } = createGlobalState({
-  userData:null, // Holds user data
-});
-
-
- const useAuth = () => {
-  const [userData] = useGlobalState("userData"); // Access global state
+const useAuthData = () => {
   const { data: session } = useSession();
- 
-  console.log("useAuth userData", userData);
-  // console.log("session", session);
-  
-  async function fetchMe() {
-    try {
-      if(session?.user?.id) {
-        console.log("11111111111111111111111111111111111111111111");
+// console.log("useAuthData session ",session);
+
+  // Fetch user data using React Query
+  const {
+    data: authData,
+    isLoading:isFetchingAuthData,
+    error:isErrorAuthData,
+    refetch:refetchAuthData,
+  } = useQuery({
+    queryKey: ['user', session?.user?.id], // Query key
+    queryFn: async () => {
+      if (session?.user?.id) {
+        const result = await axios.get(`/api/user-auth`, { params: { id: session?.user?.id } }) as any;
+        // console.log("useAuthData result ",result.data);
         
-        const response = await fetch(`/api/get-user?id=${session?.user?.id}`, {
-          method: 'GET',
-        });
-      
-        const data = await response.json();
-        console.log("data", data);
-        
-        if (data.status === 200) {
-          // setLoggedInUser(data.user);
-          setGlobalState("userData", data?.user);
-        }else{ 
-          setGlobalState("userData", null);
+        if (result.data.status === 200) {
+          return result.data.user; // Access user data from result.data
+        } else {
+          // throw new Error('Failed to fetch user data');
+          return null
         }
       }
-    } catch (err: any) {
-      console.log( `Error in useAuth hook: ${err.message}`); 
-      throw new Error(err.message)
-     
-    }
+    },
+    enabled: !!session?.user?.id, // Only fetch when user ID exists
+    // staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+    staleTime: 0, // Cache data for 0 minutes
+    retry: 1, // Retry once if the query fails
+  });
+
+    // user address mutation
+    // const {
+    //   mutate: userAddress,
+    //   isPending: isAddressPending,
+    //   isError: isAddressError,
+    //   isSuccess: isAddressSuccess,
+    // } = useMutation({
+    //   mutationFn: async ({
+    //     cartId,
+    //     userId,
+    //     quantity,
+    //   }: {
+    //     cartId: string;
+    //     userId: string;
+    //     quantity: number;
+    //   }) => {
+    //     const result = (await axios.patch('/api/add-to-cart', {
+    //       data: { cartId, userId, quantity },
+    //     })) as any;
+  
+    //     if (result.data.status !== 200) {
+    //       // throw new Error(result.message);
+    //       return null
+    //     }
+    //     return result;
+    //   },
+    //   onSuccess: () => {
+    //     queryClient.invalidateQueries({
+    //       queryKey: ['cart'],
+    //     });
+    //   },
+    // });
+
+ 
+  const authDataFetch = { 
+    authData: authData ?? null,
+    isFetchingAuthData,
+    isErrorAuthData,
+    refetchAuthData,
   }
+ 
 
-    useEffect(() => {
-      if (session?.user) {
-        fetchMe();
-      }
-    }, [session?.user]);
-
-
-
-    return { userData,fetchMe };
+  return {authDataFetch};
 };
 
-export default useAuth;
+export default useAuthData;
