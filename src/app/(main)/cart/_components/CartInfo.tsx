@@ -26,6 +26,10 @@ import axios from 'axios';
 interface CartInfoProps {
   className?: string;
 }
+// http://localhost:3000/account-order?invoice_id=Hb08RI1lyq0kfYIMA38jR1EXXWkQMak5J3h67iwr&status=success
+
+// http://localhost:3000/account-order?invoice_id=TVmw1pDSkHMUofrHyPsb41tTFtUifMDk1SFknNkX&status=success
+
 
 const CartInfo: FC<CartInfoProps> = () => {
   const {

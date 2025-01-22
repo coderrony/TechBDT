@@ -1,54 +1,61 @@
-"use client"
-import { FC, useEffect } from 'react';
+"use client";
+
+import { FC, useEffect, useRef, useState } from "react";
 import Prices from "@/components/Prices";
-
-
 import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 import Image from "next/image";
-import taka from '@/images/taka.png';
+import taka from "@/images/taka.png";
 import { useRouter, useSearchParams } from "next/navigation";
-import axios from 'axios';
+import axios from "axios";
+import LoadingIndicator from "@/components/LoadingIndicator";
+
+import OrderMsgModel from "./OrderMsgModel";
+
+// http://localhost:3000/account-order?invoice_id=Hb08RI1lyq0kfYIMA38jR1EXXWkQMak5J3h67iwr&status=success
+
+// http://localhost:3000/account-order?invoice_id=TVmw1pDSkHMUofrHyPsb41tTFtUifMDk1SFknNkX&status=success
 
 
 interface OrderInfoProps {
   className?: string;
 }
 
-
-
-
-// http://localhost:3000/account-order?invoice_id=Hb08RI1lyq0kfYIMA38jR1EXXWkQMak5J3h67iwr&status=success
-
-// http://localhost:3000/account-order?invoice_id=TVmw1pDSkHMUofrHyPsb41tTFtUifMDk1SFknNkX&status=success
-
 const OrderInfo: FC<OrderInfoProps> = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [loading,setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [statusCode,setStatusCode] = useState<number>(0)
 
   // Extract query parameters using searchParams
   const invoice_id = searchParams.get("invoice_id");
   const status = searchParams.get("status");
 
+  // Use a ref to track if the request has already been sent
+  const hasVerifiedPayment = useRef(false);
 
+  useEffect(() => {
+    const paymentVerification = async () => {
+      setLoading(true);
+      try {
+        const result = await axios.post("/api/verify-payment", { invoice_id });
+        console.log("Verification Result:", result.data);
+          setStatusCode(result.data.status);
+          setShow(true);
+       
+      } catch (error) {
+        console.error("Payment verification failed:", error);
+        router.push("/");
+      }finally{ 
+        setLoading(false);
+      }
+    };
 
-  useEffect(()=>{
-   
-    const paymentVerification = async()=>{ 
-      const result = await axios.post(
-        '/api/verify-payment',
-       {invoice_id}
-      );
-      console.log("result ",result);
-      
+    if (invoice_id && status && !hasVerifiedPayment.current) {
+      hasVerifiedPayment.current = true; // Mark as handled
+      paymentVerification();
     }
-    
-    if(invoice_id && status){
-      // console.log(invoice_id);
-      // console.log(status);
-      paymentVerification()
-    }
-   
-  },[])
+  }, [invoice_id, status]);
 
   const renderProductItem = (product: any, index: number) => {
     const { name } = product;
@@ -121,18 +128,26 @@ const OrderInfo: FC<OrderInfoProps> = () => {
           </div>
         </div>
         <div className="border-t border-slate-200 dark:border-slate-700 p-2 sm:p-8 divide-y divide-y-slate-200 dark:divide-slate-700">
-          {/* {[PRODUCTS[0]].map(renderProductItem)} */}
+          {/* Add dynamic product rendering */}
         </div>
       </div>
     );
   };
 
+  const onCloseModal = ()=> { 
+   setShow(false)
+   router.push('/account-order')
+  }
+
+
+  if (loading) return <LoadingIndicator />;
   return (
     <div className="space-y-10 sm:space-y-12">
-      {/* HEADING */}
       <h2 className="text-2xl sm:text-3xl font-semibold">Order History</h2>
       {renderOrder()}
       {renderOrder()}
+
+      <OrderMsgModel  show={show} onCloseModal={onCloseModal}  statusCode={statusCode} />
     </div>
   );
 };

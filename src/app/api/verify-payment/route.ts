@@ -59,12 +59,12 @@ export const POST = async (req: any) => {
           })
           .lean()) as any;
 
-          console.log('cart ', cart);
+          // console.log('cart ', cart);
 
         const products = cart.products.map((item: any) => {
           return {
             product_name: item.product.name,
-            slug: item.product.sku , 
+            slug: item.product.slug , 
             price: item.product.price,
             sku: item.product.sku,
             dropShop: item.product.dropShop,
@@ -113,7 +113,7 @@ export const POST = async (req: any) => {
     }
     return NextResponse.json({ message: "Request Failed", status: 500 });
   } catch (err: any) {
-    console.log("err ",err)
-    return NextResponse.json({ message: err.message, status: 500 });
+    // console.log("err ",err)
+    return NextResponse.json({ message: err.message, status: 404 });
   }
 };
