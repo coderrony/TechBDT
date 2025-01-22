@@ -267,7 +267,7 @@ const CartInfo: FC<CartInfoProps> = () => {
          webhook_url: `${process.env.NEXT_PUBLIC_SITE_URL}/ipn`,
        };
    
-      //  console.log("paymentRequest ",paymentRequest);
+       console.log("paymentRequest ",paymentRequest);
        
    
           // UddoktaPay এন্ডপয়েন্টে POST রিকোয়েস্ট করুন
@@ -278,7 +278,7 @@ const CartInfo: FC<CartInfoProps> = () => {
      
          const result = response.data;
    
-        //  console.log("cart response result",result);
+         console.log("cart response result",result);
          
    
          if (result?.status === 200) {
