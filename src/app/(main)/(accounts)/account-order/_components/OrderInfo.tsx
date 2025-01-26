@@ -41,7 +41,7 @@ const OrderInfo: FC<OrderInfoProps> = () => {
   // Use a ref to track if the request has already been sent
   const hasVerifiedPayment = useRef(false);
 
-  console.log("orderData ",orderData);
+  // console.log("orderData ",orderData);
 
   useEffect(() => {
     const paymentVerification = async () => {

@@ -1,0 +1,20 @@
+// /pages/api/products/random.js
+import clientPromise from "../../../lib/mongodb";
+
+export default async function handler(req, res) {
+  try {
+    const client = await clientPromise;
+    const db = client.db("yourDatabaseName");
+
+    // Fetch random products (limit 10 products)
+    const products = await db
+      .collection("products")
+      .aggregate([{ $sample: { size: 10 } }]) // Random selection
+      .toArray();
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}

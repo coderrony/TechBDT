@@ -87,7 +87,8 @@ const NavigationItem: FC<NavigationItemProps> = ({ menuItem }) => {
 
   const renderDropdownMenuNavlinkHasChild = (item: CategoryAndSubType) => {
     const isHover = menuCurrentHovers.includes(item.id);
-
+   
+    
     return (
       <Popover
         as='li'
@@ -113,7 +114,7 @@ const NavigationItem: FC<NavigationItemProps> = ({ menuItem }) => {
                 static
                 className='sub-menu absolute z-10 w-56 left-full pl-2 top-0'>
                 <ul className='rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-white dark:ring-opacity-10 text-sm relative bg-white dark:bg-neutral-900 py-4 grid space-y-1'>
-                  {item.sub_categories?.map(i => {
+                  {item.sub_categories?.map((i:any) => {
                     const isChileDropdown = i?.sub_categories
                       ? i?.sub_categories.length > 0
                       : false;
@@ -121,7 +122,7 @@ const NavigationItem: FC<NavigationItemProps> = ({ menuItem }) => {
                       return renderDropdownMenuNavlinkHasChild(i); // Ensure the key is added inside the child function
                     } else {
                       return (
-                        <li key={i.id} className='px-2'>
+                        <li key={i._id.toString()} className='px-2'>
                           {' '}
                           {/* Add key here */}
                           {renderDropdownMenuNavlink(i)}

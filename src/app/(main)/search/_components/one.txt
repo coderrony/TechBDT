@@ -1,0 +1,176 @@
+"use client"
+import React, { FC, useEffect, useRef, useState } from "react";
+import Pagination from "@/shared/Pagination/Pagination";
+import ButtonPrimary from "@/shared/Button/ButtonPrimary";
+
+
+
+import Input from "@/shared/Input/Input";
+import ButtonCircle from "@/shared/Button/ButtonCircle";
+
+import ProductCard from "@/components/ProductCardSectionSlider/ProductCard";
+import useDebounce from "@/hooks/useDebounce";
+import { useSearchParams } from "next/navigation";
+import TabFilters from "./TabFilters";
+import { usePaginatedItems } from "@/hooks/usePaginatedItems";
+
+interface SearchContentProps {
+  className?: string;
+}
+
+const SearchContent: FC<SearchContentProps> = () => {
+   const hasQuery = useRef(false);
+  const searchParams = useSearchParams();
+  const [rangePrices, setRangePrices] = useState([100, 35000]);
+  const [categoriesState, setCategoriesState] = useState<string[]>([]);
+  const [colorsState, setColorsState] = useState<string[]>([]);
+  const [sizesState, setSizesState] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    category: "",
+    subCategory: "",
+    priceMin: "",
+    priceMax: "",
+
+  });
+    // // Fetch data using debounced search term and filters
+    // const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    // usePaginatedItems(searchTerm, filters);
+
+    // console.log("data ",data);
+    // console.log("fetchNextPage ",fetchNextPage);
+    
+
+  const category = searchParams.get('category');
+  const subCategory = searchParams.get('subCategory');
+  // console.log("searchParams ",searchParams);
+  // console.log("query ",query);
+  // console.log('rangePrices ', rangePrices);
+
+  console.log("categoriesState ",categoriesState);
+  console.log("colorsState ",colorsState);
+  console.log("sizesState ",sizesState);
+  console.log("rangePrices ",rangePrices);
+			
+  useEffect(() => {
+
+    if ((category || subCategory)  && !hasQuery.current) {
+      hasQuery.current = true; // Mark as handled
+
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`)
+        .then((res) => res.json())
+        .then((data) => {
+          setCategoriesState(data.res_data)
+        })
+    
+      if(category){ 
+        setFilters((prev)=> ({...prev,category}))
+      }
+      if(subCategory){ 
+        setFilters((prev)=> ({...prev,subCategory}))
+      }
+    }
+  }, [category, subCategory]);
+
+  // console.log("filters ",filters);
+
+  const debounce = useDebounce(async value => {
+    try {
+      
+      console.log("search Value ",value);
+      setSearchTerm(value)
+   
+    } catch (err: any) {
+      throw new Error(err.message);
+    }
+  }, 300);
+
+  return (
+    <div className={`nc-PageSearch`} data-nc-id="PageSearch">
+      <div
+        className={`nc-HeadBackgroundCommon h-24 2xl:h-28 top-0 left-0 right-0 w-full bg-primary-50 dark:bg-neutral-800/20 `}
+      />	
+      <div className="container">
+        <header className="max-w-2xl mx-auto -mt-10 flex flex-col lg:-mt-7">
+          <form className="relative w-full " >
+            <label
+              htmlFor="search-input"
+              className="text-neutral-500 dark:text-neutral-300"
+            >
+              <span className="sr-only">Search all icons</span>
+              <Input
+                className="shadow-lg border-0 dark:border"
+                id="search-input"
+                type="search"
+                placeholder="Type your keywords"
+                sizeClass="pl-14 py-5 pr-5 md:pl-16"
+                rounded="rounded-full"
+                onChange={(e) => debounce(e.target.value)}
+              />
+              <ButtonCircle
+                className="absolute right-2.5 top-1/2 transform -translate-y-1/2"
+                size=" w-11 h-11"
+                type="submit"
+              >
+                <i className="las la-arrow-right text-xl"></i>
+              </ButtonCircle>
+              <span className="absolute left-5 top-1/2 transform -translate-y-1/2 text-2xl md:left-6">
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M22 22L20 20"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </label>
+          </form>
+        </header>
+      </div>
+
+      <div className="container py-16 lg:pb-28 lg:pt-20 space-y-16 lg:space-y-28">
+        <main>
+          {/* FILTER */}
+          
+          <TabFilters rangePrices={rangePrices} setRangePrices={(value: number[])=> setRangePrices(value)} 
+          categoriesState={categoriesState} setCategoriesState={(value: string[])=> setCategoriesState(value)} 
+          colorsState={colorsState} setColorsState={(value: string[])=> setColorsState(value)}
+          sizesState={sizesState} setSizesState={(value: string[])=> setSizesState(value)}
+          />
+
+          <div className="w-full border-b border-neutral-200/70 dark:border-neutral-700 my-8"></div>
+
+          {/* LOOP ITEMS */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10">
+            {/* {data.map((item, index) => (
+              <ProductCard data={item} key={item.id} />
+            ))} */}
+          </div>
+
+          {/* PAGINATION */}
+          <div className="flex flex-col mt-12 lg:mt-16 space-y-5 sm:space-y-0 sm:space-x-3 sm:flex-row sm:justify-between sm:items-center">
+            <Pagination />
+            <ButtonPrimary loading>Show me more</ButtonPrimary>
+          </div>
+        </main>
+
+      </div>
+    </div>
+  );
+};
+
+export default SearchContent;

@@ -12,7 +12,7 @@ import SelectValue from '@/components/SelectValue';
 import { CategoryAndSubType } from '@/types/CategoryType';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { DropShopType } from '@/types/DropShopType';
-import {  replaceMongoIdInArray } from '@/lib/convertData';
+import { replaceMongoIdInArray } from '@/lib/convertData';
 // import { createProduct } from '@/queries/products';
 import axios from 'axios';
 import { createProduct } from '@/queries/products';
@@ -124,41 +124,38 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
 
     startTransition(async () => {
       try {
-       
-        // 
+        //
 
-        if(data?.thumbnail[0]){ 
-            // const thumbnail_upload = await uploadFileByCloudinary(
-            //    data.thumbnail[0],
-            //     `product-image/${data.name.replaceAll(" ","-")}/thumbnail`,
-            //   );
-
-            // const fileBuffer = await data.thumbnail[0].arrayBuffer();
-            // const base64String = `data:${data.thumbnail[0].type};base64,${Buffer.from(fileBuffer).toString('base64')}`;
-            // const uploadResult = await cloudinary.uploader.upload(base64String, {
-            //   folder: `product-image/${data.name.replaceAll(" ","-")}/thumbnail`,
-            // });
-            // console.log("uploadResult ",uploadResult);
-            
-           
-            
-            signalFileFormData.append('path',`product-image/${data.name.replaceAll(" ","-")}/thumbnail`);
-            signalFileFormData.append('file',data.thumbnail[0]);
-            const uploadFileResult = await axios.post("/api/upload-file-api",signalFileFormData) as any
-            console.log("uploadFileResult ",uploadFileResult);
-            formData.append('thumbnail', uploadFileResult.data.res_data);
+        if (data?.thumbnail[0]) {
+          signalFileFormData.append(
+            'path',
+            `product-image/${data.name.replaceAll(' ', '-')}/thumbnail`,
+          );
+          signalFileFormData.append('file', data.thumbnail[0]);
+          const uploadFileResult = (await axios.post(
+            '/api/upload-file-api',
+            signalFileFormData,
+          )) as any;
+          console.log('uploadFileResult ', uploadFileResult);
+          formData.append('thumbnail', uploadFileResult.data.res_data);
         }
-       console.log("data.image_gallery ",data.image_gallery);
+        console.log('data.image_gallery ', data.image_gallery);
 
-        if(data?.image_gallery?.length > 0){
-          console.log("11111",data.image_gallery);
+        if (data?.image_gallery?.length > 0) {
+          multipleFileFormData.append(
+            'path',
+            `product-image/${data.name.replaceAll(' ', '-')}/image_gallery`,
+          );
 
-          multipleFileFormData.append('path',`product-image/${data.name.replaceAll(" ","-")}/image_gallery`);
-       
-          const uploadGalleryResult = await axios.post("/api/upload-file-api",multipleFileFormData) as any
-          console.log("uploadGalleryResult ",uploadGalleryResult);
-          formData.append('image_gallery', JSON.stringify(uploadGalleryResult.data.res_data));
-          
+          const uploadGalleryResult = (await axios.post(
+            '/api/upload-file-api',
+            multipleFileFormData,
+          )) as any;
+
+          formData.append(
+            'image_gallery',
+            JSON.stringify(uploadGalleryResult.data.res_data),
+          );
         }
 
         const result = await createProduct(formData);
@@ -171,13 +168,10 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
           alert(result?.message);
         }
         if (result?.status === 500) {
-    
           alert(result?.message);
         }
         setPreview(null);
         setImageGalleryPreview([]);
-
-
       } catch (err: any) {
         alert(`Error Occur ${err?.message}`);
         console.log(err.message);
@@ -295,12 +289,9 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
               })}
             />
             {errors.sku && typeof errors.sku.message === 'string' && (
-              <p className='text-red-600 text-xs ml-2'>
-                {errors.sku.message}
-              </p>
+              <p className='text-red-600 text-xs ml-2'>{errors.sku.message}</p>
             )}
           </div>
-
 
           {/* discount */}
           <div className='h-20 '>
