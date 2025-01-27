@@ -14,8 +14,8 @@ export const createProduct = async (formData: any) => {
   await connectDB();
   try {
     const name = formData.get('name') as string;
-    const category_id = formData.get('category_id');
-    const sub_category_id = formData.get('sub_category_id');
+    const category = formData.get('category');
+    const sub_category = formData.get('sub_category');
     const price = formData.get('price') as number;
     const sku = formData.get('sku') as string;
     const status = formData.get('status') as string;
@@ -50,11 +50,11 @@ export const createProduct = async (formData: any) => {
       EN_content,
     } as any;
 
-    if (category_id) {
-      product_data['category'] = category_id;
+    if (category) {
+      product_data['category'] = category;
     }
-    if (sub_category_id) {
-      product_data['sub_category'] = sub_category_id;
+    if (sub_category) {
+      product_data['sub_category'] = sub_category;
     }
 
     if (payload.sizes.length > 0) {

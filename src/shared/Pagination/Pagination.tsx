@@ -27,6 +27,7 @@ export interface PaginationProps {
 }
 
 const Pagination: FC<PaginationProps> = ({ className = "" }) => {
+  
   const renderItem = (pag: CustomLink, index: number) => {
     if (index === 0) {
       return (

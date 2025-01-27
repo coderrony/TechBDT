@@ -58,17 +58,20 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
     remove: removeVariant,
   } = useFieldArray({ control, name: 'variants' });
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategoryId = e.target.value;
-    const selectedCategory = categoriesData.find(
-      category => category.id === selectedCategoryId,
-    );
 
-    const subCategories = selectedCategory?.sub_categories || [];
+  
+const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectedCategoryId = e.target.selectedOptions[0].getAttribute('data-id'); // Get `data-id`
 
-    setSubCategories(subCategories); // Update subcategories
-    setSubCategories(replaceMongoIdInArray(subCategories as any[])); // Type cast
-  };
+  const selectedCategory = categoriesData.find(
+    category => category.id === selectedCategoryId, // Find category by ID
+  );
+
+  const subCategories = selectedCategory?.sub_categories || [];
+
+  setSubCategories(subCategories); // Update subcategories
+  setSubCategories(replaceMongoIdInArray(subCategories as any[])); // Type cast
+};
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -110,8 +113,8 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
 
     formData.append('name', data.name);
     formData.append('dropshop', data.dropshop);
-    formData.append('category_id', data.category);
-    formData.append('sub_category_id', data.sub_category);
+    formData.append('category', data.category);
+    formData.append('sub_category', data.sub_category);
     formData.append('price', data.price);
     formData.append('sku', data.sku);
     formData.append('status', data.status);
@@ -136,10 +139,10 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
             '/api/upload-file-api',
             signalFileFormData,
           )) as any;
-          console.log('uploadFileResult ', uploadFileResult);
+ 
           formData.append('thumbnail', uploadFileResult.data.res_data);
         }
-        console.log('data.image_gallery ', data.image_gallery);
+      
 
         if (data?.image_gallery?.length > 0) {
           multipleFileFormData.append(
@@ -179,10 +182,14 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
         setImageGalleryPreview([]);
       }
     });
+  
+  
   };
 
   if (isPending) return <LoadingIndicator />;
 
+  // console.log("categoriesData ",categoriesData);
+  
   return (
     <div className='container mt-6'>
       <h2 className='my-5 text-center text-1xl md:text-3xl font-semibold'>
@@ -223,7 +230,7 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
             >
               <option value=''>Select Category</option>
               {categoriesData.map(item => (
-                <option value={item.id} key={item.id}>
+                <option value={item.name} key={item.id} data-id={item.id}>
                   {item.name}
                 </option>
               ))}
@@ -236,7 +243,7 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
             <SelectValue className='mt-1.5' {...register('sub_category')}>
               <option value=''>Select Sub Category</option>
               {subCategories?.map(sub => (
-                <option value={sub.id} key={sub.id}>
+                <option value={sub.name} key={sub.id} >
                   {sub.name}
                 </option>
               ))}

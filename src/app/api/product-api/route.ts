@@ -54,10 +54,10 @@ export const GET = async (req: any) => {
     if (filters.sizes?.length) {
       query.sizes = { $in: filters.sizes }; // Handle multiple sizes
     }
-    if (filters.priceMin || filters.priceMax) {
+    if (filters.priceRange.length > 0) {
       query.price = {
-        ...(filters.priceMin ? { $gte: parseFloat(filters.priceMin) } : {}),
-        ...(filters.priceMax ? { $lte: parseFloat(filters.priceMax) } : {}),
+        ...(filters.priceRange[0] ? { $gte: parseFloat(filters.priceRange[0]) } : {}),
+        ...(filters.priceRange[1] ? { $lte: parseFloat(filters.priceRange[1]) } : {}),
       };
     }
     if (searchTerm) {
@@ -68,6 +68,9 @@ export const GET = async (req: any) => {
 
     // Fetch data
     const data = await Product.find(query).sort({ _id: 1 }).limit(limit);
+
+    console.log("data ",data);
+    
 
     return NextResponse.json({
       res_data: {

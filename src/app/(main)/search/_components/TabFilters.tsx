@@ -7,87 +7,37 @@ import ButtonThird from '@/shared/Button/ButtonThird';
 import ButtonClose from '@/shared/ButtonClose/ButtonClose';
 import Checkbox from '@/shared/Checkbox/Checkbox';
 import Slider from 'rc-slider';
-import Radio from '@/shared/Radio/Radio';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import MySwitch from '@/components/MySwitch';
-
-// DEMO Categories
-const DATA_categories = [
-  {
-    name: 'New Arrivals',
-  },
-  {
-    name: 'Sale',
-  },
-  {
-    name: 'Backpacks',
-  },
-  {
-    name: 'Travel Bags',
-  },
-  {
-    name: 'Laptop Sleeves',
-  },
-  {
-    name: 'Organization',
-  },
-  {
-    name: 'Accessories',
-  },
-];
-
-const DATA_colors = [
-  { name: 'White' },
-  { name: 'Beige' },
-  { name: 'Blue' },
-  { name: 'Black' },
-  { name: 'Brown' },
-  { name: 'Green' },
-  { name: 'Navy' },
-];
-
-const DATA_sizes = [
-  { name: 'XXS' },
-  { name: 'XS' },
-  { name: 'S' },
-  { name: 'M' },
-  { name: 'L' },
-  { name: 'XL' },
-  { name: '2XL' },
-];
-
-const PRICE_RANGE = [100, 35000];
+import {
+  default_category_colors,
+  default_category_sizes,
+  default_range_prices,
+} from '@/data/defaultValue';
 
 interface TabFiltersProps {
   className?: string;
-  rangePrices: number[]; //onFilterChange: (filters: Filters) => void;
-  setRangePrices: (value: number[]) => void;
-
-  categoriesState:string[];
-  setCategoriesState: (value: string[]) => void;
-
-  colorsState:string[];
-  setColorsState: (value: string[]) => void;
-
-  sizesState:string[];
-  setSizesState: (value: string[]) => void;
+  categoriesState: string[];
+  setFilters: (value: any) => void;
 }
 
-const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categoriesState,setCategoriesState,colorsState,setColorsState,sizesState, setSizesState}) => {
-  const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
-  //
+const TabFilters: FC<TabFiltersProps> = ({
+  categoriesState,
+  setFilters,
+}) => {
 
-  // const [rangePrices, setRangePrices] = useState([100, 35000]);
-  // const [categoriesState, setCategoriesState] = useState<string[]>([]);
-  // const [colorsState, setColorsState] = useState<string[]>([]);
-  // const [sizesState, setSizesState] = useState<string[]>([]);
+  const [query,setQuery] = useState<any>({
+      categories : [],
+      subCategories: [],
+      colors: [],
+      sizes: [],
+      priceRange:default_range_prices, // [minPrice,maxPrice]
+  
+    });
+  const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
 
-// console.log("categoriesState ",categoriesState);
-// console.log("colorsState ",colorsState);
-// console.log("sizesState ",sizesState);
-
-
+  // console.log("query ",query);
+  
   //
   const closeModalMoreFilter = () => setisOpenMoreFilter(false);
   const openModalMoreFilter = () => setisOpenMoreFilter(true);
@@ -95,21 +45,65 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
   //
   const handleChangeCategories = (checked: boolean, name: string) => {
     checked
-      ? setCategoriesState([...categoriesState, name])
-      : setCategoriesState(categoriesState.filter(i => i !== name));
+      ? setQuery((prev: any) => ({
+          ...prev,
+          categories: [...prev.categories, name],
+        }))
+      : setQuery((prev: any) => ({
+          ...prev,
+          categories: prev.categories.filter((i: string) => i !== name),
+        }));
   };
 
   const handleChangeColors = (checked: boolean, name: string) => {
     checked
-      ? setColorsState([...colorsState, name])
-      : setColorsState(colorsState.filter(i => i !== name));
+      ? setQuery((prev: any) => ({ ...prev, colors: [...prev.colors, name] }))
+      : setQuery((prev: any) => ({
+          ...prev,
+          colors: prev.colors.filter((i: string) => i !== name),
+        }));
   };
 
   const handleChangeSizes = (checked: boolean, name: string) => {
+   
     checked
-      ? setSizesState([...sizesState, name])
-      : setSizesState(sizesState.filter(i => i !== name));
+      ? setQuery((prev: any) => ({ ...prev, sizes: [...prev.sizes, name] }))
+      : setQuery((prev: any) => ({
+          ...prev,
+          sizes: prev.sizes.filter((i: string) => i !== name),
+        }));
   };
+
+
+// when click apply then filter execute
+  const handelQuerySubmit = ()=>{ 
+    setFilters(query)
+  }
+
+  // clear categories,colors,sizes
+  const handelClear = (value:string)=>{ 
+    setFilters((prev: any) => ({
+      ...prev,
+      [value]: [],
+    }));
+    setQuery((prev: any) => ({
+      ...prev,
+      [value]: [],
+    }));
+   
+  }
+
+  // clear price range and set [100,30000]
+  const clearPrice = ()=>{ 
+    setFilters((prev: any) => ({
+      ...prev,
+      priceRange: default_range_prices,
+    }));
+    setQuery((prev: any) => ({
+      ...prev,
+      priceRange: default_range_prices,
+    }));
+  }
 
   // OK
   const renderTabsPriceRage = () => {
@@ -120,10 +114,16 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
             <Popover.Button
               className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border border-primary-500 bg-primary-50 text-primary-900 focus:outline-none `}>
               ৳
-              <span className=' min-w-[90px]'>{`${rangePrices[0]} - ${rangePrices[1]}`}</span>
-              {rangePrices[0] === PRICE_RANGE[0] &&
-              rangePrices[1] === PRICE_RANGE[1] ? null : (
-                <span onClick={() => setRangePrices(PRICE_RANGE)}>
+              <span className=' min-w-[90px]'>{`${query.priceRange[0]} - ${query.priceRange[1]}`}</span>
+              {query.priceRange[0] === default_range_prices[0] &&
+              query.priceRange[1] === default_range_prices[1] ? null : (
+                <span
+                  onClick={() =>
+                    setQuery((prev: any) => ({
+                      ...prev,
+                      priceRange: default_range_prices,
+                    }))
+                  }>
                   {renderXClear()}
                 </span>
               )}
@@ -143,13 +143,16 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                       <span className='font-medium'>Price range</span>
                       <Slider
                         range
-                        min={PRICE_RANGE[0]}
-                        max={PRICE_RANGE[1]}
+                        min={default_range_prices[0]}
+                        max={default_range_prices[1]}
                         step={1}
-                        defaultValue={[rangePrices[0], rangePrices[1]]}
+                        defaultValue={query.priceRange}
                         allowCross={false}
                         onChange={(_input: number | number[]) =>
-                          setRangePrices(_input as number[])
+                          setQuery((prev: any) => ({
+                            ...prev,
+                            priceRange: _input as number[],
+                          }))
                         }
                       />
                     </div>
@@ -171,7 +174,7 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                             disabled
                             id='minPrice'
                             className='block w-32 pr-10 pl-4 sm:text-sm border-neutral-200 dark:border-neutral-700 rounded-full bg-transparent'
-                            value={rangePrices[0]}
+                            value={query.priceRange[0]}
                           />
                         </div>
                       </div>
@@ -191,7 +194,7 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                             name='maxPrice'
                             id='maxPrice'
                             className='block w-32 pr-10 pl-4 sm:text-sm border-neutral-200 dark:border-neutral-700 rounded-full bg-transparent'
-                            value={rangePrices[1]}
+                            value={query.priceRange[1]}
                           />
                         </div>
                       </div>
@@ -200,14 +203,17 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                   <div className='p-5 bg-neutral-50 dark:bg-neutral-900 dark:border-t dark:border-neutral-800 flex items-center justify-between'>
                     <ButtonThird
                       onClick={() => {
-                        setRangePrices(PRICE_RANGE);
+                        clearPrice()
                         close();
                       }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
-                      onClick={close}
+                      onClick={()=> {
+                        handelQuerySubmit()
+                        close()
+                      }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Apply
                     </ButtonPrimary>
@@ -254,7 +260,7 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                    : 'border-neutral-300 dark:border-neutral-700'
                }
                 ${
-                  !!categoriesState.length
+                  !!query.categories.length
                     ? '!border-primary-500 bg-primary-50 text-primary-900'
                     : 'border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-500'
                 }
@@ -307,12 +313,10 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
               </svg>
 
               <span className='ml-2'>Categories</span>
-              {!categoriesState.length ? (
+              {!query.categories.length ? (
                 <ChevronDownIcon className='w-4 h-4 ml-3' />
               ) : (
-                <span onClick={() => setCategoriesState([])}>
-                  {renderXClear()}
-                </span>
+                <span>{renderXClear()}</span>
               )}
             </Popover.Button>
             <Transition
@@ -326,14 +330,15 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
               <Popover.Panel className='absolute z-40 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-md'>
                 <div className='overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700'>
                   <div className='relative flex flex-col px-5 py-6 space-y-5'>
-                 
                     {/* <div className='w-full border-b border-neutral-200 dark:border-neutral-700' /> */}
-                    {DATA_categories.map(item => (
-                      <div key={item.name} className=''>
+                    {categoriesState.map((item: any) => (
+                      <div key={item.id} className=''>
                         <Checkbox
                           name={item.name}
                           label={item.name}
-                          defaultChecked={categoriesState.includes(item.name)}
+                          defaultChecked={query.categories.includes(
+                            item.name,
+                          )}
                           onChange={checked =>
                             handleChangeCategories(checked, item.name)
                           }
@@ -345,13 +350,18 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                     <ButtonThird
                       onClick={() => {
                         close();
-                        setCategoriesState([]);
+                        handelClear("categories")
+
+
                       }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
-                      onClick={close}
+                      onClick={()=>{ 
+                        close();
+                        handelQuerySubmit()
+                      }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Apply
                     </ButtonPrimary>
@@ -375,7 +385,7 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
               className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border focus:outline-none select-none
               ${open ? '!border-primary-500 ' : ''}
                 ${
-                  !!colorsState.length
+                  !!query.colors.length
                     ? '!border-primary-500 bg-primary-50 text-primary-900'
                     : 'border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-500'
                 }
@@ -427,10 +437,16 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
               </svg>
 
               <span className='ml-2'>Colors</span>
-              {!colorsState.length ? (
+              {!query.colors.length ? (
                 <ChevronDownIcon className='w-4 h-4 ml-3' />
               ) : (
-                <span onClick={() => setColorsState([])}>{renderXClear()}</span>
+                <span
+                  onClick={() =>
+                    // setFilters((prev: any) => ({ ...prev, colors: [] }))
+                    handelClear("colors")
+                  }>
+                  {renderXClear()}
+                </span>
               )}
             </Popover.Button>
             <Transition
@@ -444,12 +460,12 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
               <Popover.Panel className='absolute z-40 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-sm'>
                 <div className='overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700'>
                   <div className='relative flex flex-col px-5 py-6 space-y-5'>
-                    {DATA_colors.map(item => (
+                    {default_category_colors.map(item => (
                       <div key={item.name} className=''>
                         <Checkbox
                           name={item.name}
                           label={item.name}
-                          defaultChecked={colorsState.includes(item.name)}
+                          defaultChecked={query.colors.includes(item.name)}
                           onChange={checked =>
                             handleChangeColors(checked, item.name)
                           }
@@ -461,13 +477,18 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                     <ButtonThird
                       onClick={() => {
                         close();
-                        setColorsState([]);
+                        // setColorsState([]);
+                        // setFilters((prev: any) => ({ ...prev, colors: [] }));
+                        handelClear("colors")
                       }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
-                      onClick={close}
+                      onClick={()=>{
+                        handelQuerySubmit();
+                        close();
+                      }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Apply
                     </ButtonPrimary>
@@ -491,7 +512,7 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
               className={`flex items-center justify-center px-4 py-2 text-sm rounded-full border focus:outline-none select-none
               ${open ? '!border-primary-500 ' : ''}
                 ${
-                  !!sizesState.length
+                  !!query.sizes.length
                     ? '!border-primary-500 bg-primary-50 text-primary-900'
                     : 'border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 hover:border-neutral-400 dark:hover:border-neutral-500'
                 }
@@ -532,10 +553,16 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
               </svg>
 
               <span className='ml-2'>Sizes</span>
-              {!sizesState.length ? (
+              {!query.sizes.length ? (
                 <ChevronDownIcon className='w-4 h-4 ml-3' />
               ) : (
-                <span onClick={() => setSizesState([])}>{renderXClear()}</span>
+                <span
+                  onClick={() =>
+                    // setFilters((prev: any) => ({ ...prev, sizes: [] }))
+                    handelClear("sizes")
+                  }>
+                  {renderXClear()}
+                </span>
               )}
             </Popover.Button>
             <Transition
@@ -549,12 +576,12 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
               <Popover.Panel className='absolute z-40 w-screen max-w-sm px-4 mt-3 left-0 sm:px-0 lg:max-w-sm'>
                 <div className='overflow-hidden rounded-2xl shadow-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700'>
                   <div className='relative flex flex-col px-5 py-6 space-y-5'>
-                    {DATA_sizes.map(item => (
+                    {default_category_sizes.map(item => (
                       <div key={item.name} className=''>
                         <Checkbox
                           name={item.name}
                           label={item.name}
-                          defaultChecked={sizesState.includes(item.name)}
+                          defaultChecked={query.sizes.includes(item.name)}
                           onChange={checked =>
                             handleChangeSizes(checked, item.name)
                           }
@@ -566,13 +593,17 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                     <ButtonThird
                       onClick={() => {
                         close();
-                        setSizesState([]);
+                        // setFilters((prev: any) => ({ ...prev, sizes: [] }));
+                        handelClear("sizes")
                       }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
-                      onClick={close}
+                      onClick={()=>{ 
+                        handelQuerySubmit();
+                        close();
+                      }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Apply
                     </ButtonPrimary>
@@ -587,24 +618,21 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
   };
 
   // OK
-  const renderMoreFilterItem = (data:any[],type:string) => {
+  const renderMoreFilterItem = (data: any[], type: string) => {
     const list1 = data.filter((_, i) => i < data.length / 2);
     const list2 = data.filter((_, i) => i >= data.length / 2);
-    // console.log("list1 ",list1);
-    // console.log("list2 ",list2);
-    
-    // console.log("type ",type)
-    const controlMobileChecked = (checked:boolean,name:string) => { 
-        if(type === "categories"){ 
-          handleChangeCategories(checked,name)
-        }
-        if(type === "colors"){ 
-          handleChangeColors(checked,name)
-        }
-        if(type === "sizes"){ 
-          handleChangeSizes(checked,name)
-        }
-    }
+   
+    const controlMobileChecked = (checked: boolean, name: string) => {
+      if (type === 'categories') {
+        handleChangeCategories(checked, name);
+      }
+      if (type === 'colors') {
+        handleChangeColors(checked, name);
+      }
+      if (type === 'sizes') {
+        handleChangeSizes(checked, name);
+      }
+    };
 
     return (
       <div className='grid grid-cols-2 gap-x-4 sm:gap-x-8 gap-8'>
@@ -613,12 +641,9 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
             <Checkbox
               key={item.name}
               name={item.name}
-              // subLabel={item.description}
               label={item.name}
-              // defaultChecked={!!item.defaultChecked}
-              onChange={checked =>
-                controlMobileChecked(checked, item.name)
-              }
+              defaultChecked={query[type].includes(item.name)}
+              onChange={checked => controlMobileChecked(checked, item.name)}
             />
           ))}
         </div>
@@ -627,12 +652,9 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
             <Checkbox
               key={item.name}
               name={item.name}
-              // subLabel={item.description}
               label={item.name}
-              // defaultChecked={!!item.defaultChecked}
-              onChange={checked =>
-                controlMobileChecked(checked, item.name)
-              }
+              defaultChecked={query[type].includes(item.name)}
+              onChange={checked => controlMobileChecked(checked, item.name)}
             />
           ))}
         </div>
@@ -756,7 +778,7 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                       <div className='py-7'>
                         <h3 className='text-xl font-medium'>Categories</h3>
                         <div className='mt-6 relative '>
-                          {renderMoreFilterItem(DATA_categories,"categories")}
+                          {renderMoreFilterItem(categoriesState, 'categories')}
                         </div>
                       </div>
                       {/* --------- */}
@@ -764,7 +786,10 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                       <div className='py-7'>
                         <h3 className='text-xl font-medium'>Colors</h3>
                         <div className='mt-6 relative '>
-                          {renderMoreFilterItem(DATA_colors,"colors")}
+                          {renderMoreFilterItem(
+                            default_category_colors,
+                            'colors',
+                          )}
                         </div>
                       </div>
                       {/* --------- */}
@@ -772,11 +797,15 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                       <div className='py-7'>
                         <h3 className='text-xl font-medium'>Sizes</h3>
                         <div className='mt-6 relative '>
-                          {renderMoreFilterItem(DATA_sizes,"sizes")}
+                          {renderMoreFilterItem(
+                            default_category_sizes,
+                            'sizes',
+                          )}
                         </div>
                       </div>
 
                       {/* --------- */}
+
                       {/* ---- */}
                       <div className='py-7'>
                         <h3 className='text-xl font-medium'>Range Prices</h3>
@@ -786,12 +815,15 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                               <Slider
                                 range
                                 className='text-red-400'
-                                min={PRICE_RANGE[0]}
-                                max={PRICE_RANGE[1]}
-                                defaultValue={rangePrices}
+                                min={default_range_prices[0]}
+                                max={default_range_prices[1]}
+                                defaultValue={query.priceRange}
                                 allowCross={false}
                                 onChange={(_input: number | number[]) =>
-                                  setRangePrices(_input as number[])
+                                  setQuery((prev: any) => ({
+                                    ...prev,
+                                    priceRange: _input as number[],
+                                  }))
                                 }
                               />
                             </div>
@@ -815,7 +847,7 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                                     disabled
                                     id='minPrice'
                                     className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900'
-                                    value={rangePrices[0]}
+                                    value={query.priceRange[0]}
                                   />
                                 </div>
                               </div>
@@ -837,7 +869,7 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                                     name='maxPrice'
                                     id='maxPrice'
                                     className='focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-3 sm:text-sm border-neutral-200 rounded-full text-neutral-900'
-                                    value={rangePrices[1]}
+                                    value={query.priceRange[1]}
                                   />
                                 </div>
                               </div>
@@ -851,16 +883,32 @@ const TabFilters: FC<TabFiltersProps> = ({ rangePrices, setRangePrices,categorie
                   <div className='p-6 flex-shrink-0 bg-neutral-50 dark:bg-neutral-900 dark:border-t dark:border-neutral-800 flex items-center justify-between'>
                     <ButtonThird
                       onClick={() => {
-                        setRangePrices(PRICE_RANGE);
-                        setCategoriesState([]);
-                        setColorsState([]);
+                        setQuery((prev: any) => ({
+                          ...prev,
+                          categories: [],
+                          subCategories: [],
+                          colors: [],
+                          sizes: [],
+                          priceRange: default_range_prices,
+                        }));
+                        setFilters((prev: any) => ({
+                          ...prev,
+                          categories: [],
+                          subCategories: [],
+                          colors: [],
+                          sizes: [],
+                          priceRange: default_range_prices,
+                        }));
                         closeModalMoreFilter();
                       }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Clear
                     </ButtonThird>
                     <ButtonPrimary
-                      onClick={closeModalMoreFilter}
+                      onClick={()=>{ 
+                        handelQuerySubmit()
+                        closeModalMoreFilter()
+                      }}
                       sizeClass='px-4 py-2 sm:px-5'>
                       Apply
                     </ButtonPrimary>

@@ -7,6 +7,29 @@ export const default_avatar = 'https://res.cloudinary.com/dgobtxhjp/image/upload
 
 export const notify_duration = 2000;
 
+export const default_range_prices = [100, 30000]
+export const default_category_colors = [
+  { name: 'Black' },
+  { name: 'White' },
+  { name: 'Blue' },
+  { name: 'Orange' },
+  { name: 'Pink' },
+  { name: 'Gold' },
+  { name: 'Purple' },
+  { name: 'Green' },
+  { name: 'Navy' },
+];
+export const  default_category_sizes = [
+  { name: 'XXS' },
+  { name: 'XS' },
+  { name: 'S' },
+  { name: 'M' },
+  { name: 'L' },
+  { name: 'XL' },
+  { name: '2XL' },
+];
+
+
 // navbar items
 export const NAVIGATION_DATA: CategoryAndSubType[] = [
   {
