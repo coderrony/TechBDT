@@ -18,7 +18,7 @@ export function usePaginatedItems(
       const { data } = await axios.get("/api/product-api", {
         params: {
           cursor: pageParam,
-          limit: 2,
+          limit: 8,
           searchTerm,
           ...filters,
         },

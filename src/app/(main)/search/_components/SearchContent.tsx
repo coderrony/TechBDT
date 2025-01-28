@@ -1,11 +1,8 @@
 'use client';
 import React, { FC, useEffect, useRef, useState } from 'react';
-import Pagination from '@/shared/Pagination/Pagination';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
-
 import Input from '@/shared/Input/Input';
 import ButtonCircle from '@/shared/Button/ButtonCircle';
-
 import ProductCard from '@/components/ProductCardSectionSlider/ProductCard';
 import useDebounce from '@/hooks/useDebounce';
 import { useSearchParams } from 'next/navigation';
@@ -13,6 +10,7 @@ import TabFilters from './TabFilters';
 import { usePaginatedItems } from '@/hooks/usePaginatedItems';
 import { default_range_prices } from '@/data/defaultValue';
 import LoadingIndicator from '@/components/LoadingIndicator';
+import twFocusClass from '@/utils/twFocusClass';
 
 interface SearchContentProps {
   className?: string;
@@ -20,6 +18,7 @@ interface SearchContentProps {
 
 const SearchContent: FC<SearchContentProps> = () => {
   const hasQuery = useRef(false);
+  const [page, setPage] = useState(0);
   const searchParams = useSearchParams();
   const [categoriesState, setCategoriesState] = useState<string[]>([]);
   const [queryText, setQueryText] = useState('');
@@ -32,18 +31,29 @@ const SearchContent: FC<SearchContentProps> = () => {
     priceRange: default_range_prices, // [minPrice,maxPrice]
   });
 
-  const { data, isFetching, isLoading } = usePaginatedItems(
-    searchTerm,
-    filters,
-  );
+  const {
+    data,
+    isFetching,
+    isLoading,
+    fetchNextPage,
+    fetchPreviousPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = usePaginatedItems(searchTerm, filters) as any;
 
-  console.log('data ', data);
+  // Extract the last page data
+  // const lastPageData = data?.pages[data.pages.length - 1]?.res_data.data || [];
+  const lastPageData = data?.pages[page]?.res_data.data || [];
+
+ 
 
   const category = searchParams.get('category');
   const subCategory = searchParams.get('subCategory');
 
-  console.log('filters ', filters);
-  // console.log("categoriesState ",categoriesState);
+  
+  useEffect(() => {
+    setPage(data?.pages?.length - 1 || 0);
+  }, [data?.pages.length]);
 
   useEffect(() => {
     const controller = new AbortController(); // AbortController to cancel fetch if needed
@@ -95,7 +105,30 @@ const SearchContent: FC<SearchContentProps> = () => {
     }
   }, 350);
 
-  // if(isLoading) return <LoadingIndicator/>
+  const renderItem = (pag: any, index: number) => {
+   
+    if (index === page) {
+      return (
+        <span
+          key={index}
+          className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-primary-6000 text-white ${twFocusClass()}`}>
+      
+          {index + 1}
+        </span>
+      );
+    }
+    // RETURN UNACTIVE PAGINATION
+    return (
+      <button
+        key={index}
+        className={`inline-flex w-11 h-11 items-center justify-center rounded-full bg-white hover:bg-neutral-100 border border-neutral-200 text-neutral-6000 dark:text-neutral-400 dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:border-neutral-700 ${twFocusClass()}`}
+        // href={pag.href}
+        onClick={() => setPage(index)}>
+       
+        {index + 1}
+      </button>
+    );
+  };
 
   return (
     <div className={`nc-PageSearch`} data-nc-id='PageSearch'>
@@ -173,18 +206,26 @@ const SearchContent: FC<SearchContentProps> = () => {
 
           {!isLoading && data && (
             <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10'>
-              {data.pages.map(page =>
-                page.res_data.data.map(product => (
-                  <ProductCard key={product._id} data={product} />
-                )),
-              )}
+              {lastPageData.map((product: any) => (
+                <ProductCard key={product._id} data={product} />
+              ))}
             </div>
           )}
 
           {/* PAGINATION */}
           <div className='flex flex-col mt-12 lg:mt-16 space-y-5 sm:space-y-0 sm:space-x-3 sm:flex-row sm:justify-between sm:items-center'>
-            <Pagination />
-            <ButtonPrimary loading={isFetching}>Show me more</ButtonPrimary>
+            {/* <Pagination /> */}
+
+            <nav
+              className={`nc-Pagination inline-flex space-x-1 text-base font-medium`}>
+              {Array.from({ length: data?.pages.length }).map(renderItem)}
+            </nav>
+
+            <ButtonPrimary
+              onClick={() => fetchNextPage()}
+              disabled={!hasNextPage || isFetchingNextPage}>
+              {isFetchingNextPage ? 'Loading...' : 'Next'}
+            </ButtonPrimary>
           </div>
         </main>
       </div>
