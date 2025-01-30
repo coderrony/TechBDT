@@ -21,7 +21,7 @@ export const GET = async (req: any) => {
     await connectDB()
 
     const orders = (await Order.find({ user: userId })
-      .sort({ _id: 1 })
+      .sort({ _id: -1 })
       .limit(5)
       .lean()) as any;
 
@@ -47,7 +47,7 @@ export const GET = async (req: any) => {
 
 export const POST = async (req: any) => {
   const data = await req.json();
-  // console.log('verify-payment api ', data);
+  console.log('verify-payment api ', data);
 
   try {
     const response = await axios.post(
@@ -62,10 +62,10 @@ export const POST = async (req: any) => {
       },
     );
 
-    // console.log('verify-payment api result ', response.data);
     const result = response.data;
+    console.log('verify-payment api result ', result);
 
-    if (result.status === 'COMPLETED') {
+    if (result.status === 'COMPLETED' || result.status === 'PENDING') {
       await connectDB();
       const amount = Number(result.amount);
       const {
@@ -82,14 +82,14 @@ export const POST = async (req: any) => {
       const isExistOrder = (await Order.findOne({
         user: user_id,
         transaction_id: result.transaction_id,
-        sender_number: result.sender_number,
+        // sender_number: result.sender_number,
       })) as any;
 
       // console.log('isExistOrder ', isExistOrder);
       if (isExistOrder) {
         return NextResponse.json({
           message: 'Order already exist',
-          status: 500,
+          status: 409,
         });
       } else {
         const cart = (await AddToCart.findOne({ user: user_id })
@@ -136,6 +136,7 @@ export const POST = async (req: any) => {
           invoice_id: result.invoice_id,
           sender_number: result.sender_number,
           date: result.date,
+          status: result.status === 'PENDING' ? 'PENDING' : 'PROCESSING',
           shipping_address,
           products,
         });
@@ -143,7 +144,7 @@ export const POST = async (req: any) => {
         return NextResponse.json(
           {
             message: 'Successfully Place Order',
-            status: 200,
+            status: result.status === 'PENDING' ? 200 : 202,
           },
           { status: 200 },
         );
@@ -152,6 +153,6 @@ export const POST = async (req: any) => {
     return NextResponse.json({ message: 'Request Failed', status: 500 });
   } catch (err: any) {
     // console.log("err ",err)
-    return NextResponse.json({ message: err.message, status: 404 });
+    return NextResponse.json({ message: err.message, status: 500 });
   }
 };

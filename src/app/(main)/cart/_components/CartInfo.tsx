@@ -242,7 +242,7 @@ const CartInfo: FC<CartInfoProps> = () => {
           email: authData?.email || 'customer@example.com',
          
           //  amount: data.deliveryType === 'Regular'  ? calculateCartTotal(cartData?.products) + shipping_cost  : advancePay, // মোট অর্ডারের মূল্য
-          amount:  process.env.NODE_ENV === "development" ?  '2' : data.deliveryType === 'Regular'  ? calculateCartTotal(cartData?.products) + shipping_cost  : advancePay,
+          amount:  process.env.NODE_ENV === "development" ?  '10' : data.deliveryType === 'Regular'  ? calculateCartTotal(cartData?.products) + shipping_cost  : advancePay,
           metadata: {
             user_id: authData.id,
             full_name: authData.full_name,

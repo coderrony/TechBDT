@@ -15,6 +15,8 @@ const OrderMsgModel: FC<OrderMsgModelProps> = ({
   onCloseModal,
   statusCode,
 }) => {
+
+
   const orderSuccess = () => {
     return (
       <div className='text-center'>
@@ -29,14 +31,36 @@ const OrderMsgModel: FC<OrderMsgModelProps> = ({
             clipRule='evenodd'
           />
         </svg>
-        <h1 className='text-2xl font-bold mt-4 text-gray-800'>
+        <h1 className='text-2xl font-bold mt-4 text-gray-800 dark:text-gray-200'>
           Order Confirmed!
         </h1>
-        <p className='mt-2 text-gray-600'>Thank you for your purchase</p>
+        <p className='mt-2 text-gray-600 dark:text-gray-300'>Thank you for your purchase</p>
         {/* <p className="mt-1 text-lg font-semibold text-gray-800">{message}</p> */}
       </div>
     );
   };
+
+  const OrderPending = () => {
+  return (
+    <div className='text-center'>
+      <svg
+        xmlns='http://www.w3.org/2000/svg'
+        className='h-16 w-16 text-yellow-500 mx-auto'
+        viewBox='0 0 24 24'
+        fill='currentColor'>
+        <path
+          fillRule='evenodd'
+          d='M12 2a10 10 0 100 20 10 10 0 000-20zm0 3a1 1 0 011 1v5a1 1 0 01-2 0V6a1 1 0 011-1zm0 10a1.25 1.25 0 100 2.5A1.25 1.25 0 0012 15z'
+          clipRule='evenodd'
+        />
+      </svg>
+      <h1 className='text-2xl font-bold mt-4 text-gray-800 dark:text-gray-200'>
+        Order Pending!
+      </h1>
+      <p className='mt-2 text-gray-600 dark:text-gray-300'>Your order is being processed</p>
+    </div>
+  );
+};
 
   const orderFailed = () => {
     return (
@@ -52,16 +76,46 @@ const OrderMsgModel: FC<OrderMsgModelProps> = ({
             clipRule='evenodd'
           />
         </svg>
-        <h1 className='text-2xl font-bold mt-4 text-gray-800'>
+        <h1 className='text-2xl font-bold mt-4 text-gray-800 dark:text-gray-200'>
           Purchase Failed
         </h1>
-        <p className='mt-2 text-gray-600'>
+        <p className='mt-2 text-gray-600 dark:text-gray-300'>
           Unfortunately, we couldn&apos;t process your purchase.
         </p>
-        <p className='mt-1 text-gray-600 font-semibold'>Order already exist</p>
+        <p className='mt-1 text-gray-600 font-semibold dark:text-gray-300'>Order already exist</p>
       </div>
     );
   };
+
+  const orderInvalid = () => { 
+    return (
+      <div className='text-center'>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          className='h-16 w-16 text-red-500 mx-auto'
+          viewBox='0 0 24 24'
+          fill='currentColor'>
+          <path
+            fillRule='evenodd'
+            d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.707 7.293a1 1 0 00-1.414-1.414L12 11.586 8.707 8.293a1 1 0 10-1.414 1.414L10.586 13l-3.293 3.293a1 1 0 101.414 1.414L12 14.414l3.293 3.293a1 1 0 001.414-1.414L13.414 13l3.293-3.293z'
+            clipRule='evenodd'
+          />
+        </svg>
+        <h1 className='text-2xl font-bold mt-4 text-gray-800 dark:text-gray-200'>
+          Invalid Information
+        </h1>
+        <p className='mt-2 text-gray-600 dark:text-gray-300'>
+          The provided information is not valid.
+        </p>
+        <p className='mt-1 text-gray-600 font-semibold dark:text-gray-300'>
+          Please check your details and try again.
+        </p>
+      </div>
+    );
+  };
+  
+
+  
 
   return (
     <Transition appear show={show} as={Fragment}>
@@ -98,8 +152,10 @@ const OrderMsgModel: FC<OrderMsgModelProps> = ({
                   <ButtonClose onClick={onCloseModal} />
                 </span>
 
-                {statusCode === 200 && orderSuccess()}
-                {statusCode === 500 && orderFailed()}
+                {statusCode === 200 && OrderPending()}
+                {statusCode === 202 && orderSuccess()}
+                {statusCode === 409 && orderFailed()}
+                {statusCode === 500 && orderInvalid()}
               </div>
             </div>
           </Transition.Child>

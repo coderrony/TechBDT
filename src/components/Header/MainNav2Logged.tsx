@@ -44,7 +44,7 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = async () => {
     return (
       <div className='h-20 flex justify-between'>
         <div className='flex items-center lg:hidden flex-1'>
-          <MenuBar allCategory={allCategory || []} />
+          <MenuBar allCategory={nav_data || []} />
         </div>
 
         <div className='lg:flex-1 flex items-center'>

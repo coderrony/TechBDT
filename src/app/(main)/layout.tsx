@@ -5,13 +5,13 @@ import { ReactNode } from 'react';
 const Footer = dynamic(() => import('@/shared/Footer/Footer'), { ssr: false });
 function MainLayout({ children }: { children: ReactNode }) {
   return (
-    <div>
+    <>
       <HeaderLogged />
 
       {children}
 
       <Footer />
-    </div>
+    </>
   );
 }
 

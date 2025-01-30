@@ -49,7 +49,7 @@ const orderSchema = new Schema(
     },
     sender_number: {
       type: String,
-      required: true,
+      default: null,
     },
     date: {
       type: String,
@@ -57,8 +57,8 @@ const orderSchema = new Schema(
     },
     status: {
       type: String,
-      enum: [ 'Processing', 'Shipped', 'Delivered'],
-      default: 'Processing',
+      enum: ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
+      default: 'PENDING',
     },
     shipping_address: {
       type: new Schema(
@@ -70,32 +70,32 @@ const orderSchema = new Schema(
           house: { type: String, required: true },
           mobile: { type: [String], default: [] },
         },
-        { _id: false } // Prevents creation of a separate `_id` for this subdocument
+        { _id: false }, // Prevents creation of a separate `_id` for this subdocument
       ),
       required: true,
     },
-  
-  
+
     products: [
       {
-       product_name: { type: String, required: true },
-       slug: { type: String, required: true},
-          price: {
-            type: Number,
-            required: true,
-          },
-          sku: {
-            type: String,
-            required: true,
-          },
-          quantity: { type: Number, required: true },
-          dropShop: { type: Schema.ObjectId, ref: 'DropShop', require: true },
-          color: { type: String },
-          size: { type: String },
+        product_name: { type: String, required: true },
+        slug: { type: String, required: true },
+        price: {
+          type: Number,
+          required: true,
+        },
+        sku: {
+          type: String,
+          required: true,
+        },
+        quantity: { type: Number, required: true },
+        dropShop: { type: Schema.ObjectId, ref: 'DropShop', require: true },
+        color: { type: String },
+        size: { type: String },
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Order = mongoose.models.Order || mongoose.model('Order', orderSchema);
+export const Order =
+  mongoose.models.Order || mongoose.model('Order', orderSchema);

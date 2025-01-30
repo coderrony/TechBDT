@@ -9,9 +9,10 @@ import Image from 'next/image';
 import {signOut } from 'next-auth/react';
 
 import useAuthData from '@/hooks/useAuthData';
+import { useThemeMode } from '@/hooks/useThemeMode';
 
 export default function AvatarDropdown() {
-
+  useThemeMode();
   const {authData} = useAuthData() as any;
 // console.log("AvatarDropdown authData ",authData);
 

@@ -10,10 +10,10 @@ export const useThemeMode = () => {
   const [isDarkMode, setIsDarkMode] = useGlobalState("isDarkmode");
 
   useEffect(() => {
-    if (localStorage.theme === "dark") {
-      toDark();
-    } else {
+    if (localStorage.theme === "light") {
       toLight();
+    } else {
+      toDark();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
