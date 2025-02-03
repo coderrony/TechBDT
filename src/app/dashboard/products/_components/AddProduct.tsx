@@ -125,63 +125,63 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     formData.append('EN_content', JSON.stringify(enContentJson));
     formData.append('payload', JSON.stringify(payload));
 
-    startTransition(async () => {
-      try {
-        //
+    // startTransition(async () => {
+    //   try {
+    //     //
 
-        if (data?.thumbnail[0]) {
-          signalFileFormData.append(
-            'path',
-            `product-image/${data.name.replaceAll(' ', '-')}/thumbnail`,
-          );
-          signalFileFormData.append('file', data.thumbnail[0]);
-          const uploadFileResult = (await axios.post(
-            '/api/upload-file-api',
-            signalFileFormData,
-          )) as any;
+    //     if (data?.thumbnail[0]) {
+    //       signalFileFormData.append(
+    //         'path',
+    //         `product-image/${data.name.replaceAll(' ', '-')}/thumbnail`,
+    //       );
+    //       signalFileFormData.append('file', data.thumbnail[0]);
+    //       const uploadFileResult = (await axios.post(
+    //         '/api/upload-file-api',
+    //         signalFileFormData,
+    //       )) as any;
  
-          formData.append('thumbnail', uploadFileResult.data.res_data);
-        }
+    //       formData.append('thumbnail', uploadFileResult.data.res_data);
+    //     }
       
 
-        if (data?.image_gallery?.length > 0) {
-          multipleFileFormData.append(
-            'path',
-            `product-image/${data.name.replaceAll(' ', '-')}/image_gallery`,
-          );
+    //     if (data?.image_gallery?.length > 0) {
+    //       multipleFileFormData.append(
+    //         'path',
+    //         `product-image/${data.name.replaceAll(' ', '-')}/image_gallery`,
+    //       );
 
-          const uploadGalleryResult = (await axios.post(
-            '/api/upload-file-api',
-            multipleFileFormData,
-          )) as any;
+    //       const uploadGalleryResult = (await axios.post(
+    //         '/api/upload-file-api',
+    //         multipleFileFormData,
+    //       )) as any;
 
-          formData.append(
-            'image_gallery',
-            JSON.stringify(uploadGalleryResult.data.res_data),
-          );
-        }
+    //       formData.append(
+    //         'image_gallery',
+    //         JSON.stringify(uploadGalleryResult.data.res_data),
+    //       );
+    //     }
 
-        const result = await createProduct(formData);
-        // const result = await axios.post('/api/product-api', formData) as any;
+    //     const result = await createProduct(formData);
+    //     // const result = await axios.post('/api/product-api', formData) as any;
 
-        console.log('result ', result);
+    //     console.log('result ', result);
 
-        if (result?.status === 200) {
-          reset();
-          alert(result?.message);
-        }
-        if (result?.status === 500) {
-          alert(result?.message);
-        }
-        setPreview(null);
-        setImageGalleryPreview([]);
-      } catch (err: any) {
-        alert(`Error Occur ${err?.message}`);
-        console.log(err.message);
-        setPreview(null);
-        setImageGalleryPreview([]);
-      }
-    });
+    //     if (result?.status === 200) {
+    //       reset();
+    //       alert(result?.message);
+    //     }
+    //     if (result?.status === 500) {
+    //       alert(result?.message);
+    //     }
+    //     setPreview(null);
+    //     setImageGalleryPreview([]);
+    //   } catch (err: any) {
+    //     alert(`Error Occur ${err?.message}`);
+    //     console.log(err.message);
+    //     setPreview(null);
+    //     setImageGalleryPreview([]);
+    //   }
+    // });
   
   
   };
@@ -387,7 +387,7 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           <div className='h-20'>
             <Label>
               Product Status Like (e.g: New in | Limited Edition | Stock Out |
-              Best Sales )
+              Best Sales | Hot Deal | Top Rated | Trending | Premium Choice | Flash Sale)
             </Label>
             <Input
               type='text'
@@ -583,9 +583,7 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 multiple
                 accept='image/*'
                 className='absolute inset-0 opacity-0 cursor-pointer'
-                {...register('image_gallery', {
-                  required: 'Images Gallery Field is Required!',
-                })}
+                {...register('image_gallery')}
                 name='image_gallery'
                 onChange={handleImageGalleryChange} // Handle file input change
               />

@@ -27,10 +27,10 @@ const ProductCard: FC<ProductCardProps> = ({
 }) => {
   const { name, price, status = '', thumbnail,slug, discount, reviews } = data;
 
-  const rating = reviews.reduce((sum, item) => sum + item.rating, 0);
-  const numberOfReviews = reviews?.length;
+  // const rating = reviews.reduce((sum, item) => sum + item.rating, 0);
+  // const numberOfReviews = reviews?.length;
 
-  // console.log("reviews ",reviews)
+  // console.log("numberOfReviews ",numberOfReviews)
 
   return (
     <>
@@ -84,7 +84,8 @@ const ProductCard: FC<ProductCardProps> = ({
               <StarIcon className='w-5 h-5 pb-[1px] text-amber-400' />
 
               <span className='text-sm ms-1 text-slate-500 dark:text-slate-400'>
-                {rating || ''} ({numberOfReviews || 0} reviews)
+                {/* {rating || ''} ({numberOfReviews || 0} reviews) */}
+
               </span>
             </div>
           </div>

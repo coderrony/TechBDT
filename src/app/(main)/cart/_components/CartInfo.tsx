@@ -356,9 +356,7 @@ const CartInfo: FC<CartInfoProps> = () => {
                     }
                   />
                 </div>
-                {/* {errors.deliveryType && (
-                <span className="text-red-500 text-sm">Please select a delivery type</span>
-              )} */}
+            
               </div>
 
               {/* shipping */}

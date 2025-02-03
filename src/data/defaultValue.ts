@@ -12,12 +12,14 @@ export const default_category_colors = [
   { name: 'Black' },
   { name: 'White' },
   { name: 'Blue' },
+  { name: 'Red' },
   { name: 'Orange' },
   { name: 'Pink' },
   { name: 'Gold' },
   { name: 'Purple' },
   { name: 'Green' },
   { name: 'Navy' },
+  { name: 'Shakura' },
 ];
 export const  default_category_sizes = [
   { name: 'XXS' },

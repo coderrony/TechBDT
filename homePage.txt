@@ -1,86 +1,53 @@
-import React from 'react';
-import SectionHowItWork from '@/components/SectionHowItWork/SectionHowItWork';
-import BackgroundSection from '@/components/BackgroundSection/BackgroundSection';
-import SectionPromo1 from '@/components/SectionPromo1';
-
-import SectionGridMoreExplore from '@/components/SectionGridMoreExplore/SectionGridMoreExplore';
-import SectionPromo2 from '@/components/SectionPromo2';
-import SectionSliderCategories from '@/components/SectionSliderCategories/SectionSliderCategories';
-import SectionPromo3 from '@/components/SectionPromo3';
-
-import SectionHero2 from '@/components/SectionHero/SectionHero2';
-
-import SectionSlider from '@/components/ProductCardSectionSlider/SectionSlider';
-import ProductCard from '@/components/ProductCardSectionSlider/ProductCard';
-
-import Pagination from '@/shared/Pagination/Pagination';
-import ButtonPrimary from '@/shared/Button/ButtonPrimary';
-// import Heading from '@/components/Heading/Heading';
-import { getCategoriesWithSubCategories } from '@/queries/categories';
-
-import {  getLast40Products, getNewArrivals } from '@/queries/products';
-import { auth } from '@/auth';
+import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+import { getLastProducts, getNewArrivals } from '@/queries/products';
 import Link from 'next/link';
-// import { getUserByPhoneOrEmail } from '@/queries/users';
+import LoadingIndicator from '@/components/LoadingIndicator';
+import { delay } from '@/utils/delay';
 
+// Lazy-load components
+const SectionHero2 = dynamic(() => import('@/components/SectionHero/SectionHero2'), { ssr: false, loading: () => <LoadingIndicator/>  });
+const SectionSlider = dynamic(() => import('@/components/ProductCardSectionSlider/SectionSlider'));
+const ProductCard = dynamic(() => import('@/components/ProductCardSectionSlider/ProductCard'));
+const SectionHowItWork = dynamic(() => import('@/components/SectionHowItWork/SectionHowItWork'), { ssr: false, loading: () => <LoadingIndicator/> });
+const BackgroundSection = dynamic(() => import('@/components/BackgroundSection/BackgroundSection'), { ssr: false, loading: () =><LoadingIndicator/> });
+const SectionGridMoreExplore = dynamic(() => import('@/components/SectionGridMoreExplore/SectionGridMoreExplore'), { ssr: false, loading: () => <LoadingIndicator/> });
 
+export default async function PageHome() {
+  // Fetch data inside the component
+  const [allCategory, newArrivals, last40Products] = await Promise.all([
+    fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
+      next: { revalidate: 3600 }, // Revalidate every 1 hours
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch categories');
+        return res.json();
+      })
+      .then((data) => data.res_data),
+    getNewArrivals(),
+    getLastProducts(),
+  ]);
 
-async function PageHome() {
- 
-  const allCategory = await getCategoriesWithSubCategories();
-  // const allProducts = (await getProducts()) || [];
-  const session = await auth();
-  const newArrivals = await getNewArrivals()
-  const last40Products = await getLast40Products()
-
- 
   return (
     <div className='nc-PageHome relative overflow-hidden'>
       <SectionHero2 />
 
-    {/* new arrivals session */}
-      <div className='container relative space-y-5 lg:space-y-10 mt-4'>
-        <SectionSlider >
-          {newArrivals.map((item, index) => (
-            <li key={index} className={`glide__slide`}>
+      <div className='container space-y-10 mt-4'>
+        {/* New Arrivals */}
+     
+
+      <Suspense fallback={<div>Loading...</div>}>
+    
+        <SectionSlider>
+          {newArrivals.map((item: any, index: number) => (
+            <li key={index} className='glide__slide'>
               <ProductCard data={item} />
             </li>
           ))}
         </SectionSlider>
+      </Suspense>
 
-        {/*  Deals of the day */}
-        <div>
-          <div className='flex justify-between items-center px-5 mb-4'>
-            <h2 className='text-2xl font-bold text-neutral-500 dark:text-neutral-400'>
-              Deals of the day
-            </h2>
-            <Link className=" bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 text-slate-50 dark:text-slate-800 shadow-xl p-2 rounded" href={`/search`}>View All</Link>
-          </div>
-
-
-          {/* last 40 products */}
-          <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-x-8 gap-y-10 '>
-            {last40Products.map((item, index) => (
-              <ProductCard data={item} key={item.id} />
-            ))}
-          </div>
-
-          {/* PAGINATION */}
-        {/* <div className='flex flex-col mt-3 lg:mt-6 space-y-5 sm:space-y-0 sm:space-x-3 sm:flex-row sm:justify-between sm:items-center'>
-            <Pagination />
-            <ButtonPrimary loading>Show me more</ButtonPrimary>
-          </div> */}
-
-
-        </div>
-
-        <div className='py-24 lg:py-32 border-t border-b border-slate-200 dark:border-slate-700'>
-          <SectionHowItWork />
-        </div>
-
-        <SectionPromo1 />
-
-        {/* category with sub category */}
+        {/* Categories with Subcategories */}
         {allCategory && (
           <div className='relative py-24 lg:py-32'>
             <BackgroundSection />
@@ -88,17 +55,31 @@ async function PageHome() {
           </div>
         )}
 
-        <SectionPromo2
-          title={"Exclusive Deals on Kids' Items"}
-          description='Celebrate childhood with products that combine quality, comfort, and style, ensuring every moment is filled with fun and creativity.'
-        />
+    
 
-        {/* <SectionSliderCategories /> */}
+        <div className='flex justify-between items-center px-5 mb-4'>
+          <h2 className='text-3xl font-bold text-neutral-900 dark:text-neutral-50'>
+            Deals of the day
+          </h2>
+          <Link
+            className='bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 text-slate-50 dark:text-slate-800 shadow-xl p-2 rounded'
+            href={`/search`}
+          >
+            View All
+          </Link>
+        </div>
 
-        <SectionPromo3 />
+        {/* Last 40 Products */}
+        <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8'>
+          {last40Products.map((item: any) => (
+            <ProductCard key={item.id} data={item} />
+          ))}
+        </div>
+
+        <div className='py-24 border-t border-slate-200'>
+          <SectionHowItWork />
+        </div>
       </div>
     </div>
   );
 }
-
-export default PageHome;

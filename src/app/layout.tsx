@@ -10,7 +10,7 @@ import { Metadata } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import { queryClient } from '@/lib/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
 import dynamic from 'next/dynamic';
 import AuthProvider from '@/provider/AuthProvider';
 
@@ -99,9 +99,7 @@ export default function RootLayout({
             <QueryClientProvider client={queryClient}>
               <AuthProvider>
                 {children}
-                {process.env.NODE_ENV === 'development' && (
-                  <ReactQueryDevtools initialIsOpen={false} />
-                )}
+             
               </AuthProvider>
             </QueryClientProvider>
         

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { getLastProducts, getNewArrivals } from '@/queries/products';
 import Link from 'next/link';
 import LoadingIndicator from '@/components/LoadingIndicator';
+import { delay } from '@/utils/delay';
 
 // Lazy-load components
 const SectionHero2 = dynamic(() => import('@/components/SectionHero/SectionHero2'), { ssr: false, loading: () => <LoadingIndicator/>  });
@@ -33,6 +34,10 @@ export default async function PageHome() {
 
       <div className='container space-y-10 mt-4'>
         {/* New Arrivals */}
+     
+
+      <Suspense fallback={<div>Loading...</div>}>
+    
         <SectionSlider>
           {newArrivals.map((item: any, index: number) => (
             <li key={index} className='glide__slide'>
@@ -40,6 +45,7 @@ export default async function PageHome() {
             </li>
           ))}
         </SectionSlider>
+      </Suspense>
 
         {/* Categories with Subcategories */}
         {allCategory && (
@@ -48,6 +54,8 @@ export default async function PageHome() {
             <SectionGridMoreExplore data={allCategory || []} />
           </div>
         )}
+
+    
 
         <div className='flex justify-between items-center px-5 mb-4'>
           <h2 className='text-3xl font-bold text-neutral-900 dark:text-neutral-50'>
