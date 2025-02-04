@@ -206,7 +206,7 @@ const SearchContent: FC<SearchContentProps> = () => {
 
           {!isLoading && data && (
             <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10'>
-              {lastPageData.map((product: any) => (
+              {lastPageData?.map((product: any) => (
                 <ProductCard key={product._id} data={product} />
               ))}
             </div>

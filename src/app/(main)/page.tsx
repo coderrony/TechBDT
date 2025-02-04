@@ -1,61 +1,35 @@
-import React, { Suspense } from 'react';
+import React, {Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import { getLastProducts, getNewArrivals } from '@/queries/products';
+import imageRightPng from "@/images/hero-right.png";
+import imageRightPng2 from "@/images/hero-right-2.png";
+import imageRightPng3 from "@/images/hero-right-3.png";
 import Link from 'next/link';
-import LoadingIndicator from '@/components/LoadingIndicator';
-import { delay } from '@/utils/delay';
+// import LoadingIndicator from '@/components/LoadingIndicator';
+// import HomeSlider from '@/components/HomeSlider';
+// import SectionHero2 from '@/components/SectionHero/SectionHero2';
 
 // Lazy-load components
-const SectionHero2 = dynamic(() => import('@/components/SectionHero/SectionHero2'), { ssr: false, loading: () => <LoadingIndicator/>  });
-const SectionSlider = dynamic(() => import('@/components/ProductCardSectionSlider/SectionSlider'));
-const ProductCard = dynamic(() => import('@/components/ProductCardSectionSlider/ProductCard'));
-const SectionHowItWork = dynamic(() => import('@/components/SectionHowItWork/SectionHowItWork'), { ssr: false, loading: () => <LoadingIndicator/> });
-const BackgroundSection = dynamic(() => import('@/components/BackgroundSection/BackgroundSection'), { ssr: false, loading: () =><LoadingIndicator/> });
-const SectionGridMoreExplore = dynamic(() => import('@/components/SectionGridMoreExplore/SectionGridMoreExplore'), { ssr: false, loading: () => <LoadingIndicator/> });
+const SectionHero2 = dynamic(() => import('@/components/SectionHero/SectionHero2'));
 
+// const HomeSlider = dynamic(() => import('@/components/HomeSlider'));
+
+
+
+
+// const HomeSlider = lazy(() => import('@/components/HomeSlider'));
 export default async function PageHome() {
-  // Fetch data inside the component
-  const [allCategory, newArrivals, last40Products] = await Promise.all([
-    fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
-      next: { revalidate: 3600 }, // Revalidate every 1 hours
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch categories');
-        return res.json();
-      })
-      .then((data) => data.res_data),
-    getNewArrivals(),
-    getLastProducts(),
-  ]);
 
   return (
     <div className='nc-PageHome relative overflow-hidden'>
-      <SectionHero2 />
+      <Suspense fallback={<div>Loading...</div>}>
+        <SectionHero2 />
+
+      </Suspense>
 
       <div className='container space-y-10 mt-4'>
         {/* New Arrivals */}
      
 
-      <Suspense fallback={<div>Loading...</div>}>
-    
-        <SectionSlider>
-          {newArrivals.map((item: any, index: number) => (
-            <li key={index} className='glide__slide'>
-              <ProductCard data={item} />
-            </li>
-          ))}
-        </SectionSlider>
-      </Suspense>
-
-        {/* Categories with Subcategories */}
-        {allCategory && (
-          <div className='relative py-24 lg:py-32'>
-            <BackgroundSection />
-            <SectionGridMoreExplore data={allCategory || []} />
-          </div>
-        )}
-
-    
 
         <div className='flex justify-between items-center px-5 mb-4'>
           <h2 className='text-3xl font-bold text-neutral-900 dark:text-neutral-50'>
@@ -69,16 +43,9 @@ export default async function PageHome() {
           </Link>
         </div>
 
-        {/* Last 40 Products */}
-        <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8'>
-          {last40Products.map((item: any) => (
-            <ProductCard key={item.id} data={item} />
-          ))}
-        </div>
+    
 
-        <div className='py-24 border-t border-slate-200'>
-          <SectionHowItWork />
-        </div>
+       
       </div>
     </div>
   );

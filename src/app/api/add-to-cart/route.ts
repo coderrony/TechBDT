@@ -7,6 +7,8 @@ import { connectDB } from '@/services/mongo';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (req: any) => {
+  console.log("request in get in add to cart route");
+  
   try {
     // Extract the ID from the query parameters
     const userId = req.nextUrl.searchParams.get('id');
