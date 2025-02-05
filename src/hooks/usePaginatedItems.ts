@@ -15,7 +15,7 @@ export function usePaginatedItems(
   return useInfiniteQuery<PaginationResponse, Error>({
     queryKey: ["items", searchTerm, filters], // Cache updates when searchTerm or filters change
     queryFn: async ({ pageParam = null }) => {
-      const { data } = await axios.get("/api/product-api", {
+      const { data } = await axios.get("/api/product/search-product", {
         params: {
           cursor: pageParam,
           limit: 8,
@@ -25,7 +25,7 @@ export function usePaginatedItems(
       });
       return data;
     },
-    getNextPageParam: (lastPage) => lastPage.res_data.nextCursor || null, // Determines next page cursor
+    getNextPageParam: (lastPage) => lastPage?.res_data?.nextCursor || [], // Determines next page cursor
     initialPageParam: null, // Adds the initial page parameter (default is null)
   });
 }
