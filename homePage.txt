@@ -36,16 +36,16 @@ export default async function PageHome() {
         {/* New Arrivals */}
      
 
-      <Suspense fallback={<div>Loading...</div>}>
-    
-        <SectionSlider>
-          {newArrivals.map((item: any, index: number) => (
-            <li key={index} className='glide__slide'>
-              <ProductCard data={item} />
-            </li>
-          ))}
-        </SectionSlider>
-      </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+        
+            <SectionSlider>
+              {newArrivals.map((item: any, index: number) => (
+                <li key={index} className='glide__slide'>
+                  <ProductCard data={item} />
+                </li>
+              ))}
+            </SectionSlider>
+          </Suspense>
 
         {/* Categories with Subcategories */}
         {allCategory && (

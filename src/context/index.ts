@@ -11,3 +11,5 @@ interface AuthContextType {
 
 // Initialize the context with a default value (can be null or a default object)
 export const AuthContext = createContext<AuthContextType | null>(null);
+
+export const ProductCacheContext = createContext<any>(null);

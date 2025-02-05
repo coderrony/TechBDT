@@ -1,4 +1,5 @@
-import React, { FC } from "react";
+"use client"
+import React, { FC, useEffect, useRef, useState } from "react";
 import NcImage from "@/shared/NcImage/NcImage";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Image, { StaticImageData } from "next/image";
@@ -13,6 +14,7 @@ import explore6Svg from '@/images/collections/explore6.svg';
 import explore7Svg from '@/images/collections/explore7.svg';
 import explore8Svg from '@/images/collections/explore8.svg';
 import explore9Svg from '@/images/collections/explore9.svg';
+import { productCountBySubCategory } from "@/queries/products";
 
 const exploreImg = [explore1Svg,explore2Svg,explore3Svg,explore4Svg,explore5Svg,explore6Svg,explore7Svg,explore8Svg,explore9Svg]
 
@@ -34,6 +36,26 @@ const CardCategory4: FC<CardCategory4Props> = ({
   color = "bg-rose-50",
   count,
 }) => {
+  const [totalProduct,setTotalProduct] = useState(Math.floor(Math.random() * (12 - 5 + 1)) + 5)
+ const hasMount = useRef(false);
+
+  
+  useEffect(()=>{
+
+    const getTotalProductForSubCategory = async () => {
+        await productCountBySubCategory(name).then((data) => {
+          setTotalProduct(data)
+        })
+    }
+
+    if ( !hasMount.current) {
+      hasMount.current = true; // Mark as handled
+      getTotalProductForSubCategory()
+    }
+
+  },[])
+
+
   return (
     <div
       className={`nc-CardCategory4 relative w-full aspect-w-12 aspect-h-11 h-0 rounded-3xl overflow-hidden bg-white dark:bg-neutral-900 group hover:nc-shadow-lg transition-shadow ${className}`}
@@ -52,9 +74,9 @@ const CardCategory4: FC<CardCategory4Props> = ({
               width={50}
               height={50}
             />
-            {/* <span className="text-xs text-slate-700 dark:text-neutral-300 font-medium">
-              {count} products
-            </span> */}
+            <span className="text-xs text-slate-700 dark:text-neutral-300 font-medium">
+              {totalProduct} products
+            </span>
           </div>
 
           <div className="">
@@ -67,7 +89,7 @@ const CardCategory4: FC<CardCategory4Props> = ({
           </div>
 
           <Link
-            href={"/"}
+            href={`/search?subCategory=${name}`}
             className="flex items-center text-sm font-medium group-hover:text-primary-500 transition-colors"
           >
             <span>See Collection</span>

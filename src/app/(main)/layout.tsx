@@ -1,4 +1,6 @@
 
+
+import { ProductCacheProvider } from '@/provider/ProductCacheProvider';
 import dynamic from 'next/dynamic';
 // import Footer from '@/shared/Footer/Footer';
 import { ReactNode } from 'react';
@@ -9,7 +11,12 @@ function MainLayout({ children }: { children: ReactNode }) {
     <>
       <HeaderLogged />
 
+      <ProductCacheProvider>
+
       {children}
+      </ProductCacheProvider>
+
+   
 
       <Footer />
     </>

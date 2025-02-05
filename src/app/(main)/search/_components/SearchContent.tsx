@@ -33,10 +33,10 @@ const SearchContent: FC<SearchContentProps> = () => {
 
   const {
     data,
-    isFetching,
+    // isFetching,
     isLoading,
     fetchNextPage,
-    fetchPreviousPage,
+    // fetchPreviousPage,
     hasNextPage,
     isFetchingNextPage,
   } = usePaginatedItems(searchTerm, filters) as any;

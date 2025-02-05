@@ -8,14 +8,17 @@ import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import twFocusClass from '@/utils/twFocusClass';
 import { ProductType } from '@/types/ProductTypes';
 import Skeleton from '../Skeleton';
+import { useProductCache } from '@/hooks/useProductCache';
 
 
 const TrendingProduct = () => {
   const [historyProducts, setHistoryProducts] = useState<ProductType[][]>([]); // Store previous pages
   const [currentProducts, setCurrentProducts] = useState<ProductType[]>([]); // UI-তে দেখাবে
-
+ 
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
+    // Cache Context থেকে ক্যাশে ডাটা নেবো
+    const { cachedProducts, setCachedProducts,cachePage,setCachePage } = useProductCache();
 
 
   // Fetch new 16 products in the background
@@ -31,27 +34,43 @@ const TrendingProduct = () => {
     }
   };
 
+useEffect(()=>{
+  setCachedProducts(historyProducts)
+  setCachePage(page)
+},[historyProducts])
+
   // Initial Fetch 4 products
   useEffect(() => {
     const fetchInitialProducts = async () => {
+     
       setLoading(true);
       try {
         const res = await fetch(`/api/product/trending-product?size=${16}`);
         const data = await res.json();
         // console.log('Initial ', data);
         const half = Math.ceil(data.products.length / 2);
-        setHistoryProducts([
-          data.products.slice(0, half),
-          data.products.slice(half),
-        ]); // প্রথম ৮টি ক্যাশে রাখছি
+        const newCachedData = [data.products.slice(0, half), data.products.slice(half)];
         setCurrentProducts(data.products.slice(0, half)); // প্রথম ৮টি দেখাবে
+        setCachedProducts(newCachedData)
+        setHistoryProducts(newCachedData);
+       
       } catch (error) {
         console.error('Failed to load products', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchInitialProducts();
+
+
+    if (cachedProducts) {
+ 
+      setCurrentProducts(cachedProducts[cachePage]);
+      setHistoryProducts(cachedProducts);
+      setPage(cachePage);
+      return;
+    }else{ 
+      fetchInitialProducts();
+    }
   }, []);
 
   // Handle Next Button Click
