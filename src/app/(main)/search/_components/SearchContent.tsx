@@ -146,7 +146,7 @@ const SearchContent: FC<SearchContentProps> = () => {
                 className='shadow-lg border-0 dark:border'
                 id='search-input'
                 type='search'
-                placeholder='Type your keywords'
+                placeholder='Your are Looking for...'
                 sizeClass='pl-14 py-5 pr-5 md:pl-16'
                 rounded='rounded-full'
                 value={queryText}

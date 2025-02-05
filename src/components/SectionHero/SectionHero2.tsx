@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, lazy, useState } from "react";
 import backgroundLineSvg from "@/images/Moon.svg";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Next from "@/shared/NextPrev/Next";
@@ -8,7 +8,10 @@ import Prev from "@/shared/NextPrev/Prev";
 import useInterval from "react-use/lib/useInterval";
 import useBoolean from "react-use/lib/useBoolean";
 import Image from "next/image";
-import { HERO2_DEMO_DATA as DATA } from "./data";
+import { HERO2_DEMO_DATA as DATA } from "@/data/defaultValue";
+
+
+
 
 export interface SectionHero2Props {
   className?: string;
@@ -129,6 +132,7 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
             className="absolute w-full h-full object-contain"
             src={backgroundLineSvg}
             alt="hero"
+            priority={false}
           />
         </div>
 
@@ -178,7 +182,7 @@ const SectionHero2: FC<SectionHero2Props> = ({ className = "" }) => {
               className="w-full h-full object-contain object-right-bottom nc-SectionHero2Item__image"
               src={item.image}
               alt={item.heading}
-              priority
+              priority={false}
             />
           </div>
         </div>
