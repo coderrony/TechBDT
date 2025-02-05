@@ -1,0 +1,117 @@
+'use client';
+
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+
+interface Product {
+  _id: string;
+  name: string;
+  thumbnail: string;
+  price: number;
+}
+
+const TrendingProduct = () => {
+  const [historyProducts, setHistoryProducts] = useState<Product[][]>([]); // Store previous pages
+  const [currentProducts, setCurrentProducts] = useState<Product[]>([]); // UI-তে দেখাবে
+  const [bufferProducts, setBufferProducts] = useState<Product[]>([]); // ব্যাকগ্রাউন্ড লোড
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  console.log("page ",page);
+  console.log("historyProducts ",historyProducts);
+  console.log("currentProducts ",currentProducts);
+  
+  // Fetch new 16 products in the background
+  const fetchProductsInBackground = async () => {
+    try {
+      const res = await fetch(`/api/product/trending-product?size=${2}`); // নতুন 2টি প্রোডাক্ট আনবে
+      const data = await res.json();
+     
+      console.log("data 2 ",data)
+      setHistoryProducts([...historyProducts,data.products]); 
+      setBufferProducts(data.products); // নতুন 4টি প্রোডাক্ট ব্যাকগ্রাউন্ডে লোড হবে
+    } catch (error) {
+      console.error('Failed to fetch products', error);
+    }
+  };
+
+  // Initial Fetch 4 products
+  useEffect(() => {
+    const fetchInitialProducts = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/product/trending-product?size=${4}`);
+        const data = await res.json();
+        console.log("Initial ",data)
+        const half = Math.ceil(data.products.length / 2); 
+        setHistoryProducts([data.products.slice(0,half), data.products.slice(half)]); // প্রথম 4টি ক্যাশে রাখছি
+        setCurrentProducts(data.products.slice(0, half)); // প্রথম 2টি দেখাবে
+    
+       
+      } catch (error) {
+        console.error('Failed to load products', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInitialProducts();
+  }, []);
+
+  // Handle Next Button Click
+  const handleNextPage = () => {
+  
+    setCurrentProducts(historyProducts[page+1])
+    setPage((prev) => prev + 1);
+    
+      if(historyProducts.length === page+1){
+        fetchProductsInBackground(); // ব্যাকগ্রাউন্ডে নতুন 4টি আনবে
+      }
+
+
+  };
+
+  // Handle Previous Button Click
+  const handlePreviousPage = () => {
+    
+    setCurrentProducts(historyProducts[page-1])
+    setPage((prev) => prev - 1);
+  };
+
+  return (
+    <div className='space-y-6'>
+      <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10'>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          currentProducts.map((product) => (
+            <div key={product._id} className='border p-4 rounded-lg shadow-md'>
+              <Image width={100} height={100} src={product.thumbnail} alt={product.name} className='w-full h-40 object-cover rounded-lg' />
+              <h3 className='text-lg font-semibold mt-2'>{product.name}</h3>
+              <p className='text-sm text-gray-500'>${product.price}</p>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Pagination */}
+      <div className='flex justify-center space-x-4 mt-4'>
+        <button
+          onClick={handlePreviousPage}
+          disabled={page === 0}
+          className='px-4 py-2 bg-gray-200 rounded disabled:opacity-50'
+        >
+          Previous
+        </button>
+        <span className='px-4 py-2 bg-gray-100 rounded'>{page + 1}</span>
+        <button
+          onClick={handleNextPage}
+          className='px-4 py-2 bg-gray-200 rounded'
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default TrendingProduct;

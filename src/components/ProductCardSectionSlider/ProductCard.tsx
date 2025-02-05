@@ -25,7 +25,7 @@ const ProductCard: FC<ProductCardProps> = ({
   data,
   isLiked,
 }) => {
-  const { name, price, status = '', thumbnail,slug, discount, reviews } = data;
+  const { name, price, status = '', thumbnail,slug, discount } = data;
 
   // const rating = reviews.reduce((sum, item) => sum + item.rating, 0);
   // const numberOfReviews = reviews?.length;

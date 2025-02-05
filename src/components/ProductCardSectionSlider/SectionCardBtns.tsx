@@ -172,16 +172,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
   };
 
   const renderGroupButtons = () => {
-    // let sizeColorNotifyTost: NotifyType = {
-    //   size: '',
-    //   color: '',
-    // };
-    // if (sizes) {
-    //   sizeColorNotifyTost['size'] = sizes[0];
-    // }
-    // if (colors) {
-    //   sizeColorNotifyTost['color'] = colors[0];
-    // }
+   
     return (
       <div className='absolute bottom-0 group-hover:bottom-4 inset-x-1 flex justify-center opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all'>
         <ButtonPrimary

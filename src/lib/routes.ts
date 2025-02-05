@@ -16,6 +16,7 @@ export const PUBLIC_ROUTES = [
   '/api/otp-send',
   '/api/category-api',
   '/api/upload-file-api',
+  '/api/product/trending-product',
  
   // admin access
 
