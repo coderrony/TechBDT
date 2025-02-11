@@ -8,8 +8,7 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import NotifyAlert from '@/components/NotifyToaster';
 import toast from 'react-hot-toast';
 import ChangePassword from './_components/ChangePassword';
-// import { otpRequestProcess } from '@/queries/users';
-// import { otpSend } from '@/queries/otp-send';
+
 import axios from 'axios';
 import { notify_duration } from '@/data/defaultValue';
 

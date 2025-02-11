@@ -14,7 +14,7 @@ type ProductDetailProps = {
 export async function generateMetadata({
   params: { slug },
 }: ProductDetailProps): Promise<Metadata> {
-  const product = await getProductBySlug(slug);
+  const product = await getProductBySlug(slug) ;
 
   if (!product) {
     return {

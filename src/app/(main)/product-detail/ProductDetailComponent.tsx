@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import formatNumber from '@/utils/formatNumber';
-import taka from '@/images/taka.png';
+
 import NotifyAddTocart from '@/components/NotifyAddTocart';
 import toast from 'react-hot-toast';
 import {
@@ -122,28 +122,7 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
     }
   };
 
-  // const handleAddTOCart = async ()=>{
 
-  //   startTransition(async()=>{
-  //     if(sizeSelected !== ''){
-  //       addToCartData['size'] = sizeSelected;
-  //      }
-
-  //      if(colorSelected !== ''){
-  //       addToCartData['color'] = colorSelected;
-  //      }
-  //     const cartRes =   await createAddToCart(addToCartData) as any;
-  //     // console.log("cartRes ",cartRes);
-  //     if(cartRes.status === 500){
-  //       router.push("/login")
-  //     }
-  //     if(cartRes.status === 200){
-  //       fetchMe()
-  //       notifyAddTocart(cartRes.message)
-  //     }
-
-  //   })
-  // }
 
   const notifyAddTocart = (title: string) => {
     toast.custom(

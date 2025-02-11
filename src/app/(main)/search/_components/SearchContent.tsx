@@ -9,8 +9,8 @@ import { useSearchParams } from 'next/navigation';
 import TabFilters from './TabFilters';
 import { usePaginatedItems } from '@/hooks/usePaginatedItems';
 import { default_range_prices } from '@/data/defaultValue';
-import LoadingIndicator from '@/components/LoadingIndicator';
 import twFocusClass from '@/utils/twFocusClass';
+import Skeleton from '@/components/Skeleton';
 
 interface SearchContentProps {
   className?: string;
@@ -202,7 +202,7 @@ const SearchContent: FC<SearchContentProps> = () => {
 
           <div className='w-full border-b border-neutral-200/70 dark:border-neutral-700 my-8'></div>
 
-          {isLoading && <LoadingIndicator />}
+          {isLoading && <Skeleton />}
 
           {!isLoading && data && (
             <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-10 mt-8 lg:mt-10'>

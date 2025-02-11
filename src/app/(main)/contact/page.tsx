@@ -1,24 +1,21 @@
 import React, { FC } from "react";
 import SocialsList from "@/shared/SocialsList/SocialsList";
-import Label from "@/components/Label/Label";
-import Input from "@/shared/Input/Input";
-import Textarea from "@/shared/Textarea/Textarea";
-import ButtonPrimary from "@/shared/Button/ButtonPrimary";
+
 import BackgroundSection from "@/components/BackgroundSection/BackgroundSection";
 import SectionPromo1 from "@/components/SectionPromo1";
 
 const info = [
   {
-    title: "🗺 ADDRESS",
-    desc: "Photo booth tattooed prism, portland taiyaki hoodie neutra typewriter",
+    title: "🗺 ঠিকানা",
+    desc: "২য় তলা, ফর্চুন দীপুমনি শপিং কমপ্লেক্স, আনোয়ারা, চট্টগ্রাম, চট্টগ্রাম।",
   },
   {
-    title: "💌 EMAIL",
-    desc: "nc.example@example.com",
+    title: "💌 ইমেইল",
+    desc: "support@techbdt.com",
   },
   {
-    title: "☎ PHONE",
-    desc: "000-123-456-7890",
+    title: "☎ মোবাইল",
+    desc: "01814010159",
   },
 ];
 
@@ -26,12 +23,12 @@ const PageContact = ({}) => {
   return (
     <div className={`nc-PageContact overflow-hidden`}>
       <div className="">
-        <h2 className="my-20 flex items-center text-3xl leading-[115%] md:text-5xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
-          Contact
+        <h2 className="my-20 flex items-center text-xl leading-[115%] md:text-3xl md:leading-[115%] font-semibold text-neutral-900 dark:text-neutral-100 justify-center">
+          Contact Us
         </h2>
         <div className="container max-w-7xl mx-auto">
-          <div className="flex-shrink-0 grid grid-cols-1 md:grid-cols-2 gap-12 ">
-            <div className="max-w-sm space-y-8">
+          <div className=" grid grid-cols-1 ">
+            <div className=" space-y-8">
               {info.map((item, index) => (
                 <div key={index}>
                   <h3 className="uppercase font-semibold text-sm dark:text-neutral-200 tracking-wider">
@@ -49,36 +46,7 @@ const PageContact = ({}) => {
                 <SocialsList className="mt-2" />
               </div>
             </div>
-            <div>
-              <form className="grid grid-cols-1 gap-6" action="#" method="post">
-                <label className="block">
-                  <Label>Full name</Label>
-
-                  <Input
-                    placeholder="Example Doe"
-                    type="text"
-                    className="mt-1"
-                  />
-                </label>
-                <label className="block">
-                  <Label>Email address</Label>
-
-                  <Input
-                    type="email"
-                    placeholder="example@example.com"
-                    className="mt-1"
-                  />
-                </label>
-                <label className="block">
-                  <Label>Message</Label>
-
-                  <Textarea className="mt-1" rows={6} />
-                </label>
-                <div>
-                  <ButtonPrimary type="submit">Send Message</ButtonPrimary>
-                </div>
-              </form>
-            </div>
+          
           </div>
         </div>
       </div>

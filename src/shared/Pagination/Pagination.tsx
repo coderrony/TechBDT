@@ -1,9 +1,8 @@
-import { CustomLink } from "@/data/types";
+
 import React, { FC } from "react";
 import twFocusClass from "@/utils/twFocusClass";
-import Link from "next/link";
 
-const DEMO_PAGINATION: CustomLink[] = [
+const DEMO_PAGINATION: any[] = [
   {
     label: "1",
     href: "/",
@@ -28,7 +27,7 @@ export interface PaginationProps {
 
 const Pagination: FC<PaginationProps> = ({ className = "" }) => {
   
-  const renderItem = (pag: CustomLink, index: number) => {
+  const renderItem = (pag: any, index: number) => {
     if (index === 0) {
       return (
         <span

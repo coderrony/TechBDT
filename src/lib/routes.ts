@@ -9,6 +9,11 @@ export const ROOT = "/"
 export const PUBLIC_ROUTES = [
   '/login',
   '/search',
+  '/about',
+  '/contact',
+  '/privacy-policy',
+  '/terms-conditions',
+  '/return-refund',
   '/signup',
   '/forgot-pass',
   '/not-found',

@@ -46,12 +46,7 @@ const SectionPromo3: FC<SectionPromo3Props> = ({ className = "lg:pt-10" }) => {
                 Freeship
               </span>
             </li>
-            <li className="flex items-center space-x-4">
-              <Badge color="red" name="03" />
-              <span className="font-medium text-neutral-700 dark:text-neutral-300">
-                Premium magazines
-              </span>
-            </li>
+           
           </ul>
           <form className="mt-10 relative max-w-sm">
             <Input

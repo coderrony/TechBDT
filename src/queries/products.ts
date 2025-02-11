@@ -93,7 +93,7 @@ export const getProductInfoForMetaData = async () => {
   const products = await Product.find({})
     .select(["slug", "createdAt"])
     .lean()
-    .limit(100); // Example: Fetch first 1000 products
+    .limit(500); // Example: Fetch first 1000 products
   return replaceMongoIdInArray(products as any[]) || [];
 };
 
@@ -173,4 +173,59 @@ export async function getProductBySlug(slug: string) {
     console.error("Error fetching product by slug:", error);
     return null;
   }
+}
+
+
+// Gadgets items for home page
+export const getGadgets = async () => {
+  await connectDB();
+  try {
+    const products = await Product.find({ category: "Gadgets" })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
+
+    return replaceMongoIdInArray(products as any[]) || [];
+
+  } catch (error:any) {
+    console.error("Error fetching gadgets:", error);
+    return [];
+  }
+
+}
+
+// Gift items for home page
+export const getGiftItems = async () => {
+  // await connectDB();
+  try {
+    const products = await Product.find({ category: "Gift Items" })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
+
+    return replaceMongoIdInArray(products as any[]) || [];
+
+  } catch (error:any) {
+    console.error("Error fetching Gift Items:", error);
+    return [];
+  }
+
+}
+
+// Fashion items for home page
+export const getFashions = async () => {
+  // await connectDB();
+  try {
+    const products = await Product.find({ category: "Fashion" })
+      .sort({ createdAt: -1 })
+      .limit(20)
+      .lean();
+
+    return replaceMongoIdInArray(products as any[]) || [];
+
+  } catch (error:any) {
+    console.error("Error fetching Fashion Items:", error);
+    return [];
+  }
+
 }

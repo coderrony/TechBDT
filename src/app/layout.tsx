@@ -45,17 +45,7 @@ export const metadata: Metadata = {
     'best e-commerce site Bangladesh',
     'buy smartphones Bangladesh',
     'shop electronics online BD',
-    'daraz',
-    'rokomari',
-    'evaly',
-    'pickaboo',
-    'techbdt',
-    'techbd',
-    'ajkerdeal',
-    'star tech',
-    'startech',
-    'rayans computers',
-    'othoba',
+  
   ].join(', '),
 
   openGraph: {
@@ -85,6 +75,7 @@ export const metadata: Metadata = {
   },
 };
 const CommonClient = dynamic(() => import('./CommonClient'), { ssr: false });
+// const CommonClient = dynamic(() => import('./CommonClient'));
 export default function RootLayout({
   children,
 }: {

@@ -16,7 +16,7 @@ interface QuantityBtnProps {
 
 const QuantityBtn: FC<QuantityBtnProps> = ({ defaultValue = 1, cartId }) => {
 
-  // const {cartUpdate:{handleUpdateToCart}} = useAuthData() as any;
+  
   const {cartUpdate:{handleUpdateToCartQuantity}} = useCart() as any;
 
   const debounce = useDebounce(async value => {

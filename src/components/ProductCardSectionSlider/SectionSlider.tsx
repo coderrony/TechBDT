@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
-import Heading from "@/components/Heading/Heading";
+// import Heading from "@/components/Heading/Heading";
 // @ts-ignore
 import Glide from "@glidejs/glide/dist/glide.esm";
 
@@ -70,14 +70,7 @@ const SectionSlider: FC<SectionSliderProps> = ({
   return (
     <div className={`nc-SectionSliderProductCard ${className}`}>
       <div ref={sliderRef} className={`flow-root ${isInitialized ? "" : "invisible"}`}>
-        <Heading
-          className={headingClassName}
-          fontClass={headingFontClassName}
-          rightDescText={subHeading}
-          hasNextPrev
-        >
-          {heading || `New Arrivals`}
-        </Heading>
+   
         <div className="glide__track" data-glide-el="track">
           <ul className="glide__slides">{children}</ul>
         </div>

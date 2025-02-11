@@ -4,7 +4,25 @@ import { Route } from "@/routers/types";
 import imageRightPng from "@/images/hero-right.png";
 import imageRightPng2 from "@/images/hero-right-2.png";
 import imageRightPng3 from "@/images/hero-right-3.png";
+import facebook from "@/images/socials/facebook.svg";
+import whatsapp from "@/images/socials/whatsapp.svg";
+
 // import ncNanoId from "@/utils/ncNanoId";
+
+
+
+export interface CustomLink {
+  label: string;
+  href: Route;
+  targetBlank?: boolean;
+}
+export interface WidgetFooterMenu {
+  id: string;
+  title: string;
+  menus: CustomLink[];
+}
+
+
 
 export const default_category = 'https://res.cloudinary.com/dgobtxhjp/image/upload/v1734691085/sub_categories_dhwejf.png'
 
@@ -35,6 +53,46 @@ export const  default_category_sizes = [
   { name: 'XL' },
   { name: '2XL' },
 ];
+
+
+export const socials = [
+  { name: "Facebook", icon: facebook, href: "https://www.facebook.com/techbdtcom/" },
+  { name: "WhatsApp", icon: whatsapp, href: "https://wa.me/8801814010159" },
+
+];
+// 
+export const widgetMenus: WidgetFooterMenu[] = [
+  {
+    id: "5",
+    title: "Getting started",
+    menus: [
+      { href: "/signup", label: "Sing up" },
+      { href: "/login", label: "Sign in" },
+      { href: "/account", label: "My Account" },
+      { href: "/account-order", label: "My Orders" },
+    ],
+  },
+  {
+    id: "1",
+    title: "Company",
+    menus: [
+      { href: "/about", label: "About Us" },
+      { href: "/contact", label: "Contact Us" },
+      { href: "/privacy-policy", label: "Privacy Policy" },
+      { href: "/terms-conditions", label: "Terms & Conditions" },
+    ],
+  },
+  {
+    id: "2",
+    title: "Customer Service",
+    menus: [
+      { href: "/return-refund", label: "Cancellation || Return & Refund" },
+      { href: "/", label: "API Reference" },
+    ],
+  },
+
+];
+
 
 
 // navbar items
