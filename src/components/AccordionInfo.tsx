@@ -1,13 +1,11 @@
 'use client';
 
 import { Disclosure } from '@/app/headlessui';
-import Button from '@/shared/Button/Button';
 import { ProductContentType } from '@/types/ProductTypes';
 
 
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { FC, useState } from 'react';
-import Label from './Label/Label';
 import SelectValue from './SelectValue';
 
 interface Props {

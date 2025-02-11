@@ -17,7 +17,7 @@ export async function GET(req:any) {
         // { $project: { _id: 1, name: 1, thumbnail: 1, price: 1 } } // Optimize response size
       ]) as any;
 
-      // console.log("products ",products);
+  
   
 
     return NextResponse.json({ products:replaceMongoIdInArray(products) });
@@ -28,20 +28,3 @@ export async function GET(req:any) {
 
 
 
-// export async function GET() {
-//   try {
-//     await connectDB()
-
-//     // Fetch 16 random products
-//     const products = await Product
-//       .aggregate([
-//         { $sample: { size: 16 } }, 
-//         { $project: { _id: 1, name: 1, thumbnail: 1, price: 1 } }
-//       ])
-   
-
-//     return NextResponse.json({ products });
-//   } catch (error) {
-//     return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
-//   }
-// }

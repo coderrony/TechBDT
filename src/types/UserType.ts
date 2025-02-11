@@ -1,23 +1,3 @@
-import { Document } from "mongoose";
-
-// export interface UserType  {
-//   id?: string;
-//   full_name: string;
-//   provider: string;
-//   role: string;
-//   password?: string;
-//   email?: string;
-//   phone?: string;
-//   profilePicture?: string;
-//   createdAt?: Date;
-//   updatedAt?: Date;
-// }
-
-
-
-
-// new 
-
 
 export interface UserType {
   id:string;

@@ -5,8 +5,6 @@ import facebookSvg from '@/images/Facebook.svg';
 import googleSvg from '@/images/Google.svg';
 import Image from 'next/image';
 
-// import { createClientBrowser } from '@/supabase/client';
-// import { Provider } from '@supabase/supabase-js';
 
 import { signIn ,signOut} from "next-auth/react"
 
@@ -31,23 +29,6 @@ const loginSocials = [
 
 const SocialLogin: FC<SocialLoginProps> = () => {
 
-  // const supabase = createClientBrowser();
-
-  // const handleLogout = async () => {
-  //   try {
-  //     const { error } = await supabase.auth.signOut();
-  //     if (error) {
-  //       throw error;
-  //     }
-  //   } catch (error: unknown) {
-  //     // Check if error is an instance of Error
-  //     if (error instanceof Error) {
-  //       console.error("Error during logout:", error.message);
-  //     } else {
-  //       console.error("An unexpected error occurred during logout.");
-  //     }
-  //   }
-  // };
   
   const handleSocialAuth = async (provider: 'google' | 'facebook') => {
    

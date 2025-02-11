@@ -4,7 +4,6 @@ import rightImgDemo from "@/images/rightLargeImg.png";
 import rightLargeImgDark from "@/images/rightLargeImgDark.png";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Logo from "@/shared/Logo/Logo";
-// import ButtonSecondary from "@/shared/Button/ButtonSecondary";
 
 export interface SectionPromo1Props {
   className?: string;

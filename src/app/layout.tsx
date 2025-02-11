@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   },
 };
 const CommonClient = dynamic(() => import('./CommonClient'), { ssr: false });
-// const CommonClient = dynamic(() => import('./CommonClient'));
+
 export default function RootLayout({
   children,
 }: {

@@ -14,14 +14,3 @@ export interface CategoryAndSubType {
 }
 
 
-
-// import mongoose, { Document, Schema } from "mongoose";
-
-// // Define the Category interface extending Mongoose's Document
-// export interface CategoryType extends Document {
-//   name: string;
-//   image_url: string;
-//   count: number;
-//   createdAt: Date;
-//   updatedAt: Date;
-// }

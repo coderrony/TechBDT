@@ -1,10 +1,7 @@
 'use client';
 
 import { FC, useEffect, useRef, useState } from 'react';
-import Prices from '@/components/Prices';
 import ButtonSecondary from '@/shared/Button/ButtonSecondary';
-import Image from 'next/image';
-import taka from '@/images/taka.png';
 import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import LoadingIndicator from '@/components/LoadingIndicator';

@@ -7,7 +7,7 @@ import Navigation from '@/shared/Navigation/Navigation';
 import CartDropdown from './CartDropdown';
 
 import SearchBtn from '../IconComponents/SearchBtn';
-// import { getCategoriesWithSubCategories } from '@/queries/categories';
+
 import { default_category, NAVIGATION_DATA } from '@/data/defaultValue';
 // import { CategoryAndSubType } from '@/types/CategoryType';
 import { auth } from '@/auth';
@@ -17,10 +17,7 @@ export interface MainNav2LoggedProps {}
 
 const MainNav2Logged: FC<MainNav2LoggedProps> = async () => {
 
-  const allCategory =  await  fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
-    // cache: 'no-store', // Fetch fresh data
-    // next: { revalidate: 3600 }, // Revalidate every 1 hours
-  })
+  const allCategory =  await  fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`)
     .then((res) => {
       if (!res.ok) {
         throw new Error('Failed to fetch categories');

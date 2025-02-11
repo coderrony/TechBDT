@@ -1,11 +1,10 @@
-import React, { FC } from "react";
+import React from "react";
 
 import SearchContent from "./_components/SearchContent";
 
 
 const PageSearch =async () => {
-    // const allProducts = await getNewArrivals() || []
-  
+ 
     return <SearchContent/>
 };
 

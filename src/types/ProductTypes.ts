@@ -28,28 +28,6 @@ export interface ProductType {
   updatedAt: Date;
 }
 
-// export interface ProductType {
-//   id: string; // UUID
-//   name: string;
-//   price: number;
-//   description: string;
-//   thumbnail: string;
-//   product_role: string; 
-//   category_id?: string | null; // UUID or null
-//   sub_category_id?: string | null; // UUID or null
-//   stock?: number | null; // Default is 0
-//   discount?: number | null; // Default is 0
-//   created_at: Date; // Timestamp with timezone
-//   images_gallery: string[]; // Array of text
-//   status: string; //(e.g: New in | Limited Edition | Stock Out | Best Sales )
-//   dropshop: string; // UUID
-//   BN_content: ProductContentType[]; // Bengali content
-//   EN_content: ProductContentType[]; // English content
-//   colors?: string[] | null; // Array of text or null
-//   sizes?: string[] | null; // Array of text or null
-//   variants?: string[] | null; // Array of text or null
-//   reviews?:ReviewType[];
-// }
 
 export interface ProductContentType{
   name:string;

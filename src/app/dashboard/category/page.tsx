@@ -3,9 +3,7 @@
 import ManageTabs, { TabsType } from "../_components/ManageTabs";
 import AddCategories from "./_components/AddCategory";
 import SubCategories from "./_components/SubCategories";
-import CategoryPreview from "./_components/CategoryPreview";
 
-import { notFound } from 'next/navigation';
 
 
 async function CategoryPage() {
@@ -21,10 +19,7 @@ async function CategoryPage() {
     return res.json();
   })
   .then((data) => data.res_data)
-  // console.log("categoryWithSub ",categoryWithSub);
   
-  
- 
 
     const tabs: TabsType[] = [
       {

@@ -47,7 +47,7 @@ export const GET = async (req: any) => {
 
 export const POST = async (req: any) => {
   const data = await req.json();
-  console.log('verify-payment api ', data);
+
 
   try {
     const response = await axios.post(
@@ -63,7 +63,7 @@ export const POST = async (req: any) => {
     );
 
     const result = response.data;
-    console.log('verify-payment api result ', result);
+   
 
     if (result.status === 'COMPLETED' || result.status === 'PENDING') {
       await connectDB();
@@ -85,7 +85,7 @@ export const POST = async (req: any) => {
         // sender_number: result.sender_number,
       })) as any;
 
-      // console.log('isExistOrder ', isExistOrder);
+  
       if (isExistOrder) {
         return NextResponse.json({
           message: 'Order already exist',
@@ -100,7 +100,7 @@ export const POST = async (req: any) => {
           })
           .lean()) as any;
 
-        // console.log('cart ', cart);
+
 
         const products = cart.products.map((item: any) => {
           return {
@@ -116,7 +116,7 @@ export const POST = async (req: any) => {
           };
         });
 
-        // console.log('products ', products);
+   
 
         const order = new Order({
           user: user_id,
@@ -152,7 +152,7 @@ export const POST = async (req: any) => {
     }
     return NextResponse.json({ message: 'Request Failed', status: 500 });
   } catch (err: any) {
-    // console.log("err ",err)
+   
     return NextResponse.json({ message: err.message, status: 500 });
   }
 };

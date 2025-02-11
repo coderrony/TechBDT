@@ -7,11 +7,10 @@ import BagIcon from '@/components/BagIcon';
 import NcInputNumber from '@/components/NcInputNumber';
 
 import {
-  // NoSymbolIcon,
-  // ClockIcon,
+
   SparklesIcon,
 } from '@heroicons/react/24/outline';
-// import IconDiscount from '@/components/IconComponents/IconDiscount';
+
 import Prices from '@/components/Prices';
 import toast from 'react-hot-toast';
 
@@ -22,9 +21,9 @@ import Link from 'next/link';
 
 import ProductStatus from './ProductStatus';
 import { ProductType } from '@/types/ProductTypes';
-// import { createAddToCart } from '@/queries/addToCart';
-import { notFound, useRouter } from 'next/navigation';
-// import useAuth from '@/hooks/useAuth';
+
+import {  useRouter } from 'next/navigation';
+
 import LoadingIndicator from './LoadingIndicator';
 import useCart from '@/hooks/useCart';
 import { useSession } from 'next-auth/react';
@@ -256,10 +255,6 @@ const { data: session } = useSession();
     );
   };
 
-  // const loadingIndicator = () => {
-  //   return <LoadingIndicator />;
-  // };
-  // if(isPending) return loadingIndicator();
 
   return (
     <div className={`nc-ProductQuickView ${className}`}>

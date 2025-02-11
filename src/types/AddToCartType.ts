@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { ProductType } from "./ProductTypes";
+
 
 export interface CartProductType {
   name: string; 

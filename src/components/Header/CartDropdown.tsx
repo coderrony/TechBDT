@@ -2,23 +2,21 @@
 
 import { Popover, Transition } from '@/app/headlessui';
 import Prices from '@/components/Prices';
-// import { Product, PRODUCTS } from "@/data/data";
 import { Fragment } from 'react';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
-import ButtonSecondary from '@/shared/Button/ButtonSecondary';
+
 import Image from 'next/image';
 import Link from 'next/link';
-// import taka from '@/images/taka.png';
 
 import { calculateCartTotal } from '@/utils/calculateCartTotal';
 import formatNumber from '@/utils/formatNumber';
 
-// import useAuthData from "@/hooks/useAuthData";
+
 import LoadingIndicator from '../LoadingIndicator';
 import useCart from '@/hooks/useCart';
 
 export default function CartDropdown() {
-  // const {authDataFetch:{authData,isFetchingAuthData},cartDelete} = useAuthData() as any;
+  
   const {
     cartDataFetch: { cartData },
     cartDelete: { handleRemoveFromCart, isRemoving },
@@ -172,12 +170,7 @@ export default function CartDropdown() {
                       <span className=''>{formatNumber(cartTotalAmount)}</span>
                     </p>
                     <div className='flex space-x-2 mt-5'>
-                      {/* <ButtonSecondary
-                        href='/cart'
-                        className='flex-1 border border-slate-200 dark:border-slate-700'
-                        onClick={close}>
-                        View cart
-                      </ButtonSecondary> */}
+                    
                       <ButtonPrimary
                         href='/cart'
                         onClick={close}

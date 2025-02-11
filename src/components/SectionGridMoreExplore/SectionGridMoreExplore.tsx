@@ -24,8 +24,7 @@ const SectionGridMoreExplore: FC<SectionGridMoreExploreProps> = ({
 
   const [tabActive, setTabActive] = useState(data[0].name);
   const [productPreview, setProductPreview] = useState<any[]>([]);
-  // console.log("data ",data);
-  // console.log("productPreview ",productPreview);
+  
   
   useEffect(() => {
     const filteredItem = data.find(item => item.name === tabActive);

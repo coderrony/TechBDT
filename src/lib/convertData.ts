@@ -1,7 +1,4 @@
 
-
-
-
 import { Document } from "mongoose";
 import mongoose from "mongoose";
 
@@ -26,23 +23,6 @@ const convertObjectIdToString = (value: any): any => {
   return value;
 };
 
-// export const replaceMongoIdInObject = (obj: MongoDocumentWithId) => {
-
-//   // Create a shallow copy of the object
-//   const updatedObj = { ...obj, id: obj._id.toString() } as any;
-
-//   // Remove the _id property
-//   delete (updatedObj as any)._id; // Type assertion to bypass TypeScript restriction
-//   delete (updatedObj as any).__v; // Type assertion to bypass TypeScript restriction
-
-//   if (updatedObj.createdAt instanceof Date) {
-//     updatedObj.createdAt = updatedObj.createdAt.toISOString();
-//   }
-//   if (updatedObj.updatedAt instanceof Date) {
-//     updatedObj.updatedAt = updatedObj.updatedAt.toISOString();
-//   }
-//   return convertObjectIdToString(updatedObj);
-// };
 
 export const replaceMongoIdInObject = (obj: MongoDocumentWithId) => {
 
@@ -65,12 +45,3 @@ export const replaceMongoIdInObject = (obj: MongoDocumentWithId) => {
 export const replaceMongoIdInArray = (array: MongoDocumentWithId[]) => {
   return array.map((item) => replaceMongoIdInObject(item));
 };
-// export const replaceMongoIdInArray = (arr: any[] = []) => {
-//   if (!Array.isArray(arr)) return []; // Safeguard against non-array values
-//   return arr.map(item => {
-//     return {
-//       ...item,
-//       id: item._id || item.id, // Assuming the presence of _id or id field
-//     };
-//   });
-// };

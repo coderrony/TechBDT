@@ -1,10 +1,9 @@
 'use client';
-import React, { FC } from 'react';
-import facebookSvg from '@/images/Facebook.svg';
-import googleSvg from '@/images/Google.svg';
+import React from 'react';
+
 import Input from '@/shared/Input/Input';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
-import Image from 'next/image';
+
 import Link from 'next/link';
 import SocialLogin from '@/components/SocialLogin/SocialLogin';
 import { useForm } from 'react-hook-form';

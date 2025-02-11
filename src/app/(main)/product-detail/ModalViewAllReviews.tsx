@@ -1,12 +1,11 @@
 import { Dialog, Transition } from "@/app/headlessui";
 import { StarIcon } from "@heroicons/react/24/solid";
 import ReviewItem from "@/components/ReviewItem";
-import SortOrderFilter from "@/components/SectionGridMoreExplore/SortOrderFilter";
 import React, { FC, Fragment } from "react";
 import ButtonClose from "@/shared/ButtonClose/ButtonClose";
-import formatNumber from "@/utils/formatNumber";
+
 import { ReviewType } from "@/types/ReviewType";
-// import { ReviewType } from "@/types/ProductTypes";
+
 
 export interface ModalViewAllReviewsProps {
   show: boolean;

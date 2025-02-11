@@ -1,7 +1,5 @@
 import { ReactNode } from "react";
 import Sidebar from "./_components/Sidebar";
-import MobileSidebar from "./_components/AdminMobileSidebar";
-
 
 
 function DashboardLayout({children}:{children:ReactNode}) {

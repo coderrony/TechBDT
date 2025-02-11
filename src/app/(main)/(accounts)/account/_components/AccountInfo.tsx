@@ -250,8 +250,7 @@ const AccountInfo: FC<AccountInfoProps> = ({
     formData.append('upzila', data.upzila);
     formData.append('union', data.union);
     formData.append('house', data.house);
-    // console.log('payload', payload);
-
+  
     startTransition(async () => {
       if (data.phone) {
         // const result = await otpRequestProcess(data.phone, true) as any;
@@ -260,7 +259,7 @@ const AccountInfo: FC<AccountInfoProps> = ({
           isRegistration: true,
         })) as any;
         const result = res.data;
-        console.log('result ', result);
+     
         if (result.status === 200) {
           setOtp(result.otp);
           // await otpSend(data.phone, result.otp);
@@ -282,16 +281,13 @@ const AccountInfo: FC<AccountInfoProps> = ({
           });
         }
       } else {
-        // without phone
-        // const response = await updateAccount(formData);
-        // console.log("response ",response);
-        
+   
         if(selectedAddress?._id){ 
           formData.append('addressId', selectedAddress?._id.toString());
         }
         const res = (await axios.patch('/api/user-auth', formData)) as any;
         const result = res.data;
-        // console.log('without phone result ', result);
+       
         if (result.status === 200) {
           refetchAuthData(); // refetch user data
           notifyToast(false, 'Account Address', result.message);
@@ -304,7 +300,7 @@ const AccountInfo: FC<AccountInfoProps> = ({
   };
 
   const handleOtpSubmit = async (data: any) => {
-    // console.log('otp data ', data);
+   
     startTransition(async () => {
       if (otp !== data.otp) {
         await delay(2000);
@@ -316,11 +312,10 @@ const AccountInfo: FC<AccountInfoProps> = ({
         return;
       }
 
-      //  const result =  await updateAccount(formInfo);
+     
       const res = (await axios.patch('/api/user-auth', formInfo)) as any;
       const result = res.data;
-      // console.log('result for otp verification ', result);
-
+     
       if (result.status === 200) {
         refetchAuthData(); // refetch user data
         notifyToast(false, 'Account Address', result.message);

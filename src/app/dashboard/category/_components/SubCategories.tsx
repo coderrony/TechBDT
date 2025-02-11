@@ -4,17 +4,14 @@ import Input from '@/shared/Input/Input';
 import Image from 'next/image';
 import { FC, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-
 import imgIcon from '@/images/icons/photo.png';
-
 import LoadingIndicator from '@/components/LoadingIndicator';
 import Label from '@/components/Label/Label';
-
 import SelectValue from '@/components/SelectValue';
 import { CategoryAndSubType } from '@/types/CategoryType';
-// import { createSubCategory } from '@/queries/subCategory';
+
 import axios from 'axios';
-// import { default_category } from '@/data/defaultValue';
+
 
 interface AddCategoriesProps {
   className?: string;
@@ -30,7 +27,7 @@ interface SubCategoriesFormData {
 const SubCategories: FC<AddCategoriesProps> = ({ categoriesData }) => {
   const [isPending, startTransition] = useTransition();
   const [preview, setPreview] = useState<string | null>(null); // State for image preview
-  // console.log('categoriesData in SubCategories ', categoriesData);
+
   const {
     register,
     handleSubmit,
@@ -51,8 +48,6 @@ const SubCategories: FC<AddCategoriesProps> = ({ categoriesData }) => {
       try {
         const result = await axios.post("/api/subCategory-api",formData) as any;
 
-        console.log("result ",result);
-        
 
         if (result.data.status === 200) {
           reset();
@@ -61,7 +56,7 @@ const SubCategories: FC<AddCategoriesProps> = ({ categoriesData }) => {
         }
       } catch (err: any) {
         alert(`Error Occur ${err?.message}`);
-        console.log(err.message);
+     
       }
     });
   };

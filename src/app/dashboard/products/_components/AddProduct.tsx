@@ -13,11 +13,7 @@ import { CategoryAndSubType } from '@/types/CategoryType';
 import LoadingIndicator from '@/components/LoadingIndicator';
 import { DropShopType } from '@/types/DropShopType';
 import { replaceMongoIdInArray } from '@/lib/convertData';
-// import { createProduct } from '@/queries/products';
-import axios from 'axios';
-import { createProduct } from '@/queries/products';
-// import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
-// import cloudinary from '@/services/cloudinary';
+
 
 interface AddProductProps {
   className?: string;
@@ -104,9 +100,7 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const bnContentJson = JSON.parse(data.BN_content); // Convert string to JSON
     const enContentJson = JSON.parse(data.EN_content); // Convert string to JSON
 
-    // Array.from(data.image_gallery as File[]).forEach(file => {
-    //   formData.append('image_gallery', file);
-    // });
+    
     Array.from(data.image_gallery as File[]).forEach(file => {
       multipleFileFormData.append('gallery', file);
     });
@@ -120,75 +114,15 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     formData.append('status', data.status);
     formData.append('discount', data.discount);
     formData.append('description', data.description);
-    // formData.append('thumbnail', data.thumbnail[0]);
     formData.append('BN_content', JSON.stringify(bnContentJson));
     formData.append('EN_content', JSON.stringify(enContentJson));
     formData.append('payload', JSON.stringify(payload));
 
-    // startTransition(async () => {
-    //   try {
-    //     //
-
-    //     if (data?.thumbnail[0]) {
-    //       signalFileFormData.append(
-    //         'path',
-    //         `product-image/${data.name.replaceAll(' ', '-')}/thumbnail`,
-    //       );
-    //       signalFileFormData.append('file', data.thumbnail[0]);
-    //       const uploadFileResult = (await axios.post(
-    //         '/api/upload-file-api',
-    //         signalFileFormData,
-    //       )) as any;
  
-    //       formData.append('thumbnail', uploadFileResult.data.res_data);
-    //     }
-      
-
-    //     if (data?.image_gallery?.length > 0) {
-    //       multipleFileFormData.append(
-    //         'path',
-    //         `product-image/${data.name.replaceAll(' ', '-')}/image_gallery`,
-    //       );
-
-    //       const uploadGalleryResult = (await axios.post(
-    //         '/api/upload-file-api',
-    //         multipleFileFormData,
-    //       )) as any;
-
-    //       formData.append(
-    //         'image_gallery',
-    //         JSON.stringify(uploadGalleryResult.data.res_data),
-    //       );
-    //     }
-
-    //     const result = await createProduct(formData);
-    //     // const result = await axios.post('/api/product-api', formData) as any;
-
-    //     console.log('result ', result);
-
-    //     if (result?.status === 200) {
-    //       reset();
-    //       alert(result?.message);
-    //     }
-    //     if (result?.status === 500) {
-    //       alert(result?.message);
-    //     }
-    //     setPreview(null);
-    //     setImageGalleryPreview([]);
-    //   } catch (err: any) {
-    //     alert(`Error Occur ${err?.message}`);
-    //     console.log(err.message);
-    //     setPreview(null);
-    //     setImageGalleryPreview([]);
-    //   }
-    // });
-  
-  
   };
 
   if (isPending) return <LoadingIndicator />;
 
-  // console.log("categoriesData ",categoriesData);
   
   return (
     <div className='container mt-6'>

@@ -34,8 +34,6 @@ const reviewSchema = new Schema(
   { timestamps: true },
 );
 
-// export const Review =
-//   mongoose.models.Review ?? mongoose.model('Review', reviewSchema);
 
   export const Review = mongoose.models.Review || mongoose.model('Review', reviewSchema);
 

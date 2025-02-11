@@ -8,7 +8,6 @@ import useAuthData from './useAuthData';
 
 const useOrder = () => {
   const { authData } = useAuthData() as any;
-// console.log("useOrder session ",session);
 
   // Fetch user data using React Query
   const {
@@ -21,8 +20,7 @@ const useOrder = () => {
     queryFn: async () => {
       if (authData?.id) {
         const result = await axios.get(`/api/order-api`, { params: { id: authData?.id } }) as any;
-        // console.log("useOrder result ",result.data);
-        
+    
         if (result.data.status === 200) {
           return result.data.orders; // Access user data from result.data
         } else {

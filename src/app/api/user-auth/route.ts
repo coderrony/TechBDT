@@ -1,4 +1,4 @@
-// import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
+
 import { replaceMongoIdInObject } from '@/lib/convertData';
 import { User } from '@/model/user-model';
 import cloudinary from '@/services/cloudinary';
@@ -10,7 +10,7 @@ export const GET = async (req: any) => {
   try {
     // Extract the ID from the query parameters
     const id = req.nextUrl.searchParams.get('id');
-    //  console.log("user auth id ",id);
+
 
     if (!id) {
       return NextResponse.json({
@@ -81,7 +81,7 @@ export async function PATCH(request: NextRequest) {
 
     user.full_name = full_name;
     if (avatar) {
-      console.log('avatar ', avatar);
+
       const fileBuffer = await avatar.arrayBuffer();
       const base64String = `data:${avatar.type};base64,${Buffer.from(
         fileBuffer,
@@ -101,7 +101,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     if (addressId) {
-      console.log('i am in ', addressId);
+  
 
       // update address
       const address = user.address.find(
@@ -133,7 +133,7 @@ export async function PATCH(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { addressId, userId } = await request.json();
-    console.log(addressId, userId);
+  
 
     if (!addressId || !userId) {
       return NextResponse.json({

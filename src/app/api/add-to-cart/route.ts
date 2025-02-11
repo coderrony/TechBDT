@@ -7,7 +7,7 @@ import { connectDB } from '@/services/mongo';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (req: any) => {
-  console.log("request in get in add to cart route");
+
   
   try {
     // Extract the ID from the query parameters
@@ -23,9 +23,7 @@ export const GET = async (req: any) => {
     // Connect to the database
     await connectDB();
 
-    // const cart = (await AddToCart.findOne({ user: userId })
-    //   .populate('products.product', 'name slug thumbnail price ') // Populate product with selected fields
-    //   .lean()) as any; // Convert the result to a plain JS object
+
     const cart = (await AddToCart.findOne({ user: userId })
       .populate({
         path: 'products.product',
@@ -59,7 +57,7 @@ export const POST = async (request: NextRequest) => {
   try {
     await connectDB();
     const cart = await AddToCart.findOne({ user });
-    // console.log('cart ', cart);
+ 
 
     if (!cart) {
       // If no cart exists, create a new one

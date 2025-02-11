@@ -75,7 +75,7 @@ async function ProductDetailPage({ params: { slug } }: ProductDetailProps) {
     // Fetch product by Slug
     const product = await getProductBySlug(slug);
 
-    // console.log("product ", product);
+    
     
     // // If no product is found, trigger a 404 page
     if (!product) {

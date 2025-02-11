@@ -1,5 +1,4 @@
 'use client';
-// import { Product } from '@/data/data';
 import { FC, useState } from 'react';
 import { useRouter } from 'next/navigation';
 

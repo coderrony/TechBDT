@@ -3,7 +3,6 @@ import { SubCategory } from '@/model/sub-category-model';
 import { connectDB } from '@/services/mongo';
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-// import { uploadFileByCloudinary } from '@/lib/cloudinaryFileUpload';
 import cloudinary from '@/services/cloudinary';
 
 export const POST = async (request: NextRequest) => {
@@ -13,8 +12,7 @@ export const POST = async (request: NextRequest) => {
     const category = formData.get('category') as string;
     const file = formData.get('file') as File;
 
-    // console.log('category ', category);
-
+ 
     // save data in category schema
     const data: any = { name, category };
 
@@ -40,7 +38,7 @@ export const POST = async (request: NextRequest) => {
     await connectDB();
 
     const subCategory = await SubCategory.create(data);
-    // console.log('subCategory ', subCategory);
+   
 
     if (subCategory) {
       // Add Category to the sub category

@@ -2,16 +2,14 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient } from '@/lib/react-query';
 import axios from 'axios';
-// import { useSession } from 'next-auth/react';
+
 import useAuthData from './useAuthData';
 
 
 const useCart = () => {
   const { authData } = useAuthData() as any;
 
-  // console.log("authData hook ",authData);
-  
-
+ 
  
   // Fetch user data using React Query
   const {

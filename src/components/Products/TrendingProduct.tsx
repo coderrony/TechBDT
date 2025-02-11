@@ -27,7 +27,7 @@ const TrendingProduct = () => {
       const res = await fetch(`/api/product/trending-product?size=${8}`); // নতুন ৮টি প্রোডাক্ট আনবে
       const data = await res.json();
 
-      // console.log('data 2 ', data);
+      
       setHistoryProducts([...historyProducts, data.products]);
     } catch (error) {
       console.error('Failed to fetch products', error);
@@ -47,7 +47,7 @@ useEffect(()=>{
       try {
         const res = await fetch(`/api/product/trending-product?size=${16}`);
         const data = await res.json();
-        // console.log('Initial ', data);
+    
         const half = Math.ceil(data.products.length / 2);
         const newCachedData = [data.products.slice(0, half), data.products.slice(half)];
         setCurrentProducts(data.products.slice(0, half)); // প্রথম ৮টি দেখাবে

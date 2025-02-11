@@ -35,7 +35,7 @@ const OrderMsgModel: FC<OrderMsgModelProps> = ({
           Order Confirmed!
         </h1>
         <p className='mt-2 text-gray-600 dark:text-gray-300'>Thank you for your purchase</p>
-        {/* <p className="mt-1 text-lg font-semibold text-gray-800">{message}</p> */}
+       
       </div>
     );
   };

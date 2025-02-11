@@ -1,12 +1,3 @@
-//  export interface ReviewType {
-//   id: string; // UUID, primary key
-//   created_at: string; // Timestamp with time zone
-//   comment: string; // Text, not null
-//   rating: number; // Smallint, not null
-//   product_id: string; // UUID, foreign key
-//   full_name: string; // Text, not null
-//   avatar_url: string;  // default set  'https://api.techbdt.com/storage/v1/object/public/default_images/user-avatar/user-avatar.png'
-// }
 
 
 export interface ReviewType  {

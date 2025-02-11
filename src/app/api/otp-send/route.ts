@@ -5,8 +5,7 @@ import axios from 'axios';
 import { NextResponse } from 'next/server';
 
 export const POST = async (req: any) => {
-  // const phone = req.nextUrl.searchParams.get('phone');
-  // const isRegistration = req.nextUrl.searchParams.get('isRegistration');
+
   const { phone, isRegistration } = await req.json();
 
 
@@ -15,7 +14,6 @@ export const POST = async (req: any) => {
     await connectDB();
     const existingUser = await User.findOne({ phone }).lean();
 
-    // console.log("existingUser ",existingUser );
 
     // Registration request: phone number already exists
     if (isRegistration && existingUser) {
@@ -45,7 +43,7 @@ export const POST = async (req: any) => {
     // // Use axios GET request with params
     const response = (await axios.get(apiUrl)) as any;
 
-    console.log('SMS API Response:', response.data);
+    // console.log('SMS API Response:', response.data);
 
     return NextResponse.json(
       { message: 'OTP Sent Successfully', status: 200, otp },

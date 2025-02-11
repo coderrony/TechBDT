@@ -8,8 +8,7 @@ import { useForm } from 'react-hook-form';
 
 import LoadingIndicator from '@/components/LoadingIndicator';
 import axios from 'axios';
-// import { default_category } from '@/data/defaultValue';
-// import { createCategory } from '@/queries/categories';
+
 
 interface AddCategoriesProps {
   className?: string;
@@ -33,14 +32,14 @@ const AddCategories: FC<AddCategoriesProps> = () => {
 
   const handleCategory = async (event: CategoriesFormData) => {
     const formData = new FormData();
-    console.log('Category data: ', event);
+ 
       formData.append('name', event.name);
 
     startTransition(async () => {
       try {
     
         const result = await axios.post('/api/category-api', formData) as any;
-        console.log("result ",result);
+       
         
         if (result.data.status === 200) {
           reset();
@@ -50,7 +49,7 @@ const AddCategories: FC<AddCategoriesProps> = () => {
 
       } catch (err: any) {
         alert(`Error Occur ${err?.message}`);
-        console.log(err.message);
+     
       }
 
       

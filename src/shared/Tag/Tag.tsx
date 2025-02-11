@@ -1,4 +1,4 @@
-// import { _getTagNameRd } from "@/contains/fakeData";
+
 import Link from "next/link";
 import React, { FC } from "react";
 

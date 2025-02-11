@@ -15,6 +15,8 @@ interface AuthProviderProps {
 const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const { data: session } = useSession();
 
+ 
+
   // Fetch user data using React Query
   const {
     data: authData,
@@ -28,6 +30,8 @@ const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         const result = await axios.get(`/api/user-auth`, {
           params: { id: session?.user?.id },
         });
+
+  
 
         if (result.data.status === 200) {
           return result.data.user; // Return user data

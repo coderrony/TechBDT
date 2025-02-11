@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
-// import Heading from "@/components/Heading/Heading";
+
 // @ts-ignore
 import Glide from "@glidejs/glide/dist/glide.esm";
 
@@ -55,8 +55,8 @@ const SectionSlider: FC<SectionSliderProps> = ({
       glideInstance = new Glide(sliderElement, OPTIONS);
       glideInstance.mount();
       setIsInitialized(true);
-    } catch (error) {
-      console.error("Error mounting the Glide slider:", error);
+    } catch (error: any) {
+      console.error("Error mounting the Glide slider:", error.message);
      
     }
 

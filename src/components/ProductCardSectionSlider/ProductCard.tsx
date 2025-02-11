@@ -6,7 +6,7 @@ import ProductStatus from '../ProductStatus';
 
 import Link from 'next/link';
 import NcImage from '@/shared/NcImage/NcImage';
-// import { ProductType } from '@/types/ProductTypes';
+
 import calculateOldPrice from '@/utils/calculateOldPrice';
 import LikeButton from '../LikeButton';
 import SectionCardBtns from './SectionCardBtns';
@@ -27,10 +27,7 @@ const ProductCard: FC<ProductCardProps> = ({
 }) => {
   const { name, price, status = '', thumbnail,slug, discount } = data;
 
-  // const rating = reviews.reduce((sum, item) => sum + item.rating, 0);
-  // const numberOfReviews = reviews?.length;
-
-  // console.log("numberOfReviews ",numberOfReviews)
+ 
 
   return (
     <>

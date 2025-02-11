@@ -3,7 +3,7 @@ import { FC, useState, useTransition } from 'react';
 import toast from 'react-hot-toast';
 import { Transition } from '@/app/headlessui';
 import Image from 'next/image';
-import { notFound, useRouter } from 'next/navigation';
+import {  useRouter } from 'next/navigation';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import ButtonSecondary from '@/shared/Button/ButtonSecondary';
 
@@ -47,7 +47,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
     product_role,
   } = data;
 
-  //  console.log("SectionCardBtns data",data);
+ 
 
   const addToCartData: any = {
     product: id,

@@ -6,9 +6,6 @@ import ButtonClose from "@/shared/ButtonClose/ButtonClose";
 import ProductQuickView from "./ProductQuickView";
 import { ProductType } from "@/types/ProductTypes";
 
-// import { usePathname } from "next/navigation";
-
-
 
 export interface ModalQuickViewProps {
   show: boolean;
@@ -21,7 +18,6 @@ const ModalQuickView: FC<ModalQuickViewProps> = ({
   onCloseModalQuickView,
   data
 }) => {
-  // const pathname = usePathname();
 
   return (
     <Transition appear show={show} as={Fragment}>

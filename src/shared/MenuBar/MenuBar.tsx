@@ -2,7 +2,7 @@
 
 import React, { useState, Fragment } from "react";
 import { Transition, Dialog } from "@/app/headlessui";
-import NavMobile from "@/shared/Navigation/NavMobile";
+
 import { CategoryAndSubType } from "@/types/CategoryType";
 
 export interface MenuBarProps {
@@ -35,7 +35,7 @@ const MenuBar: React.FC<MenuBarProps> = ({allCategory}) => {
                 leaveTo="opacity-0 -translate-x-14"
               >
                 <div className="z-20 relative">
-                  <NavMobile onClickClose={handleCloseMenu} data={allCategory || []} />
+                  {/* <NavMobile onClickClose={handleCloseMenu} data={allCategory || []} /> */}
                 </div>
               </Transition.Child>
 

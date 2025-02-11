@@ -14,7 +14,8 @@ import { useThemeMode } from '@/hooks/useThemeMode';
 export default function AvatarDropdown() {
   useThemeMode();
   const {authData} = useAuthData() as any;
-// console.log("AvatarDropdown authData ",authData);
+
+
 
   return (
     <div className='AvatarDropdown '>
@@ -75,6 +76,7 @@ export default function AvatarDropdown() {
                         <div className='w-full border-b border-neutral-200 dark:border-neutral-700' />
                       </>
                     )}
+
 
                     {/* ------------------ account --------------------- */}
                     {authData && (

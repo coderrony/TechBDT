@@ -66,7 +66,7 @@ export const GET = async (req: any) => {
   
 
     // Fetch data
-    // const data = await Product.find(query).sort({ _id: 1 }).limit(limit);
+
     const data = await Product.aggregate([
       { $match: query }, // Apply the price filter
       { $sample: { size: limit } }, // Fetch random documents

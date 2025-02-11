@@ -59,7 +59,7 @@ export const {
       authorize: async credentials => {
         try {
           await connectDB();
-          console.log('Credentials:', credentials);
+
 
           if (!credentials) {
             return null;
@@ -95,7 +95,7 @@ export const {
 
             return replaceMongoIdInObject(user as any);
           } else {
-            // console.log("rest ",rest);
+       
 
             return rest;
           }
@@ -112,8 +112,7 @@ export const {
   callbacks: {
     async signIn({ user, account }) {
       try {
-        console.log('signIn user ', user);
-        // console.log("signIn account ",account);
+   
 
         let userData;
         if (
@@ -122,8 +121,7 @@ export const {
         ) {
           await connectDB();
           const existingUser = await getUserByEmail(user?.email as string);
-          // console.log('existingUser ', existingUser);
-
+        
           if (!existingUser) {
             // new user create
             userData = await newUserCreate({
@@ -135,8 +133,7 @@ export const {
           } else {
             userData = existingUser;
           }
-          // console.log('userData ', userData);
-
+      
           user.customData = userData;
         } else {
           const { id, full_name, provider, profilePicture, role } =
@@ -164,9 +161,7 @@ export const {
     },
 
     async jwt({ token, user }) {
-      //  console.log("jwt token ",token);
-      //  console.log("jwt user ",user);
-
+ 
       if (user?.customData) {
         token.user = user.customData;
       }
@@ -174,9 +169,7 @@ export const {
     },
 
     async session({ session, token }: { session: Session; token: any }) {
-      // console.log("session session ", session);
-      // console.log("session token ", token);
-
+  
       if (token?.user) {
         session.user = token.user as Session['user'];
       }
