@@ -19,7 +19,7 @@ const SectionGridMoreExplore = dynamic(
 
 export default async function PageHome() {
   // Fetch data inside the component
-  const [allCategory, gadgets, giftItems,fashions] = await Promise.all([
+  const [allCategory, gadgets, giftItems, fashions] = await Promise.all([
     fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
       next: { revalidate: 3600 }, // Revalidate every 1 hours
     })
@@ -41,8 +41,34 @@ export default async function PageHome() {
       </Suspense>
 
       <div className='container space-y-10 mt-4'>
-        {/* Trending */}
+        {/* Gadgets  section  */}
+        <>
+          <div className='flex justify-between items-center px-5 mb-4'>
+            <h2 className='text-3xl font-bold text-neutral-900 dark:text-neutral-50'>
+              Gadgets{' '}
+              <span className='text-neutral-500 dark:text-neutral-400'>
+                for Tech Enthusiasts
+              </span>
+            </h2>
+            <Link
+              className='bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 text-slate-50 dark:text-slate-800 shadow-xl p-2 rounded'
+              href={`/search?category=Gadgets`}>
+              Explore All
+            </Link>
+          </div>
 
+          <Suspense fallback={<Skeleton />}>
+            <SectionSlider>
+              {gadgets.map((item: any, index: number) => (
+                <li key={index} className='glide__slide'>
+                  <ProductCard data={item} />
+                </li>
+              ))}
+            </SectionSlider>
+          </Suspense>
+        </>
+
+        {/* Trending */}
         <h2 className='text-3xl font-bold text-neutral-900 dark:text-neutral-50 ml-4 sm:ml-5'>
           Trending...
         </h2>
@@ -59,33 +85,6 @@ export default async function PageHome() {
           </div>
         )}
 
-        {/* Gadgets  section  */}
-        <>
-          <div className='flex justify-between items-center px-5 mb-4'>
-            <h2 className='text-3xl font-bold text-neutral-900 dark:text-neutral-50'>
-              Gadgets{' '}
-              <span className='text-neutral-500 dark:text-neutral-400'>
-                for Tech Enthusiasts
-              </span>
-            </h2>
-            <Link
-              className='bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 text-slate-50 dark:text-slate-800 shadow-xl p-2 rounded'
-              href={`/search?category=Gadgets`}>
-                Explore All
-            </Link>
-          </div>
-
-          <Suspense fallback={<Skeleton />}>
-            <SectionSlider>
-              {gadgets.map((item: any, index: number) => (
-                <li key={index} className='glide__slide'>
-                  <ProductCard data={item} />
-                </li>
-              ))}
-            </SectionSlider>
-          </Suspense>
-        </>
-
         {/* Gift Items  */}
         <>
           <div className='flex justify-between items-center px-5 mb-4'>
@@ -98,7 +97,7 @@ export default async function PageHome() {
             <Link
               className='bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 text-slate-50 dark:text-slate-800 shadow-xl p-2 rounded'
               href={`/search?category=Gift Items`}>
-                Explore All
+              Explore All
             </Link>
           </div>
 
@@ -113,13 +112,13 @@ export default async function PageHome() {
           </Suspense>
         </>
 
-    {/* Fashion  Items  */}
-    <>
+        {/* Fashion  Items  */}
+        <>
           <div className='flex justify-between items-center px-5 mb-4'>
             <h2 className='text-3xl font-bold text-neutral-900 dark:text-neutral-50'>
               Fashion{' '}
               <span className='text-neutral-500 dark:text-neutral-400'>
-              for Modern Lifestyles
+                for Modern Lifestyles
               </span>
             </h2>
             <Link
@@ -139,8 +138,6 @@ export default async function PageHome() {
             </SectionSlider>
           </Suspense>
         </>
-
-
       </div>
     </div>
   );
