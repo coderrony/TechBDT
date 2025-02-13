@@ -57,7 +57,7 @@ export const GET = async (req: any) => {
 
 export async function PATCH(request: NextRequest) {
   const formData = await request.formData();
-  // const name = formData.get('name') as string;
+
   const mobile = [];
   const status = formData.get('status');
   const division = formData.get('division');
