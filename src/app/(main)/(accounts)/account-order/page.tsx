@@ -1,10 +1,7 @@
-
 import OrderInfo from "./_components/OrderInfo";
 
 const AccountOrder = () => {
-
-
-  return <OrderInfo/>
+  return <OrderInfo />;
 };
 
 export default AccountOrder;

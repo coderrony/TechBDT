@@ -1,12 +1,12 @@
 'use client';
 import { FC } from 'react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React from 'react';
 import logo from '@/images/techbdtLogo/techbdt-logo.png';
 import ButtonClose from '@/shared/ButtonClose/ButtonClose';
 import { formatDate } from '@/utils/dateFormat';
 import formatNumber from '@/utils/formatNumber';
-import { renderStatus } from './OrderInfo';
+import { renderStatus } from '@/utils/randerStatus';
 
 interface OrderInvoiceProps {
   className?: string;
@@ -18,6 +18,8 @@ const OrderInvoice: FC<OrderInvoiceProps> = ({
   invoiceData,
   setInvoiceData,
 }) => {
+
+  
   return (
     <div className=' bg-gray-100 dark:bg-gray-900 py-5 flex justify-center items-center'>
       <div className='bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 p-10 w-full max-w-3xl rounded-lg shadow-lg relative overflow-x-auto'>
@@ -56,11 +58,11 @@ const OrderInvoice: FC<OrderInvoiceProps> = ({
             <p className='font-bold'>Invoiced To:</p>
             <p>{invoiceData?.full_name.toUpperCase()}</p>
             <p>{invoiceData?.phone}</p>
-            {invoiceData?.shipping_address.mobile.length > 0 && (
+            {invoiceData?.shipping_address?.mobile.length > 0 && (
               <p>Additional Mobile:</p>
             )}
-            {invoiceData?.shipping_address.mobile.length > 0 &&
-              invoiceData.mobile.map((item: any) => <p key={item}>{item}</p>)}
+            {invoiceData?.shipping_address?.mobile.length > 0 &&
+              invoiceData?.shipping_address?.mobile?.map((item: any) => <p key={item}>{item}</p>)}
             <p>Shipping Address:</p>
             <p>{invoiceData?.shipping_address.house}</p>
             <p>
@@ -75,9 +77,9 @@ const OrderInvoice: FC<OrderInvoiceProps> = ({
 
           <div className='sm:text-right'>
             {/* <p className="font-bold">Pay To:</p> */}
-            <p className={renderStatus(invoiceData.status)}>
+            <span className={`${renderStatus(invoiceData.status)}  mb-1`}>
               {invoiceData.status}
-            </p>
+            </span>
             <p>{invoiceData.payment_method}</p>
             <p>TrxID: {invoiceData.transaction_id}</p>
             <p>

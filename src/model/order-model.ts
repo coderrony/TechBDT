@@ -1,4 +1,6 @@
+import { default_status } from '@/data/defaultValue';
 import mongoose, { Schema } from 'mongoose';
+
 
 const orderSchema = new Schema(
   {
@@ -57,7 +59,7 @@ const orderSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'],
+      enum: default_status,
       default: 'PENDING',
     },
     shipping_address: {

@@ -19,7 +19,7 @@ const useOrder = () => {
     queryKey: ['orders', authData?.id], // Query key
     queryFn: async () => {
       if (authData?.id) {
-        const result = await axios.get(`/api/order-api`, { params: { id: authData?.id } }) as any;
+        const result = await axios.get(`/api/order-api/user-order`, { params: { id: authData?.id } }) as any;
     
         if (result.data.status === 200) {
           return result.data.orders; // Access user data from result.data

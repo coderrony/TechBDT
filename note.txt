@@ -74,3 +74,66 @@ TechBDT.com isn’t just a store—it’s a lifestyle. Discover the best, shop w
 টেকবিডি.কম শুধুমাত্র একটি স্টোর নয়, এটি একটি লাইফস্টাইল। আপনার প্রয়োজনীয় পণ্য খুঁজুন, সহজে অর্ডার করুন, এবং আমাদের সাথে আধুনিক জীবন উপভোগ করুন।
 
 ---------------------------
+
+
+
+
+
+
+
+
+
+
+=================
+
+{
+  "editor.fontSize": 17,
+  "editor.mouseWheelZoom": true,
+  "debug.console.fontSize": 14,
+  "chat.editor.fontSize": 14,
+  "markdown.preview.fontSize": 14,
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.snippetSuggestions": "top",
+
+  "editor.indentSize": "tabSize",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.settings.applyToAllProfiles": [],
+  "editor.tabSize": 2,
+  "editor.fontVariations": false,
+  "editor.fontLigatures": false,
+  "window.zoomLevel": 0,
+  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "editor.wordWrapColumn": 120,
+  "editor.wordWrap": "on",
+  "errorLens.enabled": true,
+  "terminal.integrated.env.windows": {},
+  "console-ninja.featureSet": "Community",
+  "security.workspace.trust.untrustedFiles": "open",
+  "files.associations": {
+    "*.csv": "csv"
+  },
+  "editor.minimap.enabled": false,
+  "emmet.syntaxProfiles": {},
+  "explorer.compactFolders": false,
+
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "prettier.jsxSingleQuote": true,
+  "prettier.jsxBracketSameLine": true,
+  "prettier.semi": true,
+  "prettier.arrowParens": "avoid",
+  "prettier.bracketSpacing": true,
+  "prettier.printWidth": 80, // Adjust according to your preference
+
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "Codegeex.Privacy": true,
+  "[typescriptreact]": {
+    
+  }
+}

@@ -98,7 +98,7 @@ const SearchContent: FC<SearchContentProps> = () => {
 
   const debounce = useDebounce(async value => {
     try {
-      console.log('search Value ', value);
+      // console.log('search Value ', value);
       setSearchTerm(value);
     } catch (err: any) {
       throw new Error(err.message);

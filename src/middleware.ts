@@ -12,8 +12,6 @@ export async function middleware(req: any) {
     secureCookie: process.env.NODE_ENV === 'production',
   }) as any;
   
- 
-
   const isAdminRoute = (ADMIN_ROUTES.find(route => nextUrl.pathname.startsWith(route))) || false;
   const isPublicRoute = (PUBLIC_ROUTES.find(route => nextUrl.pathname.startsWith(route))) || nextUrl.pathname === ROOT;
 

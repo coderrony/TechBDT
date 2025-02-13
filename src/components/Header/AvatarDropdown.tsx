@@ -19,6 +19,15 @@ export default function AvatarDropdown() {
 
   return (
     <div className='AvatarDropdown '>
+          <button
+                            className='text-sm font-medium'
+                            onClick={() =>
+                              signOut({
+                                callbackUrl: process.env.NEXT_PUBLIC_SITE_URL,
+                              })
+                            }>
+                            Log out
+                          </button>
       <Popover className='relative'>
         {({ open, close }) => (
           <>

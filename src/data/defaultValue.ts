@@ -93,7 +93,7 @@ export const widgetMenus: WidgetFooterMenu[] = [
 
 ];
 
-
+export const default_status = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED']
 
 // navbar items
 export const NAVIGATION_DATA: CategoryAndSubType[] = [
