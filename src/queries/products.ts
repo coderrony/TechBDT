@@ -34,6 +34,7 @@ export const createProduct = async (formData: any) => {
     const EN_content = EN_contentRaw ? JSON.parse(EN_contentRaw as string) : {};
     const slug = slugify(name, { lower: true, strict: true });
 
+  
     const product_data = {
       name,
       slug,
@@ -43,7 +44,7 @@ export const createProduct = async (formData: any) => {
       discount,
       description,
       thumbnail,
-      images_gallery:JSON.parse(images_gallery),
+      images_gallery: images_gallery.length > 0 ? JSON.parse(images_gallery) : [],
       dropShop,
       BN_content,
       EN_content,
