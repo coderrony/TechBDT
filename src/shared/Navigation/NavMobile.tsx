@@ -34,7 +34,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
         {item.sub_categories?.map((i, index) => (
           <Disclosure key={index} as='li'>
             <Link
-             href={i?.href ? (typeof i.href === 'string' ? { pathname: i.href } : i.href) : `/search?${i.name}`}
+             href={i?.href ? (typeof i.href === 'string' ? { pathname: i.href } : i.href) : `/search?subCategory=${i.name}`}
               className={`flex text-sm rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 mt-0.5 pr-4 ${itemClass}`}>
               <span
             className={`py-2.5 ${i?.sub_categories?.length > 0 ? '' : 'block w-full'}`}
@@ -82,7 +82,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
           className='flex w-full items-center py-2.5 px-4 font-medium uppercase tracking-wide text-sm hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg'
         
     
-          href={item?.href ? (typeof item.href === 'string' ? { pathname: item.href } : item.href) : `/search?${item.name}`}
+          href={item?.href ? (typeof item.href === 'string' ? { pathname: item.href } : item.href) : `/search?subCategory=${item.name}`}
           >
           <span
             className={!isSubCategories ? 'block w-full' : ''}

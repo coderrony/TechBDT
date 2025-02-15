@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import Input from '@/shared/Input/Input';
 import ButtonCircle from '@/shared/Button/ButtonCircle';
@@ -17,7 +17,7 @@ interface SearchContentProps {
 }
 
 const SearchContent: FC<SearchContentProps> = () => {
-  const hasQuery = useRef(false);
+ 
   const [page, setPage] = useState(0);
   const searchParams = useSearchParams();
   const [categoriesState, setCategoriesState] = useState<string[]>([]);
@@ -50,7 +50,7 @@ const SearchContent: FC<SearchContentProps> = () => {
   const category = searchParams.get('category');
   const subCategory = searchParams.get('subCategory');
 
-  
+
   useEffect(() => {
     setPage(data?.pages?.length - 1 || 0);
   }, [data?.pages.length]);
@@ -82,19 +82,18 @@ const SearchContent: FC<SearchContentProps> = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if ((category || subCategory) && !hasQuery.current) {
-      hasQuery.current = true; // Mark as handled
 
-      if (category) {
-        setFilters((prev: any) => ({ ...prev, categories: [category] }));
-      }
-      if (subCategory) {
-        // setFilters((prev)=> ({...prev,subCategory}))
-        setFilters((prev: any) => ({ ...prev, subCategories: [subCategory] }));
-      }
+  useEffect(() => {
+    if (category) {
+      setFilters((prev: any) => ({ ...prev, categories: [category] }));
+    }
+    if (subCategory) {
+     
+      setFilters((prev: any) => ({ ...prev, subCategories: [subCategory] }));
     }
   }, [category, subCategory]);
+
+
 
   const debounce = useDebounce(async value => {
     try {
