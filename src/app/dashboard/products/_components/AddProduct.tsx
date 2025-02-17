@@ -243,13 +243,13 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
               onChange={handleCategoryChange} // Add onChange
             >
               <option value=''>Select dropshop</option>
-              {dropshops.map((item:any) => (
-                <option value={item.id} key={item.id}>
-                  {item.name}
+              {dropshops?.map((item:any) => (
+                <option value={item?.id} key={item?.id}>
+                  {item?.name}
                 </option>
               ))}
             </SelectValue>
-            {errors.dropshop && typeof errors.dropshop.message === 'string' && (
+            {errors?.dropshop && typeof errors?.dropshop.message === 'string' && (
               <p className='text-red-600 text-xs ml-2'>
                 {errors.dropshop.message}
               </p>
@@ -264,9 +264,9 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
               onChange={handleCategoryChange} // Add onChange
             >
               <option value=''>Select Category</option>
-              {categoriesData.map((item:any) => (
-                <option value={item.name} key={item.id} data-id={item.id}>
-                  {item.name}
+              {categoriesData?.map((item:any) => (
+                <option value={item?.name} key={item?.id} data-id={item?.id}>
+                  {item?.name}
                 </option>
               ))}
             </SelectValue>
@@ -278,8 +278,8 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             <SelectValue className='mt-1.5' {...register('sub_category')}>
               <option value=''>Select Sub Category</option>
               {subCategories?.map(sub => (
-                <option value={sub.name} key={sub.id} >
-                  {sub.name}
+                <option value={sub?.name} key={sub?.id} >
+                  {sub?.name}
                 </option>
               ))}
             </SelectValue>
@@ -298,8 +298,8 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 },
               })}
             />
-            {errors.name && typeof errors.name.message === 'string' && (
-              <p className='text-red-600 text-xs ml-2'>{errors.name.message}</p>
+            {errors?.name && typeof errors?.name.message === 'string' && (
+              <p className='text-red-600 text-xs ml-2'>{errors?.name.message}</p>
             )}
           </div>
 
@@ -313,9 +313,9 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 required: 'Price Field is Required!',
               })}
             />
-            {errors.price && typeof errors.price.message === 'string' && (
+            {errors?.price && typeof errors?.price.message === 'string' && (
               <p className='text-red-600 text-xs ml-2'>
-                {errors.price.message}
+                {errors?.price.message}
               </p>
             )}
           </div>
@@ -330,8 +330,8 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 required: 'Sku Field is Required!',
               })}
             />
-            {errors.sku && typeof errors.sku.message === 'string' && (
-              <p className='text-red-600 text-xs ml-2'>{errors.sku.message}</p>
+            {errors?.sku && typeof errors?.sku.message === 'string' && (
+              <p className='text-red-600 text-xs ml-2'>{errors?.sku.message}</p>
             )}
           </div>
 
@@ -345,9 +345,9 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 required: 'discount Field is Required!',
               })}
             />
-            {errors.discount && typeof errors.discount.message === 'string' && (
+            {errors?.discount && typeof errors?.discount.message === 'string' && (
               <p className='text-red-600 text-xs ml-2'>
-                {errors.discount.message}
+                {errors?.discount.message}
               </p>
             )}
           </div>
@@ -360,10 +360,10 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 required: 'Description Field is Required!',
               })}
             />
-            {errors.description &&
-              typeof errors.description.message === 'string' && (
+            {errors?.description &&
+              typeof errors?.description.message === 'string' && (
                 <p className='text-red-600 text-xs ml-2'>
-                  {errors.description.message}
+                  {errors?.description.message}
                 </p>
               )}
           </div>
@@ -385,10 +385,10 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 },
               })}
             />
-            {errors.BN_content && (
+            {errors?.BN_content && (
               <p className='text-red-600 text-xs ml-2'>
-                {typeof errors.BN_content.message === 'string'
-                  ? errors.BN_content.message
+                {typeof errors?.BN_content.message === 'string'
+                  ? errors?.BN_content.message
                   : ''}
               </p>
             )}
@@ -411,9 +411,9 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 },
               })}
             />
-            {errors.EN_content && (
+            {errors?.EN_content && (
               <p className='text-red-600 text-xs ml-2'>
-                {typeof errors.EN_content.message === 'string'
+                {typeof errors?.EN_content.message === 'string'
                   ? errors.EN_content.message
                   : ''}
               </p>
@@ -435,9 +435,9 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 },
               })}
             />
-            {errors.status && typeof errors.status.message === 'string' && (
+            {errors?.status && typeof errors?.status.message === 'string' && (
               <p className='text-red-600 text-xs ml-2'>
-                {errors.status.message}
+                {errors?.status.message}
               </p>
             )}
           </div>
@@ -445,7 +445,7 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           {/* Sizes */}
           <div className='space-y-2'>
             <Label>Sizes</Label>
-            {sizeFields.map((field, index) => (
+            {sizeFields?.map((field, index) => (
               <div key={field.id} className='flex gap-2'>
                 <Input
                   type='text'
@@ -473,7 +473,7 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           {/* Colors */}
           <div className='space-y-2'>
             <Label>Colors</Label>
-            {colorFields.map((field, index) => (
+            {colorFields?.map((field, index) => (
               <div key={field.id} className='flex gap-2'>
                 <Input
                   type='text'
@@ -565,10 +565,10 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 onChange={handleImageChange} // Handle file input change
               />
             </div>
-            {errors.thumbnail &&
-              typeof errors.thumbnail.message === 'string' && (
+            {errors?.thumbnail &&
+              typeof errors?.thumbnail.message === 'string' && (
                 <p className='text-red-600 text-xs ml-2'>
-                  {errors.thumbnail.message}
+                  {errors?.thumbnail.message}
                 </p>
               )}
 
@@ -623,16 +623,16 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 onChange={handleImageGalleryChange} // Handle file input change
               />
             </div>
-            {errors.image_gallery &&
-              typeof errors.image_gallery.message === 'string' && (
+            {errors?.image_gallery &&
+              typeof errors?.image_gallery.message === 'string' && (
                 <p className='text-red-600 text-xs ml-2'>
-                  {errors.image_gallery.message}
+                  {errors?.image_gallery.message}
                 </p>
               )}
 
             {/* Image Previews */}
             <div className='flex space-x-4 mt-4'>
-              {imageGalleryPreview.map((url, index) => (
+              {imageGalleryPreview?.map((url, index) => (
                 <div key={index} className='relative w-32 h-32'>
                   <Image
                     fill
