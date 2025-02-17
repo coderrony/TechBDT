@@ -127,99 +127,83 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       colors: (data.colors || []).map((item: any) => item.value),
       variants: (data.variants || []).map((item: any) => item.value),
     };
-
-
-
+  
     const formData = new FormData();
     const signalFileFormData = new FormData();
     const multipleFileFormData = new FormData();
-
-    const bnContentJson = JSON.parse(data.BN_content); // Convert string to JSON
-    const enContentJson = JSON.parse(data.EN_content); // Convert string to JSON
-
-    
-    Array.from(data.image_gallery as File[]).forEach(file => {
-      multipleFileFormData.append('gallery', file);
-    });
-
+  
+    // ✅ JSON.parse করার আগে চেক করা
+    const bnContentJson = data.BN_content ? JSON.parse(data.BN_content) : {};
+    const enContentJson = data.EN_content ? JSON.parse(data.EN_content) : {};
+  
+    // ✅ `image_gallery` থেকে ফাইল যোগ করা
+    if (Array.isArray(data.image_gallery) && data.image_gallery.length > 0) {
+      data.image_gallery.forEach((file: File) => {
+        multipleFileFormData.append('gallery', file);
+      });
+    }
+  
     formData.append('name', data.name);
     formData.append('dropshop', data.dropshop);
     formData.append('category', data.category);
     formData.append('sub_category', data.sub_category);
-    formData.append('price', data.price);
+    formData.append('price', String(data.price)); // ✅ String conversion
     formData.append('sku', data.sku);
     formData.append('status', data.status);
-    formData.append('discount', data.discount);
+    formData.append('discount', String(data.discount)); // ✅ String conversion
     formData.append('description', data.description);
     formData.append('BN_content', JSON.stringify(bnContentJson));
     formData.append('EN_content', JSON.stringify(enContentJson));
     formData.append('payload', JSON.stringify(payload));
-
-    
+  
     startTransition(async () => {
       try {
-        //
-
-        if (data?.thumbnail[0]) {
+        // ✅ Thumbnail Image Upload
+        if (Array.isArray(data.thumbnail) && data.thumbnail.length > 0) {
           signalFileFormData.append(
             'path',
             `product-image/${data.name.replaceAll(' ', '-')}/thumbnail`,
           );
           signalFileFormData.append('file', data.thumbnail[0]);
-          const uploadFileResult = (await axios.post(
-            '/api/upload-file-api',
-            signalFileFormData,
-          )) as any;
-        
- 
-          formData.append('thumbnail', uploadFileResult.data.res_data);
+  
+          const uploadFileResult = await axios.post('/api/upload-file-api', signalFileFormData);
+          formData.append('thumbnail', uploadFileResult?.data?.res_data || '');
         }
-      
-
+  
+        // ✅ Multiple Image Gallery Upload
         if (data?.image_gallery?.length > 0) {
           multipleFileFormData.append(
             'path',
             `product-image/${data.name.replaceAll(' ', '-')}/image_gallery`,
           );
-
-          const uploadGalleryResult = (await axios.post(
-            '/api/upload-file-api',
-            multipleFileFormData,
-          )) as any;
-       
-          formData.append(
-            'image_gallery',
-            JSON.stringify(uploadGalleryResult.data.res_data),
-          );
+  
+          const uploadGalleryResult = await axios.post('/api/upload-file-api', multipleFileFormData);
+          const imageGalleryData = uploadGalleryResult?.data?.res_data || [];
+          formData.append('image_gallery', JSON.stringify(imageGalleryData));
         }
-
+  
+        // ✅ Backend API Call
         const result = await createProduct(formData);
-     
-        
-
+  
+        // ✅ Response Handle
         if (result?.status === 200) {
           reset();
           alert(result?.message);
-        }
-        if (result?.status === 500) {
+        } else {
           alert(result?.message);
         }
+  
         setPreview(null);
         setImageGalleryPreview([]);
       } catch (err: any) {
-        alert(`Error Occur ${err?.message}`);
-        console.log(err.message);
+        alert(`Error Occurred: ${err?.message}`);
+        console.error(err);
         setPreview(null);
         setImageGalleryPreview([]);
       }
     });
-  
-  
-
-    
-
- 
   };
+  
 
   if (isPending) return <LoadingIndicator />;
 
