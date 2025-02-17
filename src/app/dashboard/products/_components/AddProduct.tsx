@@ -108,6 +108,8 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // console.log("file ",file);
+    
     if (file) {
       setPreview(URL.createObjectURL(file)); // Create image preview
     }
@@ -122,6 +124,8 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   };
 
   const handleProduct = async (data: any) => {
+    // console.log("submit data ",data);
+    
     const payload = {
       sizes: (data.sizes || []).map((item: any) => item.value),
       colors: (data.colors || []).map((item: any) => item.value),
@@ -129,19 +133,24 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     };
   
     const formData = new FormData();
-    const signalFileFormData = new FormData();
-    const multipleFileFormData = new FormData();
-  
+
     // ✅ JSON.parse করার আগে চেক করা
     const bnContentJson = data.BN_content ? JSON.parse(data.BN_content) : {};
     const enContentJson = data.EN_content ? JSON.parse(data.EN_content) : {};
   
-    // ✅ `image_gallery` থেকে ফাইল যোগ করা
-    if (Array.isArray(data.image_gallery) && data.image_gallery.length > 0) {
-      data.image_gallery.forEach((file: File) => {
-        multipleFileFormData.append('gallery', file);
+ 
+ 
+
+    if (Array.isArray(data.image_gallery)) {
+      data.image_gallery.forEach((file: any) => {
+        formData.append('gallery', file as File);
+      });
+    } else if (data.image_gallery instanceof FileList) {
+      Array.from(data.image_gallery).forEach((file) => {
+        formData.append('gallery', file as File);
       });
     }
+    formData.append('thumbnail', data.thumbnail[0]);
   
     formData.append('name', data.name);
     formData.append('dropshop', data.dropshop);
@@ -155,42 +164,24 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     formData.append('BN_content', JSON.stringify(bnContentJson));
     formData.append('EN_content', JSON.stringify(enContentJson));
     formData.append('payload', JSON.stringify(payload));
+
+  
+  
   
     startTransition(async () => {
       try {
-        // ✅ Thumbnail Image Upload
-        if (Array.isArray(data.thumbnail) && data.thumbnail.length > 0) {
-          signalFileFormData.append(
-            'path',
-            `product-image/${data.name.replaceAll(' ', '-')}/thumbnail`,
-          );
-          signalFileFormData.append('file', data.thumbnail[0]);
-  
-          const uploadFileResult = await axios.post('/api/upload-file-api', signalFileFormData);
-          formData.append('thumbnail', uploadFileResult?.data?.res_data || '');
-        }
-  
-        // ✅ Multiple Image Gallery Upload
-        if (data?.image_gallery?.length > 0) {
-          multipleFileFormData.append(
-            'path',
-            `product-image/${data.name.replaceAll(' ', '-')}/image_gallery`,
-          );
-  
-          const uploadGalleryResult = await axios.post('/api/upload-file-api', multipleFileFormData);
-          const imageGalleryData = uploadGalleryResult?.data?.res_data || [];
-          formData.append('image_gallery', JSON.stringify(imageGalleryData));
-        }
-  
-        // ✅ Backend API Call
-        const result = await createProduct(formData);
+
+ 
+        const result = await axios.post('/api/product/create-product', formData) as any;
+
+     
   
         // ✅ Response Handle
-        if (result?.status === 200) {
+        if (result?.data?.status === 200) {
           reset();
-          alert(result?.message);
+          alert(result?.data?.message);
         } else {
-          alert(result?.message);
+          alert(result?.data?.message);
         }
   
         setPreview(null);
