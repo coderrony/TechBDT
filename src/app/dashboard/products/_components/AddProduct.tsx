@@ -2,7 +2,7 @@
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import Input from '@/shared/Input/Input';
 import Image from 'next/image';
-import { FC, useState, useTransition } from 'react';
+import { FC, useEffect, useState, useTransition } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import imgIcon from '@/images/icons/photo.png';
 import galleryIcon from '@/images/icons/gallery.png';
@@ -11,19 +11,22 @@ import Label from '@/components/Label/Label';
 import SelectValue from '@/components/SelectValue';
 import { CategoryAndSubType } from '@/types/CategoryType';
 import LoadingIndicator from '@/components/LoadingIndicator';
-import { DropShopType } from '@/types/DropShopType';
+
 import { replaceMongoIdInArray } from '@/lib/convertData';
 import { createProduct } from '@/queries/products';
 import axios from 'axios';
-
+import { useSession } from "next-auth/react"
 
 interface AddProductProps {
   className?: string;
-  categoriesData: CategoryAndSubType[];
-  dropshops: DropShopType[];
+
 }
 
-const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
+const AddProduct: FC<AddProductProps> = () => {
+  const { data: session } = useSession()
+  const [categoriesData,setCategoriesData] = useState<any>([])
+  const [dropshops,setDropshops] = useState<any>([])
+
   const [subCategories, setSubCategories] = useState<
     CategoryAndSubType['sub_categories']
   >([]);
@@ -37,6 +40,8 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
     control, // Extract control from useForm
     formState: { errors },
   } = useForm();
+
+
 
   const {
     fields: sizeFields,
@@ -56,13 +61,44 @@ const AddProduct: FC<AddProductProps> = ({ categoriesData, dropshops }) => {
     remove: removeVariant,
   } = useFieldArray({ control, name: 'variants' });
 
+  useEffect(()=>{
+    const fetchCategories = async () => {
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
+        cache: 'no-store', // Fetch fresh data
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to fetch categories');
+          }
+          return res.json();
+        })
+        .then((data) => setCategoriesData(data.res_data))
+    }
+
+    const fetchDropshop = async () => {
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/drop-shop-api?id=${session?.user?.id}`, {
+        cache: 'no-store', // Fetch fresh data
+      },)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed to fetch DropShop');
+          }
+          return res.json();
+        })
+        .then((data) => setDropshops(data.res_data))
+    }
+
+    fetchCategories()
+    fetchDropshop()
+  },[])
+
 
   
 const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const selectedCategoryId = e.target.selectedOptions[0].getAttribute('data-id'); // Get `data-id`
 
   const selectedCategory = categoriesData.find(
-    category => category.id === selectedCategoryId, // Find category by ID
+    (category:any) => category.id === selectedCategoryId, // Find category by ID
   );
 
   const subCategories = selectedCategory?.sub_categories || [];
@@ -207,7 +243,7 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
               onChange={handleCategoryChange} // Add onChange
             >
               <option value=''>Select dropshop</option>
-              {dropshops.map(item => (
+              {dropshops.map((item:any) => (
                 <option value={item.id} key={item.id}>
                   {item.name}
                 </option>
@@ -228,7 +264,7 @@ const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
               onChange={handleCategoryChange} // Add onChange
             >
               <option value=''>Select Category</option>
-              {categoriesData.map(item => (
+              {categoriesData.map((item:any) => (
                 <option value={item.name} key={item.id} data-id={item.id}>
                   {item.name}
                 </option>

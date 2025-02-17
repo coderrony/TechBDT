@@ -10,7 +10,7 @@ import SearchBtn from '../IconComponents/SearchBtn';
 
 import { default_category, NAVIGATION_DATA } from '@/data/defaultValue';
 // import { CategoryAndSubType } from '@/types/CategoryType';
-import { auth } from '@/auth';
+
 
 
 export interface MainNav2LoggedProps {}
