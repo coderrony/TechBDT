@@ -1,11 +1,10 @@
 
-import { TabsType } from "../_components/ManageTabs";
+import ManageTabs, { TabsType } from "../_components/ManageTabs";
 
-import dynamic from "next/dynamic";
 import { auth } from '@/auth';
-const ManageTabs = dynamic(() => import('../_components/ManageTabs'), { ssr: true });
-const AddProduct = dynamic(() => import('./_components/AddProduct'), { ssr: true });
-const ProductPreview = dynamic(() => import('./_components/ProductPreview'), { ssr: true });
+import AddProduct from "./_components/AddProduct";
+import ProductPreview from "./_components/ProductPreview";
+
 
 async function ProductsPage() {
     const session = await auth();

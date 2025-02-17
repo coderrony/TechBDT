@@ -43,6 +43,8 @@ export const default_category_colors = [
   { name: 'Green' },
   { name: 'Navy' },
   { name: 'Shakura' },
+  { name: 'Golden' },
+  { name: 'Sliver' },
 ];
 export const  default_category_sizes = [
   { name: 'XXS' },

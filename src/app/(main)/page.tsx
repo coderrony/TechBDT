@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Skeleton from '@/components/Skeleton';
 import BackgroundSection from '@/components/BackgroundSection/BackgroundSection';
-import { getFashions, getGadgets, getGiftItems } from '@/queries/products';
+import { getBestDeal, getGadgets, getGiftItems } from '@/queries/products';
 import ProductCard from '@/components/ProductCardSectionSlider/ProductCard';
 import SectionSlider from '@/components/ProductCardSectionSlider/SectionSlider';
 
@@ -19,7 +19,7 @@ const SectionGridMoreExplore = dynamic(
 
 export default async function PageHome() {
   // Fetch data inside the component
-  const [allCategory, gadgets, giftItems, fashions] = await Promise.all([
+  const [allCategory, gadgets, giftItems, bestDeal] = await Promise.all([
     fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/category-api`, {
       next: { revalidate: 3600 }, // Revalidate every 1 hours
     })
@@ -30,7 +30,7 @@ export default async function PageHome() {
       .then(data => data.res_data),
     getGadgets(),
     getGiftItems(),
-    getFashions(),
+    getBestDeal(),
   ]);
 
   return (
@@ -116,7 +116,7 @@ export default async function PageHome() {
         <>
           <div className='flex justify-between items-center px-5 mb-4'>
             <h2 className='text-3xl font-bold text-neutral-900 dark:text-neutral-50'>
-              Fashion{' '}
+              Best Deal{' '}
               <span className='text-neutral-500 dark:text-neutral-400'>
                 for Modern Lifestyles
               </span>
@@ -130,7 +130,7 @@ export default async function PageHome() {
 
           <Suspense fallback={<Skeleton />}>
             <SectionSlider>
-              {fashions.map((item: any, index: number) => (
+              {bestDeal.map((item: any, index: number) => (
                 <li key={index} className='glide__slide'>
                   <ProductCard data={item} />
                 </li>

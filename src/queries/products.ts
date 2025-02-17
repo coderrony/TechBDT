@@ -163,10 +163,10 @@ export const getGiftItems = async () => {
 }
 
 // Fashion items for home page
-export const getFashions = async () => {
+export const getBestDeal = async () => {
   // await connectDB();
   try {
-    const products = await Product.find({ category: "Fashion" })
+    const products = await Product.find({ category: "Best Deal" })
       .sort({ createdAt: -1 })
       .limit(20)
       .lean();
@@ -174,7 +174,7 @@ export const getFashions = async () => {
     return replaceMongoIdInArray(products as any[]) || [];
 
   } catch (error:any) {
-    console.error("Error fetching Fashion Items:", error);
+    console.error("Error fetching best deal Items:", error);
     return [];
   }
 
