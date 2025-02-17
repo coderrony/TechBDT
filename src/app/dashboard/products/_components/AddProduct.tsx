@@ -15,7 +15,6 @@ import LoadingIndicator from '@/components/LoadingIndicator';
 import { replaceMongoIdInArray } from '@/lib/convertData';
 import { createProduct } from '@/queries/products';
 import axios from 'axios';
-import { useSession } from "next-auth/react"
 
 interface AddProductProps {
   className?: string;
@@ -23,7 +22,7 @@ interface AddProductProps {
 }
 
 const AddProduct: FC<AddProductProps> = () => {
-  const { data: session } = useSession()
+
   const [categoriesData,setCategoriesData] = useState<any>([])
   const [dropshops,setDropshops] = useState<any>([])
 
@@ -76,7 +75,7 @@ const AddProduct: FC<AddProductProps> = () => {
     }
 
     const fetchDropshop = async () => {
-      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/drop-shop-api?id=${session?.user?.id}`, {
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/drop-shop-api`, {
         cache: 'no-store', // Fetch fresh data
       },)
         .then((res) => {
@@ -93,7 +92,7 @@ const AddProduct: FC<AddProductProps> = () => {
   },[])
 
 
-  
+
 const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const selectedCategoryId = e.target.selectedOptions[0].getAttribute('data-id'); // Get `data-id`
 

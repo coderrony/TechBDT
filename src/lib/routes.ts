@@ -23,7 +23,7 @@ export const PUBLIC_ROUTES = [
   '/api/upload-file-api',
   '/api/product/search-product',
   '/api/product/trending-product',
- 
+
   // admin access
 
   '/api/drop-shop-api'
