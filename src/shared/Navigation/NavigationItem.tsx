@@ -8,12 +8,14 @@ import React, { FC, Fragment, useState } from 'react';
 import Link from 'next/link';
 import { CategoryAndSubType } from '@/types/CategoryType';
 
+
 export interface NavigationItemProps {
   menuItem: CategoryAndSubType;
 }
 
 const NavigationItem: FC<NavigationItemProps> = ({ menuItem }) => {
   const [menuCurrentHovers, setMenuCurrentHovers] = useState<string[]>([]);
+
 
   const isDropdown = menuItem?.sub_categories
     ? menuItem?.sub_categories.length > 0
@@ -140,6 +142,7 @@ const NavigationItem: FC<NavigationItemProps> = ({ menuItem }) => {
   };
 
   const renderDropdownMenuNavlink = (item: CategoryAndSubType) => {
+ 
     const isChileDropdown = item?.sub_categories
       ? item?.sub_categories.length > 0
         ? true
@@ -148,7 +151,10 @@ const NavigationItem: FC<NavigationItemProps> = ({ menuItem }) => {
     return (
       <Link
         className='flex items-center font-normal text-neutral-6000 dark:text-neutral-400 py-2 px-4 rounded-md hover:text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200'
-        href={`/search?subCategory=${item.name}`}>
+        href={`/search?${item?.sub_categories?.length === 0 ? "category" : "subCategory"}=${item.name}`}
+      
+        
+        >
         {item.name}
         {isChileDropdown && (
           <ChevronDownIcon

@@ -85,11 +85,15 @@ const SearchContent: FC<SearchContentProps> = () => {
 
   useEffect(() => {
     if (category) {
-      setFilters((prev: any) => ({ ...prev, categories: [category] }));
+      setFilters((prev: any) => ({ ...prev, categories: [category],subCategories:[] }));
     }
     if (subCategory) {
      
-      setFilters((prev: any) => ({ ...prev, subCategories: [subCategory] }));
+      setFilters((prev: any) => ({ ...prev, subCategories: [subCategory],categories:[] }));
+    }
+
+    if(category === null && subCategory === null){
+      setFilters((prev: any) => ({ ...prev, subCategories: [],categories:[] }));
     }
   }, [category, subCategory]);
 
@@ -97,7 +101,7 @@ const SearchContent: FC<SearchContentProps> = () => {
 
   const debounce = useDebounce(async value => {
     try {
-      // console.log('search Value ', value);
+
       setSearchTerm(value);
     } catch (err: any) {
       throw new Error(err.message);
