@@ -7,68 +7,68 @@ import {
 import { Product } from '@/model/product-model';
 import { Review } from '@/model/review-model';
 import { connectDB } from '@/services/mongo';
-import slugify from 'slugify';
+// import slugify from 'slugify';
 
-export const createProduct = async (formData: any) => {
-  await connectDB();
-  try {
-    const name = formData.get('name') as string;
-    const category = formData.get('category');
-    const sub_category = formData.get('sub_category');
-    const price = Number(formData.get('price')) || 0;
-    const sku = formData.get('sku') as string;
-    const status = formData.get('status') as string;
-    const discount = Number(formData.get('discount')) || 0;
-    const description = formData.get('description') as string;
-    const thumbnail = formData.get('thumbnail') as string;
-    const images_gallery = formData.getAll('image_gallery') || [];
-    const dropShop = formData.get('dropshop') as string;
+// export const createProduct = async (formData: any) => {
+//   await connectDB();
+//   try {
+//     const name = formData.get('name') as string;
+//     const category = formData.get('category');
+//     const sub_category = formData.get('sub_category');
+//     const price = Number(formData.get('price')) || 0;
+//     const sku = formData.get('sku') as string;
+//     const status = formData.get('status') as string;
+//     const discount = Number(formData.get('discount')) || 0;
+//     const description = formData.get('description') as string;
+//     const thumbnail = formData.get('thumbnail') as string;
+//     const images_gallery = formData.getAll('image_gallery') || [];
+//     const dropShop = formData.get('dropshop') as string;
 
-    const BN_contentRaw = formData.get('BN_content');
-    const EN_contentRaw = formData.get('EN_content');
-    const payloadString = formData.get('payload');
+//     const BN_contentRaw = formData.get('BN_content');
+//     const EN_contentRaw = formData.get('EN_content');
+//     const payloadString = formData.get('payload');
 
-    // ✅ JSON.parse করার আগে চেক করা
-    let payload = payloadString ? JSON.parse(payloadString) : {};
-    const BN_content = BN_contentRaw ? JSON.parse(BN_contentRaw as string) : {};
-    const EN_content = EN_contentRaw ? JSON.parse(EN_contentRaw as string) : {};
+//     // ✅ JSON.parse করার আগে চেক করা
+//     let payload = payloadString ? JSON.parse(payloadString) : {};
+//     const BN_content = BN_contentRaw ? JSON.parse(BN_contentRaw as string) : {};
+//     const EN_content = EN_contentRaw ? JSON.parse(EN_contentRaw as string) : {};
     
-    const slug = slugify(name, { lower: true, strict: true });
+//     const slug = slugify(name, { lower: true, strict: true });
 
-    // ✅ images_gallery যদি empty হয়, তাহলে JSON.parse() না করা
-    const product_data: any = {
-      name,
-      slug,
-      price,
-      sku,
-      status,
-      discount,
-      description,
-      thumbnail,
-      images_gallery: images_gallery.length > 0 ? images_gallery : [],
-      dropShop,
-      BN_content,
-      EN_content,
-    };
+//     // ✅ images_gallery যদি empty হয়, তাহলে JSON.parse() না করা
+//     const product_data: any = {
+//       name,
+//       slug,
+//       price,
+//       sku,
+//       status,
+//       discount,
+//       description,
+//       thumbnail,
+//       images_gallery: images_gallery.length > 0 ? images_gallery : [],
+//       dropShop,
+//       BN_content,
+//       EN_content,
+//     };
 
-    if (category) product_data['category'] = category;
-    if (sub_category) product_data['sub_category'] = sub_category;
-    if (payload.sizes?.length > 0) product_data['sizes'] = payload.sizes;
-    if (payload.colors?.length > 0) product_data['colors'] = payload.colors;
-    if (payload.variants?.length > 0) product_data['variants'] = payload.variants;
+//     if (category) product_data['category'] = category;
+//     if (sub_category) product_data['sub_category'] = sub_category;
+//     if (payload.sizes?.length > 0) product_data['sizes'] = payload.sizes;
+//     if (payload.colors?.length > 0) product_data['colors'] = payload.colors;
+//     if (payload.variants?.length > 0) product_data['variants'] = payload.variants;
 
-    const product = await Product.create(product_data);
+//     const product = await Product.create(product_data);
 
-    if (product) {
-      return { status: 200, message: 'Product Created successfully!' };
-    } else {
-      return { status: 500, message: 'Error: Failed to Create Product!' };
-    }
-  } catch (err: any) {
-    console.error("Error creating product:", err);
-    throw new Error('Failed to Create Product');
-  }
-};
+//     if (product) {
+//       return { status: 200, message: 'Product Created successfully!' };
+//     } else {
+//       return { status: 500, message: 'Error: Failed to Create Product!' };
+//     }
+//   } catch (err: any) {
+//     console.error("Error creating product:", err);
+//     throw new Error('Failed to Create Product');
+//   }
+// };
 
 
 

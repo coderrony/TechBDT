@@ -13,7 +13,7 @@ import { CategoryAndSubType } from '@/types/CategoryType';
 import LoadingIndicator from '@/components/LoadingIndicator';
 
 import { replaceMongoIdInArray } from '@/lib/convertData';
-import { createProduct } from '@/queries/products';
+// import { createProduct } from '@/queries/products';
 import axios from 'axios';
 
 interface AddProductProps {

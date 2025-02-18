@@ -123,7 +123,7 @@ export default async function PageHome() {
             </h2>
             <Link
               className='bg-slate-900 dark:bg-slate-100 hover:bg-slate-800 text-slate-50 dark:text-slate-800 shadow-xl p-2 rounded'
-              href={`/search?category=Fashion`}>
+              href={`/search?category=Best Deal`}>
               Explore All
             </Link>
           </div>
