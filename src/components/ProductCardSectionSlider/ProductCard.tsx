@@ -8,7 +8,7 @@ import Link from 'next/link';
 import NcImage from '@/shared/NcImage/NcImage';
 
 import calculateOldPrice from '@/utils/calculateOldPrice';
-import LikeButton from '../LikeButton';
+// import LikeButton from '../LikeButton';
 import SectionCardBtns from './SectionCardBtns';
 import Prices from '../Prices';
 import OldPrice from '../OldPrice';
@@ -49,7 +49,7 @@ const ProductCard: FC<ProductCardProps> = ({
             />
           </Link>
           <ProductStatus status={status} />
-          <LikeButton liked={isLiked} className='absolute top-3 end-3 z-10' />
+          {/* <LikeButton liked={isLiked} className='absolute top-3 end-3 z-10' /> */}
 
           <SectionCardBtns data={data} />
         </div>
