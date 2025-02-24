@@ -5,19 +5,20 @@ import Input from '@/shared/Input/Input';
 import ButtonCircle from '@/shared/Button/ButtonCircle';
 import ProductCard from '@/components/ProductCardSectionSlider/ProductCard';
 import useDebounce from '@/hooks/useDebounce';
-import { useSearchParams } from 'next/navigation';
+import {  useSearchParams } from 'next/navigation';
 import TabFilters from './TabFilters';
 import { usePaginatedItems } from '@/hooks/usePaginatedItems';
 import { default_range_prices } from '@/data/defaultValue';
 import twFocusClass from '@/utils/twFocusClass';
 import Skeleton from '@/components/Skeleton';
 
+
 interface SearchContentProps {
   className?: string;
 }
 
 const SearchContent: FC<SearchContentProps> = () => {
- 
+
   const [page, setPage] = useState(0);
   const searchParams = useSearchParams();
   const [categoriesState, setCategoriesState] = useState<string[]>([]);
@@ -55,6 +56,24 @@ const SearchContent: FC<SearchContentProps> = () => {
     setPage(data?.pages?.length - 1 || 0);
   }, [data?.pages.length]);
 
+
+
+  useEffect(() => {
+   
+    if(filters.categories.length > 0 || filters.subCategories.length > 0 ){
+      setQueryText("");
+      setSearchTerm('');
+    }
+  },[filters])
+
+  useEffect(() => {
+     if(searchTerm !== "" ){ 
+      setFilters((prev: any) => ({ ...prev, subCategories: [],categories:[] }));
+      
+     }
+
+  },[searchTerm])
+
   useEffect(() => {
     const controller = new AbortController(); // AbortController to cancel fetch if needed
     const fetchCategories = async () => {
@@ -84,6 +103,7 @@ const SearchContent: FC<SearchContentProps> = () => {
 
 
   useEffect(() => {
+    // console.log("i am in 1")
     if (category) {
       setFilters((prev: any) => ({ ...prev, categories: [category],subCategories:[] }));
     }
@@ -95,6 +115,8 @@ const SearchContent: FC<SearchContentProps> = () => {
     if(category === null && subCategory === null){
       setFilters((prev: any) => ({ ...prev, subCategories: [],categories:[] }));
     }
+    setQueryText('');
+    setSearchTerm('');
   }, [category, subCategory]);
 
 
@@ -106,7 +128,7 @@ const SearchContent: FC<SearchContentProps> = () => {
     } catch (err: any) {
       throw new Error(err.message);
     }
-  }, 350);
+  }, 400);
 
   const renderItem = (pag: any, index: number) => {
    
@@ -156,6 +178,7 @@ const SearchContent: FC<SearchContentProps> = () => {
                 onChange={e => {
                   setQueryText(e.target.value);
                   debounce(e.target.value);
+                  
                 }}
               />
               <ButtonCircle
@@ -200,6 +223,8 @@ const SearchContent: FC<SearchContentProps> = () => {
 
           <TabFilters
             categoriesState={categoriesState}
+            // categoriesState={filters.categories}
+            filters={filters}
             setFilters={(value: any) => setFilters(value)}
           />
 

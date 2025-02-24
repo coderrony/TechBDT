@@ -1,10 +1,54 @@
 import React from 'react';
 import SocialsList from '@/shared/SocialsList/SocialsList';
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Return & Refund Policy - Hassle-Free Shopping Experience",
+  description:
+    "Review TechBDT.com's Return & Refund Policy. Learn about our easy cancellation process, return conditions, and secure refund procedures. Shop confidently with our customer-friendly policies designed for your satisfaction.",
+  robots: {
+    index: true,   // Allow search engine indexing
+    follow: true,  // Allow search engine to follow links
+  },
+  keywords: [
+    "Return Policy",
+    "Refund Policy",
+    "Order Cancellation",
+    "Easy Returns",
+    "Hassle-Free Refunds",
+    "E-commerce Return Process",
+    "Secure Refunds",
+    "TechBDT Return Policy",
+    "Bangladesh E-commerce",
+  ],
+  authors: [{ name: "TechBDT", url: "https://techbdt.com" }],
+  openGraph: {
+    title: "Return & Refund Policy - TechBDT | Hassle-Free Shopping Experience",
+    description:
+      "Understand TechBDT.com's transparent return, refund, and cancellation policies. Enjoy a secure and customer-friendly shopping experience with clear guidelines on returns and refunds.",
+    url: "https://techbdt.com/return-refund",
+    siteName: "TechBDT",
+    images: [
+      {
+        url: "https://techbdt.com/og-image-return-refund.jpg",
+        width: 800,
+        height: 600,
+        alt: "Return & Refund Policy - TechBDT E-commerce Platform",
+      },
+    ],
+    locale: "en_BD",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Return & Refund Policy | TechBDT - Hassle-Free Shopping Experience",
+    description:
+      "Learn more about TechBDT.com's customer-friendly return, refund, and order cancellation policies for a secure and convenient shopping experience.",
+    images: ["https://techbdt.com/twitter-image-return-refund.jpg"],
+  },
+};
 
 const info = [
-
-
-
   {
     title: 'অর্ডার বাতিলকরণ',
     desc: `

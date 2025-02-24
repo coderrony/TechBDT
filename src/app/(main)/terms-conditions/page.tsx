@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import SocialsList from '@/shared/SocialsList/SocialsList';
-
+import { Metadata } from "next";
 const info = [
   {
     title: 'শর্তাবলীর পরিবর্তন',
@@ -57,6 +57,53 @@ const info = [
       </ul>  `,
   },
 ];
+
+
+export const metadata: Metadata = {
+  title: "Terms & Conditions - Hassle-Free Shopping Experience",
+  description:
+    "Read TechBDT's Terms and Conditions to understand our policies on delivery, payment processes, product returns, and refunds. Our goal is to provide a secure and transparent shopping experience for all customers.",
+  robots: {
+    index: true,   // Allow search engines to index this page
+    follow: true,  // Allow search engines to follow links
+  },
+  keywords: [
+    "Terms and Conditions",
+    "TechBDT",
+    "E-commerce Policies",
+    "Product Delivery",
+    "Payment Process",
+    "Return and Refund Policy",
+    "Secure Shopping",
+    "E-commerce Terms",
+    "Online Shopping Rules",
+  ],
+  authors: [{ name: "TechBDT", url: "https://techbdt.com" }],
+  openGraph: {
+    title: "Terms & Conditions - TechBDT | Hassle-Free Shopping Experience",
+    description:
+      "Explore the detailed Terms and Conditions for TechBDT.com. Learn about delivery, payment policies, and our approach to customer service and returns.",
+    url: "https://techbdt.com/terms-conditions",
+    siteName: "TechBDT",
+    images: [
+      {
+        url: "https://techbdt.com/og-image-terms-conditions.jpg",
+        width: 800,
+        height: 600,
+        alt: "TechBDT Terms & Conditions - E-commerce Policies",
+      },
+    ],
+    locale: "en_BD",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms & Conditions | TechBDT - Hassle-Free Shopping Experience",
+    description:
+      "Check out TechBDT's Terms and Conditions page for comprehensive details on our policies regarding product delivery, returns, refunds, and payments.",
+    images: ["https://techbdt.com/twitter-image-terms-conditions.jpg"],
+  },
+};
 
 const TermsConditionsPage = ({}) => {
   return (

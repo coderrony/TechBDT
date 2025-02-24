@@ -20,9 +20,9 @@ const nextConfig = {
     
       },
       {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-        port: "",
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/dgobtxhjp/**',
       },
       {
         protocol: "https",
@@ -35,12 +35,14 @@ const nextConfig = {
         port: "",
       },
     ],
+
   },
   experimental: {
     optimizeCss: true,
+
   },
   compress: true,
-
+ 
 };
 
 module.exports = nextConfig;

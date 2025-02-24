@@ -2,6 +2,53 @@
 import React, { FC } from "react";
 import BgGlassmorphism from "@/components/BgGlassmorphism/BgGlassmorphism";
 import SectionPromo3 from "@/components/SectionPromo3";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Us | TechBDT - Your Trusted E-commerce Platform",
+  description:
+    "Learn about TechBDT.com, a leading technology and fashion-based e-commerce platform in Bangladesh. We offer top-quality tech gadgets, trendy fashion items, and essential electronics at affordable prices with fast delivery and secure payment options.",
+  robots: {
+    index: true,   // Allow search engine indexing
+    follow: true,  // Allow search engine to follow links
+  },
+  keywords: [
+    "About TechBDT",
+    "Bangladesh E-commerce",
+    "Tech Gadgets",
+    "Fashion E-commerce",
+    "Electronics Online Shopping",
+    "Secure Payments",
+    "Fast Delivery",
+    "Reliable Customer Support",
+  ],
+  authors: [{ name: "TechBDT", url: "https://techbdt.com" }],
+  openGraph: {
+    title: "About Us - TechBDT | Trusted E-commerce in Bangladesh",
+    description:
+      "TechBDT.com offers you a unique online shopping experience with trusted tech gadgets, trendy fashion products, and essential electronics, all at affordable prices. Discover fast delivery, secure payment gateways, and reliable customer support today.",
+    url: "https://techbdt.com/about",
+    siteName: "TechBDT",
+    images: [
+      {
+        url: "https://techbdt.com/og-image-about.jpg",
+        width: 800,
+        height: 600,
+        alt: "About TechBDT - Trusted E-commerce Platform",
+      },
+    ],
+    locale: "en_BD",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Us | TechBDT - Trusted E-commerce Platform",
+    description:
+      "Explore TechBDT.com: Your trusted online destination for tech gadgets, trendy fashion, and essential electronics with fast delivery and secure payments.",
+    images: ["https://techbdt.com/twitter-image-about.jpg"],
+  },
+};
+
 const PageAbout = ({}) => {
   return (
     <div className={`nc-PageAbout overflow-hidden relative`}>

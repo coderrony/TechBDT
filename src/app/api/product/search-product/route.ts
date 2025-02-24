@@ -12,6 +12,8 @@ export const GET = async (req: any) => {
     const cursor = searchParams.get('cursor');
     const searchTerm = searchParams.get('searchTerm');
 
+ 
+
     // Prepare filters
     const filters: Record<string, any> = {};
     searchParams.forEach((value, key) => {
@@ -59,14 +61,17 @@ export const GET = async (req: any) => {
           : {}),
       };
     }
+
     if (searchTerm) {
-      query.name = { $regex: searchTerm, $options: 'i' }; // Case-insensitive search
+      query.$or = [
+        { name: { $regex: searchTerm, $options: 'i' } },
+        { category: { $regex: searchTerm, $options: 'i' } },
+        { sub_category: { $regex: searchTerm, $options: 'i' } },
+      ];
     }
 
-  
 
     // Fetch data
-
     const data = await Product.aggregate([
       { $match: query }, // Apply the price filter
       { $sample: { size: limit } }, // Fetch random documents

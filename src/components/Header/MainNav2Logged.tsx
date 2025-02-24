@@ -30,7 +30,8 @@ const MainNav2Logged: FC<MainNav2LoggedProps> = async () => {
       ...NAVIGATION_DATA,
       {
         id: 'ae5c-456a',
-        href: '/search',
+        // href: '/search',
+        href: '#',
         name: 'Categories',
         image_url: default_category,
         sub_categories: allCategory,

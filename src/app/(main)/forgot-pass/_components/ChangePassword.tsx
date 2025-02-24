@@ -94,11 +94,17 @@ const ChangePassword: FC<ChangePasswordProps> = ({ phoneNumber, otp }) => {
         className='grid grid-cols-1 gap-6'
         onSubmit={handleSubmit(confirmOtpHandle)}>
         <label className='block'>
-          <span className='text-sm text-green-700'>
+          {/* <span className='text-sm text-green-700'>
             We’ve sent a One-Time Password (OTP) TO {phoneNumber}
             <br />
             Please enter the OTP below to verify your account.
-          </span>
+          </span> */}
+
+          <span className='text-sm text-green-700'>
+          আমরা একটি ওয়ান-টাইম পাসওয়ার্ড (OTP) {phoneNumber} নম্বরে পাঠিয়েছি।  
+          <br />
+          আপনার অ্যাকাউন্ট যাচাইয়ের জন্য নিচে OTP টি প্রবেশ করুন। OTP পৌঁছাতে ২–৩ মিনিট সময় লাগতে পারে।
+        </span>
           {isPending ? (
             loadingIndicator()
           ) : (

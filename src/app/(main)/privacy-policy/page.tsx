@@ -1,5 +1,52 @@
 import React from "react";
 import SocialsList from "@/shared/SocialsList/SocialsList";
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Privacy Policy - Secure & Reliable E-commerce",
+  description:
+    "Read TechBDT.com's Privacy Policy to learn how we collect, use, and protect your personal information. We ensure secure transactions, safe data handling, and respect your privacy at every step of your online shopping experience.",
+  robots: {
+    index: true,   // Allow search engine indexing
+    follow: true,  // Allow search engine to follow links
+  },
+  keywords: [
+    "Privacy Policy",
+    "Data Protection",
+    "Personal Information Security",
+    "E-commerce Privacy",
+    "TechBDT Privacy Policy",
+    "Secure Online Shopping",
+    "User Data Safety",
+    "Bangladesh E-commerce",
+  ],
+  authors: [{ name: "TechBDT", url: "https://techbdt.com" }],
+  openGraph: {
+    title: "Privacy Policy - TechBDT | Secure & Reliable E-commerce",
+    description:
+      "At TechBDT.com, we are committed to protecting your privacy. Discover how we handle personal data, ensure secure transactions, and provide a safe online shopping environment.",
+    url: "https://techbdt.com/privacy-policy",
+    siteName: "TechBDT",
+    images: [
+      {
+        url: "https://techbdt.com/og-image-privacy-policy.jpg",
+        width: 800,
+        height: 600,
+        alt: "Privacy Policy - TechBDT E-commerce Platform",
+      },
+    ],
+    locale: "en_BD",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy | TechBDT - Secure & Reliable E-commerce",
+    description:
+      "Learn how TechBDT.com collects, uses, and safeguards your data, providing you with a secure and trustworthy online shopping experience.",
+    images: ["https://techbdt.com/twitter-image-privacy-policy.jpg"],
+  },
+};
 
 const info = [
   {

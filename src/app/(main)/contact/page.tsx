@@ -4,6 +4,31 @@ import SocialsList from "@/shared/SocialsList/SocialsList";
 import BackgroundSection from "@/components/BackgroundSection/BackgroundSection";
 import SectionPromo1 from "@/components/SectionPromo1";
 
+import { Metadata } from "next";
+
+
+export const metadata: Metadata = {
+  title: "Contact Us | 01814010159 Support 24/7",
+  description:
+    "Get in touch with us for any queries related to your orders, delivery, payments, or our services. Our support team is available 24/7 to assist you.",
+  robots: {
+    index: true,   // Allow search engine indexing
+    follow: true,  // Allow following links
+  },
+  keywords: [
+    "Contact",
+    "E-commerce Support",
+    "Order Assistance",
+    "Delivery Information",
+    "Payment Issues",
+    "Customer Care",
+    "Bangla E-commerce",
+  ],
+  authors: [{ name: "TechBDT", url: "https://techbdt.com" }],
+};
+
+
+
 const info = [
   {
     title: "🗺 ঠিকানা",

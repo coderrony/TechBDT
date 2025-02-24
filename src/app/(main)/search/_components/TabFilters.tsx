@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Fragment, useState, FC } from 'react';
+import React, { Fragment, useState, FC, useEffect } from 'react';
 import { Dialog, Popover, Transition } from '@/app/headlessui';
 import ButtonPrimary from '@/shared/Button/ButtonPrimary';
 import ButtonThird from '@/shared/Button/ButtonThird';
@@ -17,26 +17,23 @@ import {
 interface TabFiltersProps {
   className?: string;
   categoriesState: string[];
+  filters:any;
   setFilters: (value: any) => void;
 }
 
 const TabFilters: FC<TabFiltersProps> = ({
   categoriesState,
+  filters,
   setFilters,
 }) => {
 
-  const [query,setQuery] = useState<any>({
-      categories : [],
-      subCategories: [],
-      colors: [],
-      sizes: [],
-      priceRange:default_range_prices, // [minPrice,maxPrice]
-  
-    });
+  const [query,setQuery] = useState<any>(filters);
   const [isOpenMoreFilter, setisOpenMoreFilter] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
 
   // console.log("query ",query);
+
+  useEffect(()=>{setQuery(filters)},[filters])
   
   //
   const closeModalMoreFilter = () => setisOpenMoreFilter(false);
@@ -336,7 +333,7 @@ const TabFilters: FC<TabFiltersProps> = ({
                         <Checkbox
                           name={item.name}
                           label={item.name}
-                          defaultChecked={query.categories.includes(
+                          defaultChecked={filters.categories.includes(
                             item.name,
                           )}
                           onChange={checked =>

@@ -28,14 +28,14 @@ const NavMobile: React.FC<NavMobileProps> = ({
     item: CategoryAndSubType,
     itemClass = ' pl-3 text-neutral-900 dark:text-neutral-200 font-medium ',
   ) => {
-   
+
     return (
       <ul className='nav-mobile-sub-menu pl-6 pb-1 text-base'>
         {item.sub_categories?.map((i, index) => (
           <Disclosure key={index} as='li'>
             <Link
             //  href={i?.href ? (typeof i.href === 'string' ? { pathname: i.href } : i.href) : `/search?subCategory=${i.name}`}
-            href={`/search?${i?.sub_categories?.length === 0 ? "category" : "subCategory"}=${i.name}`}
+            href={`/search?${i?.sub_categories?.length > 0 ? "category" : "subCategory"}=${i.name}`}
               className={`flex text-sm rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 mt-0.5 pr-4 ${itemClass}`}>
               <span
             className={`py-2.5 ${i?.sub_categories?.length > 0 ? '' : 'block w-full'}`}
@@ -71,7 +71,7 @@ const NavMobile: React.FC<NavMobileProps> = ({
     );
   };
 
-  const _renderItem = (item: CategoryAndSubType, index: number) => {
+  const _renderItem = (item: any, index: number) => {
 
     const isSubCategories = item.sub_categories.length > 0 ? true : false
     return (
@@ -83,15 +83,21 @@ const NavMobile: React.FC<NavMobileProps> = ({
           className='flex w-full items-center py-2.5 px-4 font-medium uppercase tracking-wide text-sm hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg'
         
     
-          href={item?.href ? (typeof item.href === 'string' ? { pathname: item.href } : item.href) : `/search?subCategory=${item.name}`}
+          // href={item?.href ? (typeof item.href === 'string' ? { pathname: item.href } : item.href) : `/search?subCategory=${item.name}`}
+          href={item?.href}
           >
           <span
             className={!isSubCategories ? 'block w-full' : ''}
-            onClick={onClickClose}>
+            
+            onClick={item?.href !== "#" ? onClickClose : undefined} 
+          
+         
+            >
             {item.name}
           </span>
-          {isSubCategories && (
-            <span className='block flex-grow' onClick={e => e.preventDefault()}>
+          {isSubCategories  && (
+            <span className='block flex-grow' onClick={e => e.preventDefault() }
+            >
               <Disclosure.Button
                 as='span'
                 className='flex justify-end flex-grow'>

@@ -101,11 +101,19 @@ const OtpVerification: FC<OtpVerificationProps> = ({ user, otp }) => {
   return (
     <form className='grid grid-cols-1 gap-6' onSubmit={handleSubmit(onSubmit)}>
       <label className='block'>
-        <span className='text-sm text-green-700'>
-          We’ve sent a One-Time Password (OTP) To {user.phone}.
+           {/* <span className='text-sm text-green-700'>
+          We’ve sent a One-Time Password (OTP) to {user.phone}. 
           <br />
-          Please enter the OTP below to verify your account.
-        </span>
+          Please enter the OTP below to verify your account. It may take 2–3 minutes to arrive.
+        </span> */}
+
+<span className='text-sm text-green-700'>
+  আমরা একটি ওয়ান-টাইম পাসওয়ার্ড (OTP) {user.phone} নম্বরে পাঠিয়েছি।  
+  <br />
+  আপনার অ্যাকাউন্ট যাচাইয়ের জন্য নিচে OTP টি প্রবেশ করুন। OTP পৌঁছাতে ২–৩ মিনিট সময় লাগতে পারে।
+</span>
+
+
         {isPending ? (
           loadingIndicator()
         ) : (
