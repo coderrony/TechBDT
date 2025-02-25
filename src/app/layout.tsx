@@ -10,8 +10,7 @@ import { queryClient } from '@/lib/react-query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import AuthProvider from '@/provider/AuthProvider';
-import Head from 'next/head'; // ✅ Head import
-import Image from 'next/image';
+import Head from 'next/head'; // ✅ Head import করা হয়েছে
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -44,6 +43,7 @@ export const metadata: Metadata = {
     'buy smartphones Bangladesh',
     'shop electronics online BD',
   ].join(', '),
+
   openGraph: {
     type: 'website',
     locale: 'en_BD',
@@ -79,9 +79,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={poppins.className}>
+    <html lang='en' className={poppins.className}>
       <Head>
-        {/* ✅ Facebook Meta Pixel Code */}
+        {/* ✅ Meta Pixel কোড যুক্ত করা হয়েছে */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -98,19 +98,17 @@ export default function RootLayout({
             `,
           }}
         />
-      </Head>
-      <body className="bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200">
-        {/* ✅ Noscript image for tracking */}
         <noscript>
-          <Image
-            height="1"
-            width="1"
+          <img
+            height='1'
+            width='1'
             style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=661139586254672&ev=PageView&noscript=1"
-            alt="facebook pixel"
+            src='https://www.facebook.com/tr?id=661139586254672&ev=PageView&noscript=1'
           />
         </noscript>
+      </Head>
 
+      <body className='bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200'>
         <SessionProvider>
           <QueryClientProvider client={queryClient}>
             <AuthProvider>{children}</AuthProvider>
