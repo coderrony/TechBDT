@@ -11,6 +11,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import AuthProvider from '@/provider/AuthProvider';
 import Head from 'next/head'; // ✅ Head import করা হয়েছে
+import Image from 'next/image';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -99,7 +100,8 @@ export default function RootLayout({
           }}
         />
         <noscript>
-          <img
+          <Image
+          alt="image"
             height='1'
             width='1'
             style={{ display: 'none' }}

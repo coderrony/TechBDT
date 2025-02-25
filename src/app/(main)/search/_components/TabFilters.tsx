@@ -43,11 +43,11 @@ const TabFilters: FC<TabFiltersProps> = ({
   const handleChangeCategories = (checked: boolean, name: string) => {
     checked
       ? setQuery((prev: any) => ({
-          ...prev,
+          ...prev,subCategories:[],
           categories: [...prev.categories, name],
         }))
       : setQuery((prev: any) => ({
-          ...prev,
+          ...prev,subCategories:[],
           categories: prev.categories.filter((i: string) => i !== name),
         }));
   };
