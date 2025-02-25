@@ -20,6 +20,12 @@ const nextConfig = {
     
       },
       {
+        protocol: "https",
+        hostname: "www.facebook.com",
+        port: "",
+    
+      },
+      {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
         pathname: '/dgobtxhjp/**',
