@@ -15,9 +15,10 @@ import { ProductType } from '@/types/ProductTypes';
 import LoadingIndicator from '../LoadingIndicator';
 
 import { notify_duration } from '@/data/defaultValue';
-import useAuthData from '@/hooks/useAuthData';
+// import useAuthData from '@/hooks/useAuthData';
 import useCart from '@/hooks/useCart';
 import { useSession } from 'next-auth/react';
+import { sendServerEvent } from '@/utils/sendServerEvent';
 
 interface SectionCardBtnsProps {
   className?: string;
@@ -45,16 +46,17 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
     id,
     slug,
     product_role,
+    description,
   } = data;
 
- 
 
   const addToCartData: any = {
     product: id,
     quantity: 1,
   };
 
-  const addToCartHandle = () => {
+  const addToCartHandle = async () => {
+  
     if (session?.user) {
       let sizeColorNotifyTost: NotifyType = {
         size: '',
@@ -70,6 +72,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
       }
       handleAddToCart(addToCartData);
       notifyAddTocart(sizeColorNotifyTost, 'ADD TO CART');
+      sendServerEvent("AddToCart", {name,sizes,description,phone:session?.user?.phone,email:session?.user?.email,full_name:session?.user?.full_name})
     } else {
       toast.custom(
         t => (

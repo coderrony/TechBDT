@@ -9,7 +9,8 @@ export const ROOT = "/"
 export const PUBLIC_ROUTES = [
   '/login',
   '/search',
-  '/about',
+  '/search',
+
   '/contact',
   '/privacy-policy',
   '/terms-conditions',
@@ -19,6 +20,7 @@ export const PUBLIC_ROUTES = [
   '/not-found',
   '/api/auth/',
   '/api/otp-send',
+  '/api/fb-capi',   
   '/api/category-api',
   '/api/upload-file-api',
   '/api/product/search-product',

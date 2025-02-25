@@ -5,7 +5,7 @@ import './globals.css';
 import '@/fonts/line-awesome-1.3.0/css/line-awesome.css';
 import '@/styles/index.scss';
 import 'rc-slider/assets/index.css';
-
+import Script from "next/script";
 // import CommonClient from './CommonClient';
 import { Metadata } from 'next';
 // import { connectDB } from '@/services/mongo';
@@ -15,6 +15,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 
 import dynamic from 'next/dynamic';
 import AuthProvider from '@/provider/AuthProvider';
+import Image from 'next/image';
+import Providers from '@/provider/providers';
 
 
 const poppins = Poppins({
@@ -83,19 +85,51 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang='en' className={poppins.className}>
+         <head>
+        <Script
+          id="fb-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src='https://connect.facebook.net/en_US/fbevents.js';
+              s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script');
+              fbq('init', ${process.env.FB_PIXEL_ID});
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
+        <noscript>
+          <Image
+          alt="image"
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src={`https://www.facebook.com/tr?id=${process.env.FB_PIXEL_ID}&ev=PageView&noscript=1`}
+          />
+        </noscript>
+      </head>
       <body className='bg-white text-base dark:bg-neutral-900 text-neutral-900 dark:text-neutral-200'>
  
+        <Providers>
         <SessionProvider>
-            <QueryClientProvider client={queryClient}>
-              <AuthProvider>
-                {children}
-             
-              </AuthProvider>
-            </QueryClientProvider>
-        
-        </SessionProvider>
+                <QueryClientProvider client={queryClient}>
+                  <AuthProvider>
+                    {children}
+                
+                  </AuthProvider>
+                </QueryClientProvider>
+            
+            </SessionProvider>
+        </Providers>
         <CommonClient />
       </body>
     </html>
