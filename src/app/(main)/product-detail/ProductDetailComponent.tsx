@@ -33,6 +33,8 @@ import { notify_duration } from '@/data/defaultValue';
 import useCart from '@/hooks/useCart';
 import { useSession } from 'next-auth/react';
 import { Transition } from '@headlessui/react';
+import { sendServerEvent } from '@/utils/sendServerEvent';
+import useAuthData from '@/hooks/useAuthData';
 
 
 interface ProductDetailComponentProps {
@@ -60,9 +62,10 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
   const { data: session } = useSession();
   const {
     cartAdd: { isAdding, handleAddToCart },
+    cartDataFetch: { cartData }
   } = useCart() as any;
  
-
+  const {authData} = useAuthData() as any;
   const [sizeSelected, setSizeSelected] = useState(sizes ? sizes[0] : '');
   const [colorSelected, setColorSelected] = useState(colors ? colors[0] : '');
   const [qualitySelected, setQualitySelected] = useState(1);
@@ -84,6 +87,7 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
  
   const handleCart = () => {
     if (session?.user) {
+      const isAddress = authData?.address?.length > 0 ?  authData.address[0] : false 
       if (sizeSelected !== '') {
         addToCartData['size'] = sizeSelected;
       }
@@ -93,7 +97,24 @@ const ProductDetailComponent: FC<ProductDetailComponentProps> = ({
       }
       handleAddToCart(addToCartData);
       notifyAddTocart('ADD TO CART');
-     
+      sendServerEvent("AddToCart",
+        {
+         email:authData?.email,phone:authData?.phone,
+         full_name:authData?.full_name,
+         address:isAddress ? {city:isAddress.division,state:isAddress.union} : "",
+       },
+       {
+         content_ids:cartData?.id,
+         contents:cartData?.products?.map((item:any)=> {
+           return { 
+             id:item.product._id,
+             quantity:item.quantity,
+             item_price:item.product.price,
+         
+           }
+         })
+         
+       })
     } else {
       toast.custom(
         t => (

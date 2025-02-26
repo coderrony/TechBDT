@@ -1,4 +1,7 @@
-export async function sendServerEvent(eventName: string, userData: any) {
+export async function sendServerEvent(eventName: string, userData: any,customData:any) {
+
+  
+
   await fetch("/api/fb-capi", {
     method: "POST",
     headers: {
@@ -7,6 +10,7 @@ export async function sendServerEvent(eventName: string, userData: any) {
     body: JSON.stringify({
       eventName,
       userData,
+      customData
     }),
   });
 }

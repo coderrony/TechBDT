@@ -1,4 +1,4 @@
-// app/api/fb-capi/route.ts
+
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 
@@ -15,15 +15,41 @@ function sanitizeUserData(userData: any) {
     ph: userData.phone ? sha256(userData.phone) : undefined,
     fn: userData.full_name ? sha256(userData.full_name.split(" ")[0]) : undefined,
     ln: userData.full_name ? sha256(userData.full_name.split(" ").slice(1).join(" ")) : undefined,
+    ct: userData.address?.city ? sha256(userData.address.city) : undefined,
+    st: userData.address?.state ? sha256(userData.address.state) : undefined,
+    country:  sha256("BD"),
   };
+}
+
+function calculateTotalValue(contents: any[]) {
+  return contents.reduce((total, item) => total + item.item_price * item.quantity, 0);
+}
+
+function prepareCustomData(eventName: string, customData: any) {
+  const totalValue = calculateTotalValue(customData.contents || []);
+
+  const baseData = {
+    currency: "BDT",
+    value: totalValue,
+    content_type: "product",
+  };
+
+  if (["Purchase", "AddToCart", "ViewContent"].includes(eventName)) {
+    return {
+      ...baseData,
+      content_ids: customData.content_ids || [],
+      contents: customData.contents || [],
+    };
+  }
+  return baseData;
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("body.userData ", body.userData);
-
     const userData = sanitizeUserData(body.userData);
+    const customData = prepareCustomData(body.eventName, body.customData);
+
 
     const response = await fetch(
       `https://graph.facebook.com/v18.0/${PIXEL_ID}/events?access_token=${ACCESS_TOKEN}`,
@@ -38,6 +64,7 @@ export async function POST(req: Request) {
               event_name: body.eventName,
               event_time: Math.floor(new Date().getTime() / 1000),
               user_data: userData,
+              custom_data: customData,
             },
           ],
         }),
@@ -45,7 +72,7 @@ export async function POST(req: Request) {
     );
 
     const result = await response.json();
-    console.log("result ", result);
+
 
     if (!response.ok) {
       return NextResponse.json({ success: false, error: result }, { status: 500 });

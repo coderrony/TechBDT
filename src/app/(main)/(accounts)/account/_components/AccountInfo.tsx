@@ -366,10 +366,11 @@ const AccountInfo: FC<AccountInfoProps> = ({
             className='grid grid-cols-1 gap-6 mx-auto max-w-sm lg:max-w-md'
             onSubmit={handleSubmit(handleOtpSubmit)}>
             <label className='block'>
+         
               <span className='text-sm text-green-700'>
-                We’ve sent a One-Time Password (OTP).
+                আমরা একটি ওয়ান-টাইম পাসওয়ার্ড (OTP) পাঠিয়েছি।  
                 <br />
-                Please enter the OTP below to verify your account.
+                আপনার অ্যাকাউন্ট যাচাইয়ের জন্য নিচে OTP টি প্রবেশ করুন। OTP পৌঁছাতে ২–৩ মিনিট সময় লাগতে পারে।
               </span>
 
               <Input

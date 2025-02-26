@@ -22,6 +22,7 @@ import Radio from '@/shared/Radio/Radio';
 import Input from '@/shared/Input/Input';
 // import { createCharge } from '@/services/uddoktaPayService';
 import axios from 'axios';
+import { sendServerEvent } from '@/utils/sendServerEvent';
 
 interface CartInfoProps {
   className?: string;
@@ -57,8 +58,7 @@ const CartInfo: FC<CartInfoProps> = () => {
     cartDataFetch: { cartData, isFetchingCart },
     cartDelete: { handleRemoveFromCart, isRemoving },
   } = useCart() as any;
-  // console.log("cartData ",cartData);
-  // console.log('authData ', authData);
+
   const deliveryType = watch('deliveryType');
   const shipping_cost =
     watch('shipping') === 'Dhaka City Corporation' ? 60 : 120;
@@ -259,7 +259,7 @@ const CartInfo: FC<CartInfoProps> = () => {
           webhook_url: `${process.env.NEXT_PUBLIC_SITE_URL}/ipn`,
         };
 
-        //  console.log("paymentRequest ",paymentRequest);
+    
 
         // UddoktaPay এন্ডপয়েন্টে POST রিকোয়েস্ট করুন
         const response = await axios.post(
@@ -269,9 +269,29 @@ const CartInfo: FC<CartInfoProps> = () => {
 
         const result = response.data;
 
-        // console.log('cart response result', result);
+     
 
         if (result?.status === 200) {
+          // user activity send to facebook pixels
+          const isAddress = authData?.address?.length > 0 ?  authData.address[0] : false 
+            sendServerEvent("Purchase",
+                 {
+                  email:authData?.email,phone:authData?.phone,
+                  full_name:authData?.full_name,
+                  address:isAddress ? {city:isAddress.division,state:isAddress.union} : "",
+                },
+                {
+                  content_ids:cartData?.id,
+                  contents:cartData?.products?.map((item:any)=> {
+                    return { 
+                      id:item.product._id,
+                      quantity:item.quantity,
+                      item_price:item.product.price,
+                  
+                    }
+                  })
+                  
+                })
           window.location.href = result.res_data.payment_url!;
         } else {
           alert('Failed to create payment: ' + result.message);

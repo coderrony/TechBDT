@@ -1,5 +1,5 @@
 'use client';
-import { FC, useState, useTransition } from 'react';
+import { FC, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Transition } from '@/app/headlessui';
 import Image from 'next/image';
@@ -15,10 +15,10 @@ import { ProductType } from '@/types/ProductTypes';
 import LoadingIndicator from '../LoadingIndicator';
 
 import { notify_duration } from '@/data/defaultValue';
-// import useAuthData from '@/hooks/useAuthData';
 import useCart from '@/hooks/useCart';
 import { useSession } from 'next-auth/react';
 import { sendServerEvent } from '@/utils/sendServerEvent';
+import useAuthData from '@/hooks/useAuthData';
 
 interface SectionCardBtnsProps {
   className?: string;
@@ -32,10 +32,15 @@ interface NotifyType {
 
 const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
 
- const { data: session } = useSession();
-  const { cartAdd: { isAdding, handleAddToCart, isAddError }} = useCart() as any;
+ const { data: session } = useSession() as any;
+ const {authData} = useAuthData() as any;
+  const { cartAdd: { isAdding, handleAddToCart, isAddError }, cartDataFetch: { cartData },} = useCart() as any;
   const router = useRouter();
   const [showModalQuickView, setShowModalQuickView] = useState(false);
+
+  // console.log("session ",session);
+  // console.log("authData ",authData);
+  
 
   const {
     name,
@@ -46,7 +51,7 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
     id,
     slug,
     product_role,
-    description,
+
   } = data;
 
 
@@ -56,6 +61,12 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
   };
 
   const addToCartHandle = async () => {
+    const isAddress = authData?.address?.length > 0 ?  authData.address[0] : false 
+
+    // console.log("data ",data);
+    // console.log("addToCartData ",addToCartData);
+    // console.log("cartData ",cartData);
+    
   
     if (session?.user) {
       let sizeColorNotifyTost: NotifyType = {
@@ -72,7 +83,24 @@ const SectionCardBtns: FC<SectionCardBtnsProps> = ({ className, data }) => {
       }
       handleAddToCart(addToCartData);
       notifyAddTocart(sizeColorNotifyTost, 'ADD TO CART');
-      sendServerEvent("AddToCart", {name,sizes,description,phone:session?.user?.phone,email:session?.user?.email,full_name:session?.user?.full_name})
+      sendServerEvent("AddToCart",
+       {
+        email:authData?.email,phone:authData?.phone,
+        full_name:authData?.full_name,
+        address:isAddress ? {city:isAddress.division,state:isAddress.union} : "",
+      },
+      {
+        content_ids:cartData?.id,
+        contents:cartData?.products?.map((item:any)=> {
+          return { 
+            id:item.product._id,
+            quantity:item.quantity,
+            item_price:item.product.price,
+        
+          }
+        })
+        
+      })
     } else {
       toast.custom(
         t => (
